@@ -89,8 +89,24 @@ def depthFirstSearch(problem: SearchProblem) -> List[Directions]:
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    visited_states = set()
+    actions = [(problem.getStartState(), [])]
+
+    while actions:
+        current_state, path = actions.pop()
+
+        if problem.isGoalState(current_state):
+            return path
+
+        if current_state not in visited_states:
+            visited_states.add(current_state)
+
+        for successor, action, stepCost in problem.getSuccessors(current_state):
+            if successor not in visited_states:
+                new_path = path + [action]
+                actions.append((successor, new_path))
+
+    return []
 
 def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
     """Search the shallowest nodes in the search tree first."""
