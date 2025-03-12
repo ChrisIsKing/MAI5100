@@ -150,17 +150,14 @@ def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
                 array_key = secondary_queue[x]
                 j = x - 1
 
-                while j >= 0 and secondary_queue[j][2] > array_value:
+                while j >= 0 and secondary_queue[j][2] < array_value:
                     secondary_queue[j + 1] = secondary_queue[j]
                     j -= 1
 
                 secondary_queue[j + 1] = array_key
 
-            print(secondary_queue)
-            queue = secondary_queue + queue
-
-            print(queue)
-            exit()
+            for successor, action, stepCost in secondary_queue:
+                queue.insert(0, (successor, path + [action]))
 
 
 
