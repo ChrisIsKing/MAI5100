@@ -143,7 +143,12 @@ def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
 
         secondary_queue = problem.getSuccessors(current_state)
 
+        for x in range(1, len(secondary_queue)):
+            print(x)
+
+
         print(secondary_queue)
+        exit()
 
 
 
