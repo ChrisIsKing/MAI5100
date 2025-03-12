@@ -144,11 +144,23 @@ def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
         secondary_queue = problem.getSuccessors(current_state)
 
         for x in range(1, len(secondary_queue)):
-            print(x)
+            array_value = secondary_queue[x][2]
+            array_key = secondary_queue[x]
+            j = x - 1
+
+            while j >= 0 and secondary_queue[j][2] > array_value:
+                secondary_queue[j + 1] = secondary_queue[j]
+                j -= 1
+
+            secondary_queue[j + 1] = array_key
+
 
 
         print(secondary_queue)
-        exit()
+
+
+        print(secondary_queue)
+        # exit()
 
 
 
