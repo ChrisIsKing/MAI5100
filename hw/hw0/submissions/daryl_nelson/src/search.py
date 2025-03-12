@@ -131,12 +131,12 @@ def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
     """Search the node of least total cost first."""
     visited_states = set()
     actions = [(problem.getStartState(), [])]
-    cheapest_node = []
     count = 0;
 
     while actions:
         print(actions)
         current_state, path = actions.pop()
+        cheapest_node = []
 
         if problem.isGoalState(current_state):
             return path
@@ -150,8 +150,12 @@ def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
             if not cheapest_node or stepCost < cheapest_node[2] and successor not in visited_states:
                cheapest_node = [successor, action, stepCost]
 
-        new_path = path + [cheapest_node[1]]
-        actions.append((cheapest_node[0], new_path))
+        if cheapest_node:
+            new_path = path + [cheapest_node[1]]
+            actions.append((cheapest_node[0], new_path))
+        else:
+            new_path = path + [cheapest_node[1]]
+            actions.append((cheapest_node[0], new_path))
 
         print(cheapest_node)
         print(new_path)
