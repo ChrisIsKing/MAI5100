@@ -133,6 +133,7 @@ def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
     visited = set()
 
     while queue:
+        print(queue)
         current_state, path = queue.pop(0)
 
         if problem.isGoalState(current_state):
@@ -141,26 +142,26 @@ def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
         if current_state not in visited:
             visited.add(current_state)
 
-        secondary_queue = problem.getSuccessors(current_state)
-
-        for x in range(1, len(secondary_queue)):
-            array_value = secondary_queue[x][2]
-            array_key = secondary_queue[x]
-            j = x - 1
-
-            while j >= 0 and secondary_queue[j][2] > array_value:
-                secondary_queue[j + 1] = secondary_queue[j]
-                j -= 1
-
-            secondary_queue[j + 1] = array_key
+            secondary_queue = problem.getSuccessors(current_state)
 
 
+            for x in range(1, len(secondary_queue)):
+                array_value = secondary_queue[x][2]
+                array_key = secondary_queue[x]
+                j = x - 1
 
-        print(secondary_queue)
+                while j >= 0 and secondary_queue[j][2] > array_value:
+                    secondary_queue[j + 1] = secondary_queue[j]
+                    j -= 1
 
+                secondary_queue[j + 1] = array_key
 
-        print(secondary_queue)
-        # exit()
+            print(secondary_queue)
+            queue = secondary_queue + queue
+
+            print(queue)
+            exit()
+
 
 
 
