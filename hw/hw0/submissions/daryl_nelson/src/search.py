@@ -129,13 +129,12 @@ def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
 
 def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
     """Search the node of least total cost first."""
-    queue = [(problem.getStartState(), [])]
+    queue = [(problem.getStartState(), [], 0)]
     visited = set()
 
-    count = 0
-
     while queue:
-        current_state, path = queue.pop(0)
+
+        current_state, path, total_cost = queue.pop(0)
 
         if problem.isGoalState(current_state):
             return path
@@ -143,67 +142,20 @@ def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
         if current_state not in visited:
             visited.add(current_state)
 
-            secondary_queue = problem.getSuccessors(current_state)\
-
-            if secondary_queue:
-
-                for x in range(1, len(secondary_queue)):
-                    array_value = secondary_queue[x][2]
-                    array_key = secondary_queue[x]
-                    j = x - 1
-
-                    while j >= 0 and secondary_queue[j][2] < array_value:
-                        secondary_queue[j + 1] = secondary_queue[j]
-                        j -= 1
-
-                    secondary_queue[j + 1] = array_key
-
-                for successor, action, stepCost in secondary_queue:
-                    queue.insert(0, (successor, path + [action]))
+            for successor, action, stepCost in problem.getSuccessors(current_state):
+                queue.append((successor, path + [action], stepCost + total_cost))
 
 
+            for x in range(1, len(queue)):
+                array_value = queue[x][2]
+                array_key = queue[x]
+                j = x - 1
 
+                while j >= 0 and queue[j][2] > array_value:
+                    queue[j + 1] = queue[j]
+                    j -= 1
 
-
-
-
-
-
-
-
-    # while actions:
-    #     print(actions)
-    #     current_state, path = actions.pop()
-    #     cheapest_node = []
-    #
-    #     if problem.isGoalState(current_state):
-    #         return path
-    #
-    #     if current_state not in visited_states:
-    #         visited_states.add(current_state)
-    #
-    #
-    #     for successor, action, stepCost in problem.getSuccessors(current_state):
-    #
-    #         if not cheapest_node or stepCost < cheapest_node[2] and successor not in visited_states:
-    #            cheapest_node = [successor, action, stepCost]
-    #
-    #     if cheapest_node:
-    #         new_path = path + [cheapest_node[1]]
-    #         actions.append((cheapest_node[0], new_path))
-    #     else:
-    #         actions.append((current_state, path))
-    #
-    #     print(cheapest_node)
-    #     print(new_path)
-    #     print(actions)
-    #     count += 1
-    #     if count > 2:
-    #         exit()
-    #
-    #
-    #
-    # return []
+                queue[j + 1] = array_key
 
 
 
