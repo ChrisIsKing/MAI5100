@@ -134,3 +134,6 @@ Students must choose between **two project directions**:
 - **Use of Generative AI:** Allowed as a **collaborator**, but must be **acknowledged**.
 
 📌 **Honor Code:** Misuse of generative AI tools will be treated as an academic violation.
+
+
+thsdfiobgnrtwoinhbo
