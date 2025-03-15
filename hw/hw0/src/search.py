@@ -110,10 +110,55 @@ def depthFirstSearch(problem: SearchProblem) -> List[Directions]:
     visitedPos = []
     initialState = problem.getStartState()
     finalCardinal = []
-    currentState = initialState
+    currentState = [initialState,0,0]
+
+    print("init cur_state:",currentState)
     goalState = [(1,1)]
-   
-    while True:
+
+    def dfs(currentState):
+        #print("This i curState:", currentState)
+        
+        if currentState == goalState[0]:
+            visitedPos.append(currentState[0])
+            print("Goal reached: ", visitedPos)
+            return
+
+        else:
+
+            visitedPos.append(currentState[0])
+            print("visited: ",visitedPos)
+            Options = problem.getSuccessors(currentState[0])
+
+            if len(Options) == 1:
+                print("deadend reached")
+                return
+            
+            for i in range (len(Options)): #iterate over each element in option
+                print("OPtions: ",Options)
+                if Options[i][0] in visitedPos: #check if the available ith option has already been visited.
+
+                    if len(Options)>1:
+                        
+                        for j in range(1,len(Options)):
+                            if Options[j][0] in visitedPos:
+                                print("Entered Loop")
+                                return
+
+                    print(" already visited:", Options[i][0])
+                    continue
+
+                else:
+                    print("Going: ", Options[i])
+                    temp = []
+                    temp = dfs(Options[i])
+
+                    return temp
+
+    dfs(currentState)
+
+
+"""""
+   while True:
         if currentState == goalState:
             print("goal at start")
             return
@@ -121,9 +166,8 @@ def depthFirstSearch(problem: SearchProblem) -> List[Directions]:
         Options = problem.getSuccessors(currentState)
         print("Options outside for loop", Options)
         
-        
         for i in range(len(Options)):
-             x = 0
+
              while Options[i][0] not in visitedPos:
 
                 if Options[i][0] in visitedPos:
@@ -141,16 +185,11 @@ def depthFirstSearch(problem: SearchProblem) -> List[Directions]:
                         print("GOAL REACHED", visitedPos)
                         print(finalCardinal)
                         return finalCardinal
-                    print("From inside branch", Options[i][0], "visitedPos:", visitedPos, "\n")
+                    print("From inside branch", Options[i][0], "visitedPos:", visitedPos)"""
 
 
    # return  [s, s, w, s, w, w, s, w]
     #util.raiseNotDefined()
-
-
-
-
-
 
 
 
