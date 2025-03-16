@@ -75,13 +75,6 @@ def tinyMazeSearch(problem: SearchProblem) -> List[Directions]:
     w = Directions.WEST
     return  [s, s, w, s, w, w, s, w]
 
-
-
-
-
-
-
-
 def depthFirstSearch(problem: SearchProblem) -> List[Directions]:
     """
     Search the deepest nodes in the search tree first.
@@ -97,104 +90,7 @@ def depthFirstSearch(problem: SearchProblem) -> List[Directions]:
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-
-    """print("Start:", problem.getStartState())
-    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
-    print("Start's successors:", problem.getSuccessors(problem.getStartState()))"""
-    
-    s = Directions.SOUTH
-    w = Directions.WEST
-    n = Directions.NORTH
-    e = Directions.EAST
-
-    visitedPos = []
-    initialState = problem.getStartState()
-    finalCardinal = []
-    currentState = [initialState,0,0]
-
-    print("init cur_state:",currentState)
-    goalState = [(1,1)]
-
-    def dfs(currentState):
-        #print("This i curState:", currentState)
-        
-        if currentState == goalState[0]:
-            visitedPos.append(currentState[0])
-            print("Goal reached: ", visitedPos)
-            return
-
-        else:
-
-            visitedPos.append(currentState[0])
-            print("visited: ",visitedPos)
-            Options = problem.getSuccessors(currentState[0])
-
-            if len(Options) == 1:
-                print("deadend reached")
-                return
-            
-            for i in range (len(Options)): #iterate over each element in option
-                print("OPtions: ",Options)
-                if Options[i][0] in visitedPos: #check if the available ith option has already been visited.
-
-                    if len(Options)>1:
-                        
-                        for j in range(1,len(Options)):
-                            if Options[j][0] in visitedPos:
-                                print("Entered Loop")
-                                return
-
-                    print(" already visited:", Options[i][0])
-                    continue
-
-                else:
-                    print("Going: ", Options[i])
-                    temp = []
-                    temp = dfs(Options[i])
-
-                    return temp
-
-    dfs(currentState)
-
-
-"""""
-   while True:
-        if currentState == goalState:
-            print("goal at start")
-            return
-
-        Options = problem.getSuccessors(currentState)
-        print("Options outside for loop", Options)
-        
-        for i in range(len(Options)):
-
-             while Options[i][0] not in visitedPos:
-
-                if Options[i][0] in visitedPos:
-                    print("Revisiting State")
-                
-                else:
-                    visitedPos.append(currentState)
-                    finalCardinal.append(Options[i][1])
-                    currentState = Options[i][0]
-                    Options = problem.getSuccessors(currentState)
-
-                    if Options[i][0] == goalState[0]:
-                        visitedPos.append(Options[i][0])
-                        finalCardinal.append(Options[i][1])
-                        print("GOAL REACHED", visitedPos)
-                        print(finalCardinal)
-                        return finalCardinal
-                    print("From inside branch", Options[i][0], "visitedPos:", visitedPos)"""
-
-
-   # return  [s, s, w, s, w, w, s, w]
-    #util.raiseNotDefined()
-
-
-
-
-
+    util.raiseNotDefined()
 
 def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
     """Search the shallowest nodes in the search tree first."""
