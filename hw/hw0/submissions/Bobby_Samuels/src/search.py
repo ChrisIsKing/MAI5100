@@ -166,7 +166,20 @@ def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
     countbfs = 0
    
     #recursive function bfs
+    # States are stored as (node from getSuccessor, parent index )
+    # a node from getSuccessors looks like ( (x,y),'Action',number )
     def bfs( currentLevel):
+        
+        print("===> 1 current level is "+ str(currentLevel))
+        tempAction = (0,[]) #Return format for bfs is a tuple (parent index, action array)
+        nextLevel = [] #Stores the children of the current level
+        
+        #For every option in current level, check it to see if its the goal, and if not, store it's children into NextLevl
+        
+        for parentIndex, state in enumerate(currentLevel): #Grab each option in current level,and it's index in current level
+            if state[0][0] not in visitedPositions:
+                visitedPositions.append(state[0][0])
+                print("===> 2 visited Positions is now "+str(visitedPositions))
         return  (0,[s, s, w, s, w, w, s, w])
     
     finalActions = bfs( [ initialStateInFormat])
