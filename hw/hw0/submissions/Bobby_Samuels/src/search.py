@@ -159,17 +159,19 @@ def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
     
     initialState = problem.getStartState()
     initialStateInFormat=(initialState,0)
-    
     global goalReachedbfs
     goalReachedbfs = False
     finalActions = []
     global countbfs
     countbfs = 0
    
+    #recursive function bfs
+    def bfs( currentLevel):
+        return  (0,[s, s, w, s, w, w, s, w])
     
+    finalActions = bfs( [ initialStateInFormat])
+    return finalActions[1]
     
-    
-    return  [s, s, w, s, w, w, s, w]
 
 def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
     """Search the node of least total cost first."""
