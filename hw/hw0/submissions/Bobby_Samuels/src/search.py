@@ -90,7 +90,63 @@ def depthFirstSearch(problem: SearchProblem) -> List[Directions]:
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # util.raiseNotDefined()
+    
+    # print("Start:", problem.getStartState())
+    # print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
+    # print("Start's successors:", problem.getSuccessors(problem.getStartState()))
+    
+    print("= 1 ==> My Algorithm Begins")
+    s = Directions.SOUTH
+    w = Directions.WEST
+    n = Directions.NORTH
+    e = Directions.EAST
+    visitedPositions = []
+    initialState = problem.getStartState()
+    initialStateInOptionForm=(initialState,"",1)
+    finalArray = []
+    global count
+    global goalReached
+    goalReached = False
+    count = 0
+  
+    def dfs(currentState): #Recursive DFS on a node object 
+        tempActions = []
+        global count
+        global goalReached
+        count = count+1
+        # if(count > 200):
+        #     print("recursion limit reached")
+        #     return []
+        # print("= 2 ==> dfs instance #"+str(count)+" called")
+        # print("Current State in opt form "+str(currentState))
+        if (currentState[0] not in visitedPositions):
+            visitedPositions.append(currentState[0])
+            # print("= 2.5 ==> Visited States"+str(visitedPositions))
+        if (problem.isGoalState(currentState[0])):
+            # print("= 3 ==>GOAL Reached")
+            tempActions.append(currentState[1])
+            goalReached = True
+        else:
+            # print("= 3 ==> Goal not Current state. Finding Unvisited states")
+            nextOptions = problem.getSuccessors(currentState[0])
+            # print("= 4 ==> We have multiple frontier options")
+            for option in nextOptions:
+                if goalReached == True:
+                    break
+                if option[0] not in visitedPositions:
+                    result = dfs (option)
+                    if len(result) > 0:
+                        tempActions = [currentState[1]]+ result
+                
+        # print("= 5 ==> Return Array is: "+str(tempActions)) 
+        return tempActions
+        
+    finalArray = dfs(initialStateInOptionForm)
+    if(len(finalArray) >0):
+        finalArray.pop(0)
+    print("final answer:" + str(finalArray))
+    return finalArray
 
 def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
     """Search the shallowest nodes in the search tree first."""
