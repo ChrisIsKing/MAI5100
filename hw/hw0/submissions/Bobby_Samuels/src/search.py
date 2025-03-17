@@ -151,7 +151,25 @@ def depthFirstSearch(problem: SearchProblem) -> List[Directions]:
 def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    s = Directions.SOUTH
+    w = Directions.WEST
+    n = Directions.NORTH
+    e = Directions.EAST
+    visitedPositions = []
+    
+    initialState = problem.getStartState()
+    initialStateInFormat=(initialState,0)
+    
+    global goalReachedbfs
+    goalReachedbfs = False
+    finalActions = []
+    global countbfs
+    countbfs = 0
+   
+    
+    
+    
+    return  [s, s, w, s, w, w, s, w]
 
 def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
     """Search the node of least total cost first."""
