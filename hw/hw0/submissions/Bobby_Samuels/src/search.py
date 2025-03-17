@@ -157,17 +157,19 @@ def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
     e = Directions.EAST
     visitedPositions = []
     
-    initialState = problem.getStartState()
-    initialStateInFormat=(initialState,0)
+    initialState = problem.getStartState() # returns (x,y)
+    initialStateInFormat=((initialState,'NULL',0),0) #custom bfs node format
     global goalReachedbfs
     goalReachedbfs = False
     finalActions = []
     global countbfs
     countbfs = 0
    
-    #recursive function bfs
-    # States are stored as (node from getSuccessor, parent index )
+    # recursive function bfs
+    # initialState returns only (x,y)
     # a node from getSuccessors looks like ( (x,y),'Action',number )
+    # States in custom bfs are stored as (node from getSuccessor, parent index )
+    
     def bfs( currentLevel):
         
         print("===> 1 current level is "+ str(currentLevel))
