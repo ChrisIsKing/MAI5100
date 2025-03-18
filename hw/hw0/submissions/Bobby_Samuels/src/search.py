@@ -175,16 +175,43 @@ def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
         print("===> 1 current level is "+ str(currentLevel))
         tempAction = (0,[]) #Return format for bfs is a tuple (parent index, action array)
         nextLevel = [] #Stores the children of the current level
-        
-        #For every option in current level, check it to see if its the goal, and if not, store it's children into NextLevl
+        global goalReachedbfs
+        #For every option in current level, check it to see if its the goal, and if not, store it's children into NextLevel
+        #If we did not find the goal in current level, then recursively try to find in nextLevel
         
         for parentIndex, state in enumerate(currentLevel): #Grab each option in current level,and it's index in current level
-            if state[0][0] not in visitedPositions:
+            if state[0][0] not in visitedPositions: # is current node's XY position visited already?
                 visitedPositions.append(state[0][0])
                 print("===> 2 visited Positions is now "+str(visitedPositions))
-        return  (0,[s, s, w, s, w, w, s, w])
+            if problem.isGoalState( state[0][0] ): #If currentState is GOAL, stop looping and return node
+                print("===> 3 GOAL found, state is: "+str(state))
+                tempAction = ( parentIndex,[ state[0][1] ]) 
+                goalReachedbfs = True   
+                break 
+            else : # Stack each child of this state into nextLevel   
+                children = problem.getSuccessors( state[0][0] )
+                if (len(children)> 0  ): # if state has children in nextLevel iterate
+                    for child in children:
+                        if child[0] not in visitedPositions:
+                            nextLevel.append((child,parentIndex))
+        
+        # Now that we have the next level, let's search it
+        print("===> 4 children in nextLevel is: "+str(nextLevel)) 
+        if goalReachedbfs is False:
+            # result returns (parentIndex, [ list of actions as array ] )
+            result = bfs( nextLevel) # recursion occurs here
+            if len(result[1]) > 0 : # If a goal is found, it will return something
+                
+                # get the parent node that lead to that goal
+                ansNode = currentLevel[ result[0]] 
+                
+                # append parentindex & action array to be returned
+                tempAction = (ansNode[1],[ansNode[0][1]]+result[1])      
+        return tempAction               
+        # return  (0,[s, s, w, s, w, w, s, w])
     
     finalActions = bfs( [ initialStateInFormat])
+    print("===> 6 final Action of BFS is: "+str(finalActions[1]))
     return finalActions[1]
     
 
