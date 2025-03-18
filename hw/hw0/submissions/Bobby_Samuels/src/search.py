@@ -211,6 +211,10 @@ def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
         # return  (0,[s, s, w, s, w, w, s, w])
     
     finalActions = bfs( [ initialStateInFormat])
+    
+    # We added a "Null" Action in Initial State, let's get rid of it
+    if(len (finalActions[1]) > 0):
+        finalActions[1].pop(0)
     print("===> 6 final Action of BFS is: "+str(finalActions[1]))
     return finalActions[1]
     
