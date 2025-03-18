@@ -155,8 +155,9 @@ def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
     w = Directions.WEST
     n = Directions.NORTH
     e = Directions.EAST
-    visitedPositions = []
     
+    global visitedPositions
+    visitedPositions = []
     initialState = problem.getStartState() # returns (x,y)
     initialStateInFormat=((initialState,'NULL',0),0) #custom bfs node format
     global goalReachedbfs
@@ -172,24 +173,30 @@ def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
     
     def bfs( currentLevel):
         
-        print("===> 1 current level is "+ str(currentLevel))
+        # print("===> 1 current level is "+ str(currentLevel))
         tempAction = (0,[]) #Return format for bfs is a tuple (parent index, action array)
         nextLevel = [] #Stores the children of the current level
         global goalReachedbfs
+        global visitedPositions
         #For every option in current level, check it to see if its the goal, and if not, store it's children into NextLevel
         #If we did not find the goal in current level, then recursively try to find in nextLevel
         
         for parentIndex, state in enumerate(currentLevel): #Grab each option in current level,and it's index in current level
             # print("===> 1.5 state index is "+ str(parentIndex))
+            if (state[0][0] in visitedPositions):
+                continue
+            
             if state[0][0] not in visitedPositions: # is current node's XY position visited already?
                 visitedPositions.append(state[0][0])
                 # print("===> 2 visited Positions is now "+str(visitedPositions))
+            
+            
             if problem.isGoalState( state[0][0] ): #If currentState is GOAL, stop looping and return node
                 # print("===> 3 GOAL found, state is: "+str(state))
                 # print("===> 3 GOAL found, parent index is: "+str(parentIndex))
                 tempAction = ( state[1],[ state[0][1] ]) 
                 goalReachedbfs = True   
-                
+
                 break 
             else : # Stack each child of this state into nextLevel   
                 children = problem.getSuccessors( state[0][0] )
@@ -199,7 +206,7 @@ def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
                             nextLevel.append((child,parentIndex))
         
         # Now that we have the next level, let's search it
-        # print("===> 4 children in nextLevel is: "+str(nextLevel)) 
+        print("===> 4 children in nextLevel is: "+str(nextLevel)) 
         if goalReachedbfs == False:
             # result returns (parentIndex, [ list of actions as array ] )
             result = bfs( nextLevel) # recursion occurs here
