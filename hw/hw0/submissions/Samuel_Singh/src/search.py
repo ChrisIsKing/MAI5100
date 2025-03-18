@@ -20,6 +20,7 @@ Pacman agents (in searchAgents.py).
 import util
 from game import Directions
 from typing import List
+import heapq #for priority queue
 
 class SearchProblem:
     """
@@ -62,7 +63,6 @@ class SearchProblem:
         The sequence must be composed of legal moves.
         """
         util.raiseNotDefined()
-
 
 def tinyMazeSearch(problem: SearchProblem) -> List[Directions]:
     """
@@ -260,7 +260,87 @@ def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
 def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+
+    def ucs():
+
+        priority_queue = []
+        visitedPos = {}
+        parent = {}
+
+        initialState = problem.getStartState()
+        heapq.heappush(priority_queue, (0, initialState)) #push teh start state and the cost=0 to the queue for inititalizing
+        print(priority_queue)
+
+        count = 0
+        while priority_queue:
+            count+=1
+            #print("\n", count)
+            cost, currentState = heapq.heappop(priority_queue)
+            #print("Cost and current state:", cost, currentState)
+
+            if problem.isGoalState(currentState):
+                print("Goal Found!")
+                heapq.heappush(priority_queue,(new_cost, next_state))
+                visitedPos[currentState] = cost
+                #print("VisitedPos at goal:", visitedPos)
+                print("queue at Goal:", priority_queue, "\n")
+
+
+                goal = currentState
+                path = []
+                while goal != initialState:
+                    prev_state, action = parent[goal]
+                    path.append(action)  # Add the action to the path
+                    goal = prev_state
+                # Reverse the path since we backtracked
+                path.reverse()
+
+                # Output the path
+                print("Path to the goal:", path)
+                return path
+
+            # break
+
+            if currentState in visitedPos and visitedPos[currentState] <= cost:
+                print("Already visited with lower cost:", currentState)
+                continue
+
+            visitedPos[currentState] = cost
+            
+            #if count <5:
+               # print("visitedPos:", visitedPos)
+
+            Options = problem.getSuccessors(currentState)
+
+            for next_state, action, step_cost in Options:
+                
+                #print("state, action, step_cost:", next_state, action, step_cost)
+
+                new_cost = cost+step_cost
+
+                #print("len ns", len(next_state))
+                
+                if len(next_state) <=1:
+                    next_state_coordinates = next_state[0]
+                else:
+                    next_state_coordinates = next_state
+
+                if next_state not in visitedPos or new_cost < visitedPos[next_state]:
+                    heapq.heappush(priority_queue,(new_cost, next_state))
+                    parent[next_state] = (currentState, action)  # Store the parent state and action
+
+                # Only push the state into the priority queue if not visited or lower cost
+                #if next_state_coordinates not in visitedPos or new_cost < visitedPos[next_state_coordinates]:
+                #    heapq.heappush(priority_queue, (new_cost, next_state_coordinates))  # Store only coordinates (x, y)
+                #    parent[next_state_coordinates] = (currentState, action)  # Store the parent state and action
+
+            
+            #if count <5:
+            #    print("queue at end of iter:", priority_queue, "\n")
+
+    return (ucs())
+    #util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None) -> float:
     """
