@@ -64,8 +64,6 @@ class SearchProblem:
         util.raiseNotDefined()
 
 
-
-
 def tinyMazeSearch(problem: SearchProblem) -> List[Directions]:
     """
     Returns a sequence of moves that solves tinyMaze.  For any other maze, the
@@ -74,7 +72,6 @@ def tinyMazeSearch(problem: SearchProblem) -> List[Directions]:
     s = Directions.SOUTH
     w = Directions.WEST
     return  [s, s, w, s, w, w, s, w]
-
 
 
 def depthFirstSearch(problem: SearchProblem) -> List[Directions]:
@@ -179,49 +176,85 @@ def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
     
-    visitedPos = []
-    initialState = problem.getStartState()
-    finalCardinal = []
-    currentState = [initialState,0,0]
-    global count
-    count = 0
-    def bfs(currentState):
-        global count
-        count +=1
+    def bfs():
+        my_queue = []
+        my_queue.append([((problem.getStartState()), ('None', 0))]) #append dummy vals to start position tuple. 
+        #print(my_queue)
+        visitedPos = []  #hold visited pos
+        count = 0 #to track iterations/ tiers.
 
-        if problem.isGoalState(currentState[0]):
-            visitedPos.append(currentState[0])
-            print("Goal reached: ", visitedPos)
-            return visitedPos
+        while len(my_queue) > 0:
+            count += 1
+            print("\n", count)
 
-        #if not append visitedpositions array
-        else:
-            visitedPos.append(currentState[0])
-            Options = problem.getSuccessors(currentState[0])
-            print( "\n","Count:",count, " Options: ", Options)
+            current = my_queue.pop(0)
 
-            for i in range(len(Options)): #iterate over all available options
-                print("checking:", Options[i])
-                if problem.isGoalState(currentState[0]): #check if the option is a goal sate
-                    print("Goal Found at:", Option[i])
-                    visitedPos.append(currentState[0])
-                    return visitedPos
+            #print("my_queue after popping = ", my_queue)
+            print("current = ", current[0][0])
+
+            if current[0][0] in [pos[0] for pos in visitedPos]: #if the current node was alreadyu visited, then skip the turn.
+                print("current val already visited", current[0][0])
+                continue
 
 
+            #check if the current state is our goal state
+            if problem.isGoalState(current[0][0]):
+                print("Goal found in parent")
 
-                
-            
+                nested_tuple = current
+                print(nested_tuple)
+                inverted_path = []
 
-                    
+                # Loop to extract each tuple
+                while isinstance(nested_tuple, tuple):
+                    inverted_path.append(
+                        nested_tuple[0])  # Add the first element of the tuple
+                    nested_tuple = nested_tuple[
+                        1]  # Move to the next nested tuple
+
+                #reverse the list to move from start to goal
+                final_path = inverted_path[::-1]
+                final_path = [tup[1] for tup in final_path]  #give me the second index of tuple.
+
+                #print("final path = ", final_path)
+                return final_path
+
+            #if current[0] not in visitedPos:
+            visitedPos.append(current[0])
+
+            if count < 10:
+                print("visitedPos = ", visitedPos)
+
+            Options = problem.getSuccessors(current[0][0])
+            print("Options = ", Options)
+
+            for i in range(len(Options)):
+
+                if Options[i][0] in [pos[0] for pos in visitedPos]:
+                    print("already visited", Options[i][0])
+                    continue
+
+                else:
+
+                    path = current
+                    #print("Path", path)
+                    print("enqueueing option: ", Options[i][0])
+
+                    my_queue.append((Options[i], path))  #[i][0] = current, [i][2] = previous path, [i][1] = previous previous path
+
+                    if problem.isGoalState(Options[i][0]):
+                        print("Goal found in child")
+                        #print("Full queue", my_queue)
+                        #goal_found = True
+
+                    #display a partial output...for debugging.....
+                    if count<3:    
+                        print("my_queue after = ", my_queue)
 
 
+    #print("final_path:", bfs())
 
-    bfs(currentState)
-    
-    return currentState
-
-
-    
+    return bfs()
     util.raiseNotDefined()
 
 def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
