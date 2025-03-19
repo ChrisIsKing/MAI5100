@@ -284,9 +284,9 @@ class CornersProblem(search.SearchProblem):
 
         self.walls = startingGameState.getWalls()
         self.startingPosition = startingGameState.getPacmanPosition()
-        self.goal = startingGameState.isWin()
         top, right = self.walls.height-2, self.walls.width-2
         self.corners = ((1,1), (1,top), (right, 1), (right, top))
+        self.visited_states = []
         for corner in self.corners:
             if not startingGameState.hasFood(*corner):
                 print('Warning: no food in corner ' + str(corner))
@@ -303,7 +303,7 @@ class CornersProblem(search.SearchProblem):
         """
         Returns whether this search state is a goal state of the problem.
         """
-        return self.goal
+        return all(corner in self.visited_states for corner in self.corners)
 
     def getSuccessors(self, state: Any):
         """
@@ -323,13 +323,8 @@ class CornersProblem(search.SearchProblem):
             x,y = state
             dx, dy = Actions.directionToVector(action)
             nextx, nexty = int(x + dx), int(y + dy)
-            hitsWall = self.walls[nextx][nexty]
-            if not hitsWall:
+            if not self.walls[nextx][nexty]:
                 successors.append([(nextx, nexty), action, self.getCostOfActions([action])])
-
-
-
-
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
@@ -365,11 +360,10 @@ def cornersHeuristic(state: Any, problem: CornersProblem):
     corners = problem.corners # These are the corner coordinates
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
-    print(corners)
-    print(walls)
+
 
     "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    return 1 # Default to trivial solution
 
 
 
