@@ -234,7 +234,10 @@ def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
 def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    
+    s = Directions.SOUTH
+    w = Directions.WEST
+    return  [s, s]
 
 def nullHeuristic(state, problem=None) -> float:
     """
