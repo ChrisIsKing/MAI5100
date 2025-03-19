@@ -234,10 +234,68 @@ def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
 def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
+    print("===>- 1 UCS Called")
     
-    s = Directions.SOUTH
-    w = Directions.WEST
-    return  [s, s]
+    # initialState returns only (x,y)
+    # a node from getSuccessors looks like ( (x,y),'Action',number )
+    
+    visitedPositions=[] # To prevent searching visited nodes
+    frontier = [] # Current List of frontier nodes
+    actions = []  #Array of Final Actions to return
+    initialState = problem.getStartState()
+    initialStateFormateed = ((initialState,"START",0),[],0) #Formatted : node, total arr of actions, total cost to node
+    goalReached = False # Stop UCS when this is true
+    frontier.append(initialStateFormateed)
+    
+    while goalReached is False:
+        refCost = 10**12 # Every attempt to search frontier, keep track of smallest cost
+        smlNode = None # Variable to store the smallest Cost node found
+        
+        
+        # Select the smallest item in Frontier, check if it's the goal, and if it is, return the Actions to get there
+        # if it isn't, add it's children to the frontier & try again
+        
+        # This FOR loop finds the smallest cost Node
+        if(len(frontier)<5):
+            print("===>- 2 Frontier is "+str(frontier))
+        for option in frontier:
+            if option[0][0] in visitedPositions:
+                continue # Skip this node if we already visited it
+            if option[2] < refCost:
+                refCost=option[2]
+                smlNode=option
+        
+        # Now that we have selected the smallest node, we visit it
+        if(smlNode):
+            if(len(smlNode[1])<10):
+                print("===>- 3 small node is "+str(smlNode))
+        else:
+            print("SML Node is Nothing?")
+        visitedPositions.append(smlNode[0][0]) # Save the node's XY coordinates
+        if (problem.isGoalState( smlNode[0][0])):
+            actions = smlNode[1]
+            goalReached = True
+            print("===>- 5 GOAL REACHED !!")
+            # break ?
+        else:
+            try:
+                children = problem.getSuccessors(smlNode[0][0])
+                for child in children:
+                    childFormatted = (child,smlNode[1]+[child[1]],smlNode[2]+child[2])
+                    frontier.append(childFormatted) 
+            except  Exception as e:
+                
+                print("Error: Small Node is "+ str(smlNode))
+                print("Error: Small Node[0] is "+ str(smlNode[0]))
+                print("Error: Successors is "+ str(problem.getSuccessors(smlNode[0])))
+                print("An error occurred:", e)    
+        frontier.remove(smlNode)
+    #End While
+    
+    # if (len(actions)>0)
+    print("===>- 4 Return Actions" + str(actions))
+    return actions        
+
 
 def nullHeuristic(state, problem=None) -> float:
     """
