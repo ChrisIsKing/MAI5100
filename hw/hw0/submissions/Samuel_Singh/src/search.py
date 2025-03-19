@@ -270,18 +270,18 @@ def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
 
         initialState = problem.getStartState()
         heapq.heappush(priority_queue, (0, initialState)) #push teh start state and the cost=0 to the queue for inititalizing
-        print(priority_queue)
+       # print(priority_queue)
 
         count = 0
         while priority_queue:
             count+=1
-            #print("\n", count)
+            print("\n", count)
             cost, currentState = heapq.heappop(priority_queue)
-            #print("Cost and current state:", cost, currentState)
+            print("Cost and current state:", cost, currentState)
 
             if problem.isGoalState(currentState):
                 print("Goal Found!")
-                heapq.heappush(priority_queue,(new_cost, next_state))
+                #heapq.heappush(priority_queue,(new_cost, next_state))
                 visitedPos[currentState] = cost
                 #print("VisitedPos at goal:", visitedPos)
                 print("queue at Goal:", priority_queue, "\n")
@@ -300,45 +300,42 @@ def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
                 print("Path to the goal:", path)
                 return path
 
-            # break
-
-            if currentState in visitedPos and visitedPos[currentState] <= cost:
-                print("Already visited with lower cost:", currentState)
-                continue
 
             visitedPos[currentState] = cost
-            
-            #if count <5:
-               # print("visitedPos:", visitedPos)
 
             Options = problem.getSuccessors(currentState)
 
             for next_state, action, step_cost in Options:
                 
-                #print("state, action, step_cost:", next_state, action, step_cost)
-
+                print("next_state, action, step_cost:", next_state, action, step_cost)
+               # print(next_state[0])
                 new_cost = cost+step_cost
 
-                #print("len ns", len(next_state))
-                
-                if len(next_state) <=1:
-                    next_state_coordinates = next_state[0]
+
+                if isinstance(next_state, tuple) and isinstance(next_state[0], tuple):
+                    # Return the first element which is the coordinates (x, y)
+                    next_state_for_comparision = next_state[0]
+                    print("updated ns", next_state_for_comparision)
+                # Otherwise, return the state itself assuming it's already in the form (x, y)
                 else:
-                    next_state_coordinates = next_state
+                    next_state_for_comparision = next_state
 
-                if next_state not in visitedPos or new_cost < visitedPos[next_state]:
-                    heapq.heappush(priority_queue,(new_cost, next_state))
-                    parent[next_state] = (currentState, action)  # Store the parent state and action
 
-                # Only push the state into the priority queue if not visited or lower cost
-                #if next_state_coordinates not in visitedPos or new_cost < visitedPos[next_state_coordinates]:
-                #    heapq.heappush(priority_queue, (new_cost, next_state_coordinates))  # Store only coordinates (x, y)
-                #    parent[next_state_coordinates] = (currentState, action)  # Store the parent state and action
+                
+                if count >9 and count <12:
+                    print("cnt 11: ", next_state, visitedPos, new_cost)
 
-            
-            #if count <5:
-            #    print("queue at end of iter:", priority_queue, "\n")
 
+                if (next_state_for_comparision not in visitedPos) or (new_cost < visitedPos[next_state_for_comparision]):
+                    #heapq.heappush(priority_queue,(new_cost, next_state_for_comparision))
+                    #parent[next_state_for_comparision] = (currentState, action)  # Store the parent state and action
+                    heapq.heappush(priority_queue, (new_cost, next_state))
+                    visitedPos[next_state_for_comparision] = new_cost
+                    parent[next_state_for_comparision] = (currentState, action)
+
+        print("no goal found?")
+        return ["West","East","East", "South", "South", "West", "West"]  #for debuggging
+        
     return (ucs())
     #util.raiseNotDefined()
 
