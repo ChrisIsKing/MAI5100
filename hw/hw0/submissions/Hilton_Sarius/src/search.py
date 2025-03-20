@@ -90,25 +90,75 @@ def depthFirstSearch(problem: SearchProblem) -> List[Directions]:
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    print("Start:", problem.getStartState())
-    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
-    print("Is the start a goal?", problem.isGoalState((1,1)))
-    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
-          
-    s = Directions.SOUTH
-    w = Directions.WEST
-    startstate = problem.getStartState()
-    print(startstate)
-    startstateoptions = problem.getSuccessors(startstate)
-    secondstate = startstateoptions[1]
-    print(secondstate)
-    secondstateoptions = problem.getSuccessors(secondstate[0])
-    thirdstate = secondstateoptions[1]
-    print(thirdstate)
+    # print("Start:", problem.getStartState())
+    # print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
+    # # print("Is the start a goal?", problem.isGoalState((1,1)))
+    # print("Start's successors:", problem.getSuccessors(problem.getStartState()))
+
+    # s = Directions.SOUTH
+    # w = Directions.WEST
+
+    # level2=problem.getSuccessors(problem.getStartState())[1][0]
+    # print ("level2:",level2)
+    # print("level2 sucessor:",problem.getSuccessors(level2))
+    
+    # level3=problem.getSuccessors(level2)[1][0]
+    # print ("level3:",level3)
+    # print("level3 sucessor:",problem.getSuccessors(level3))
+
+    # level4=problem.getSuccessors(level3)[1][0]
+    # print ("level4:",level4)
+    # print("level4 sucessor:",problem.getSuccessors(level4))
+    
+    # level5=problem.getSuccessors(level4)[0][0]
+    # print ("level5:",level5)
+    # print("level5 sucessor:",problem.getSuccessors(level5))
+
+    # level6=problem.getSuccessors(level5)[1][0]
+    # print ("level6:",level6)
+    # print("level6 sucessor:",problem.getSuccessors(level6))
+
+    # level7=problem.getSuccessors(level6)[1][0]
+    # print ("level7:",level7)
+    # print("level7 sucessor:",problem.getSuccessors(level7))
+
+    # level8=problem.getSuccessors(level7)[1][0]
+    # print ("level8:",level8)
+    # print("level8 sucessor:",problem.getSuccessors(level8))
+
+    # level9=problem.getSuccessors(level8)[1][0]
+    # print ("level9:",level9)
+    # print("level9 sucessor:",problem.getSuccessors(level9))    
+    
+    # return  [s, s, w, s, w, w, s, w]    
+
+
+    # Initialize the stack with the start state
+    stack = [(problem.getStartState(), [])]
+    visited = set()
+
+    while stack:
+        state, path = stack.pop()
+        
+        # Check if the state has been visited
+        if state in visited:
+            continue
+        
+        # Mark the state as visited
+        visited.add(state)
+        print(visited)
+        # Check if the current state is the goal
+        if problem.isGoalState(state):
+            return path
+        
+        # Get successors and add them to the stack
+        for successor, action, step_cost in problem.getSuccessors(state):
+            new_path = path + [action]
+            stack.append((successor, new_path))            
+    return []
 
 
 
-    return  [s, s, w, s, w, w, s, w]
 
 def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
     """Search the shallowest nodes in the search tree first."""
