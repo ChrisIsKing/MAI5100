@@ -276,6 +276,7 @@ def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
             actions = smlNode[1]
             goalReached = True
             print("===>- 5 GOAL REACHED !!")
+            print("================================>- 5 small node state is "+str(smlNode[0][0]))
             # break ?
         else:
             try:
@@ -296,7 +297,6 @@ def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
     print("===>- 4 Return Actions" + str(actions))
     return actions        
 
-
 def nullHeuristic(state, problem=None) -> float:
     """
     A heuristic function estimates the cost from the current state to the nearest
@@ -307,7 +307,10 @@ def nullHeuristic(state, problem=None) -> float:
 def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic) -> List[Directions]:
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    initialState = problem.getStartState()
+    print(heuristic(initialState,problem))
+    # util.raiseNotDefined()
+    return []
 
 # Abbreviations
 bfs = breadthFirstSearch
