@@ -260,8 +260,6 @@ def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
 def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-
-
     def ucs():
 
         priority_queue = []
@@ -279,7 +277,19 @@ def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
             cost, currentState = heapq.heappop(priority_queue)
             print("Cost and current state:", cost, currentState)
 
-            if problem.isGoalState(currentState):
+            if isinstance(currentState[0], tuple):  # Case 1: ((x, y), <some_object>)
+                currentState_for_comparision = currentState[0]  # Extract the (x, y)
+                print("updated cs[0]", currentState_for_comparision)
+            else:  # Case 2: (x, y)
+                currentState_for_comparision = currentState  # Return the state as it is
+                print("updated cs", currentState_for_comparision)
+
+
+            print("extraceted x,y success?")
+
+            print("is ", currentState, " the goal state: ", problem.isGoalState((currentState)))#debugging goalstate not being detected
+
+            if (problem.isGoalState(currentState)):
                 print("Goal Found!")
                 #heapq.heappush(priority_queue,(new_cost, next_state))
                 visitedPos[currentState] = cost
@@ -297,9 +307,12 @@ def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
                 path.reverse()
 
                 # Output the path
+                print("parent:", parent)
                 print("Path to the goal:", path)
                 return path
 
+
+            print("got past goal check")
 
             visitedPos[currentState] = cost
 
@@ -322,9 +335,8 @@ def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
 
 
                 
-                if count >9 and count <12:
+                if count >8 and count <12:
                     print("cnt 11: ", next_state, visitedPos, new_cost)
-
 
                 if (next_state_for_comparision not in visitedPos) or (new_cost < visitedPos[next_state_for_comparision]):
                     #heapq.heappush(priority_queue,(new_cost, next_state_for_comparision))
@@ -333,8 +345,8 @@ def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
                     visitedPos[next_state_for_comparision] = new_cost
                     parent[next_state_for_comparision] = (currentState, action)
 
-        print("no goal found?")
-        return ["West","East","East", "South", "South", "West", "West"]  #for debuggging
+        print("no goal found?", parent)
+        return ["West","East","East", "South", "South", "West", "West"]  #enable this for debuggging
         
     return (ucs())
     #util.raiseNotDefined()
@@ -347,8 +359,133 @@ def nullHeuristic(state, problem=None) -> float:
     return 0
 
 def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic) -> List[Directions]:
-    """Search the node that has the lowest combined cost and heuristic first."""
-    "*** YOUR CODE HERE ***"
+
+    """
+    Get successors. For each successors get the cost. Also find the distance that node is from the goal. Add the two values.
+    Compare this total among each of the succors and return the smallest one. Continue until goal is reached. 
+     """
+
+    def astar():
+
+        print(heuristic(problem.getStartState(),problem))
+    
+        my_queue = []
+        my_queue.append([((problem.getStartState()), ('None', 0))])
+        visitedPos = []
+        print(my_queue)
+
+        count =0
+        cost_buff = []
+        while len(my_queue) >0:
+            
+            count += 1
+            print("\n", count)
+
+            current = my_queue.pop()
+           # print("current",current)
+  
+            if current[0][0] in [pos[0] for pos in visitedPos]: #if the current node was alreadyu visited, then skip the turn.
+                print("current val already visited", current[0][0])
+                continue
+            
+            if problem.isGoalState(current[0][0]):
+                print("Goal found in parent")
+
+                nested_tuple = current
+                inverted_path = []
+                # Loop to extract each tuple
+                while isinstance(nested_tuple, tuple):
+                    inverted_path.append(
+                        nested_tuple[0])  # Add the first element of the tuple
+                    nested_tuple = nested_tuple[
+                        1]  # Move to the next nested tuple
+
+                #reverse the list to move from start to goal
+                final_path = inverted_path[::-1]
+                final_path = [tup[1] for tup in final_path]  #give me the second index of tuple.
+                print(final_path)
+                return final_path
+            
+            visitedPos.append(current[0])
+
+            Options = problem.getSuccessors(current[0][0])
+            print("Options = ", Options[0][0])
+
+            
+            for i in range(len(Options)):
+                
+                #check if goal is in the optins
+                if problem.isGoalState(Options[i][0]):
+                    print("Goal found in Options", Options[i])
+                    
+                    my_queue.append((Options[i], current))
+                    nested_tuple = current
+                    inverted_path = []
+                    # Loop to extract each tuple
+                    while isinstance(nested_tuple, tuple):
+                        inverted_path.append(
+                            nested_tuple[0])  # Add the first element of the tuple
+                        nested_tuple = nested_tuple[
+                            1]  # Move to the next nested tuple
+
+                    #reverse the list to move from start to goal
+                    final_path = inverted_path[::-1]
+                    final_path = [tup[1] for tup in final_path]  #give me the second index of tuple.
+                    print(final_path)
+                    return final_path
+
+                    
+
+
+
+                if Options[i][0] in [pos[0] for pos in visitedPos]:
+                    print("already visited", Options[i][0])
+                    continue
+
+                else:
+                    #print(Options[i])
+                    cost_buff.append(Options[i])
+
+
+
+            
+            print("cost_buff before processing:", cost_buff)
+
+            for j in range(len(cost_buff)):
+            
+                manhattan = heuristic(cost_buff[j][0], problem) # g(n)
+    
+                node_cost = cost_buff[j][2] # f(n)
+                total_cost = manhattan+node_cost
+
+                print("updating:", cost_buff[j], "  manhattan", manhattan, "node:", node_cost, "    Total cost:",total_cost)
+
+                #print(cost_buff[i][2])
+                
+                cost_buff[j] = list(cost_buff[j])
+                cost_buff[j][2] = total_cost
+                cost_buff[j] = tuple(cost_buff[j])
+
+            print("\n","Cost buff with updated costs: ",cost_buff)
+
+            lowest_node = min(cost_buff, key=lambda x: x[2]) #return the lowest cost node
+            print("The lowest is:", lowest_node)
+
+            cost_buff = [lowest_node]
+
+            print("new_buff", cost_buff)
+
+            my_queue.append((cost_buff[0], current)) #[i][0] = current, [i][2] = previous path, [i][1] = previous previous path
+
+            #empty trh cost buff
+            cost_buff = []
+            print("queue after", my_queue)
+
+
+    return astar()
+    #return ["West"]
+
+
     util.raiseNotDefined()
 
 # Abbreviations
