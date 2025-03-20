@@ -171,34 +171,32 @@ def nullHeuristic(state, problem=None) -> float:
 def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic) -> List[Directions]:
     """Search the node that has the lowest combined cost and heuristic first."""
     queue = [(problem.getStartState(), [], 0)]
-    visited = set()
+    visited = {}
 
     while queue:
-
         current_state, path, total_cost = queue.pop(0)
 
         if problem.isGoalState(current_state):
-            return  path
+            return path
 
-        if current_state not in visited:
-            visited.add(current_state)
+        if current_state not in visited or total_cost < visited[current_state]:
+            visited[current_state] = total_cost
 
             for successor, action, stepCost in problem.getSuccessors(current_state):
-                if successor not in visited:
-                    queue.append((successor, path + [action], stepCost + total_cost))
+                new_total_cost = total_cost + stepCost
+                if successor not in visited or new_total_cost < visited[successor]:
+                    queue.append((successor, path + [action], new_total_cost))
 
-            for x in range(1, len(queue)):
-                array_value = queue[x][2] + heuristic(queue[x][0], problem)
-                array_key = queue[x]
-                j = x - 1
-
-                while j >= 0 and (queue[j][2] + heuristic(queue[j][0], problem)) > array_value:
+        for x in range(1, len(queue)):
+            array_value = queue[x][2] + heuristic(queue[x][0], problem)
+            array_key = queue[x]
+            j = x - 1
+            while j >= 0 and (queue[j][2] + heuristic(queue[j][0], problem)) > array_value:
                     queue[j + 1] = queue[j]
                     j -= 1
+            queue[j + 1] = array_key
 
-                queue[j + 1] = array_key
     return []
-
 
 # Abbreviations
 bfs = breadthFirstSearch
