@@ -281,16 +281,14 @@ class CornersProblem(search.SearchProblem):
         """
         Stores the walls, pacman's starting position and corners.
         """
-
         self.walls = startingGameState.getWalls()
         self.startingPosition = startingGameState.getPacmanPosition()
-        top, right = self.walls.height-2, self.walls.width-2
-        self.corners = ((1,1), (1,top), (right, 1), (right, top))
-        self.visited_states = []
+        top, right = self.walls.height - 2, self.walls.width - 2
+        self.corners = ((1, 1), (1, top), (right, 1), (right, top))
         for corner in self.corners:
             if not startingGameState.hasFood(*corner):
                 print('Warning: no food in corner ' + str(corner))
-        self._expanded = 0 # DO NOT CHANGE; Number of search nodes expanded
+        self._expanded = 0  # DO NOT CHANGE; Number of search nodes expanded
 
     def getStartState(self):
         """
@@ -303,7 +301,7 @@ class CornersProblem(search.SearchProblem):
         """
         Returns whether this search state is a goal state of the problem.
         """
-        return all(corner in self.visited_states for corner in self.corners)
+        return state in self.corners
 
     def getSuccessors(self, state: Any):
         """
@@ -361,11 +359,11 @@ def cornersHeuristic(state: Any, problem: CornersProblem):
     # walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     position = state
-    visited_corners = set(problem.visited_states)
+    visited_corners = set()
     unvisited_corners = set(problem.corners) - visited_corners
 
     if not unvisited_corners:
-        return 0
+        return 1
 
     distances = [abs(position[0] - corner[0]) + abs(position[1] - corner[1]) for corner in unvisited_corners]
 
