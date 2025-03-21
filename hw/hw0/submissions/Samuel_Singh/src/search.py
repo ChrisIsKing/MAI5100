@@ -20,7 +20,7 @@ Pacman agents (in searchAgents.py).
 import util
 from game import Directions
 from typing import List
-import heapq #for priority queue
+
 
 class SearchProblem:
     """
@@ -262,91 +262,50 @@ def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
     "*** YOUR CODE HERE ***"
     def ucs():
 
-        priority_queue = []
-        visitedPos = {}
-        parent = {}
+        priority_queue = []  # Priority queue (list)
+        visited = {}
 
         initialState = problem.getStartState()
-        heapq.heappush(priority_queue, (0, initialState)) #push teh start state and the cost=0 to the queue for inititalizing
-       # print(priority_queue)
+        priority_queue.append((0, [], initialState))  # (cost, path, state) 
+        print("initial queue:", priority_queue)
 
         count = 0
+
         while priority_queue:
             count+=1
             print("\n", count)
-            cost, currentState = heapq.heappop(priority_queue)
-            print("Cost and current state:", cost, currentState)
 
-            if isinstance(currentState[0], tuple):  # Case 1: ((x, y), <some_object>)
-                currentState_for_comparision = currentState[0]  # Extract the (x, y)
-                print("updated cs[0]", currentState_for_comparision)
-            else:  # Case 2: (x, y)
-                currentState_for_comparision = currentState  # Return the state as it is
-                print("updated cs", currentState_for_comparision)
+            priority_queue.sort()  # Sort queue by cost (low-cost first)
 
+            print("Sorted queue at start:", priority_queue)
 
-            print("extraceted x,y success?")
+            cost, path, currentState = priority_queue.pop(0)  # Pop the lowest-cost node
 
-            print("is ", currentState, " the goal state: ", problem.isGoalState((currentState)))#debugging goalstate not being detected
+            print("Current: ", currentState)
 
-            if (problem.isGoalState(currentState)):
-                print("Goal Found!")
-                #heapq.heappush(priority_queue,(new_cost, next_state))
-                visitedPos[currentState] = cost
-                #print("VisitedPos at goal:", visitedPos)
-                print("queue at Goal:", priority_queue, "\n")
+            if currentState in visited:
+                print("already visited current")
+                continue
+            
+            #visited.add(currentState)
+            visited[currentState] = cost
+            print("Visited: ", visited)
 
-
-                goal = currentState
-                path = []
-                while goal != initialState:
-                    prev_state, action = parent[goal]
-                    path.append(action)  # Add the action to the path
-                    goal = prev_state
-                # Reverse the path since we backtracked
-                path.reverse()
-
-                # Output the path
-                print("parent:", parent)
-                print("Path to the goal:", path)
-                return path
-
-
-            print("got past goal check")
-
-            visitedPos[currentState] = cost
+            if problem.isGoalState(currentState):
+                print("Goal Found: ", path)
+                return path  # Return the solution
 
             Options = problem.getSuccessors(currentState)
+            print("Options:", Options)
 
             for next_state, action, step_cost in Options:
-                
-                print("next_state, action, step_cost:", next_state, action, step_cost)
-               # print(next_state[0])
-                new_cost = cost+step_cost
 
-
-                if isinstance(next_state, tuple) and isinstance(next_state[0], tuple):
-                    # Return the first element which is the coordinates (x, y)
-                    next_state_for_comparision = next_state[0]
-                    print("updated ns", next_state_for_comparision)
-                # Otherwise, return the state itself assuming it's already in the form (x, y)
-                else:
-                    next_state_for_comparision = next_state
-
-
-                
-                if count >8 and count <12:
-                    print("cnt 11: ", next_state, visitedPos, new_cost)
-
-                if (next_state_for_comparision not in visitedPos) or (new_cost < visitedPos[next_state_for_comparision]):
-                    #heapq.heappush(priority_queue,(new_cost, next_state_for_comparision))
-                    #parent[next_state_for_comparision] = (currentState, action)  # Store the parent state and action
-                    heapq.heappush(priority_queue, (new_cost, next_state))
-                    visitedPos[next_state_for_comparision] = new_cost
-                    parent[next_state_for_comparision] = (currentState, action)
-
-        print("no goal found?", parent)
-        return ["West","East","East", "South", "South", "West", "West"]  #enable this for debuggging
+                if next_state not in visited:
+                    new_cost = cost + step_cost
+                    priority_queue.append((new_cost, path + [action], next_state))  # Add the path cpst and next state to the queue
+            
+            if count < 5:
+                print("Queue at end of iteration:", priority_queue)
         
     return (ucs())
     #util.raiseNotDefined()
@@ -360,130 +319,59 @@ def nullHeuristic(state, problem=None) -> float:
 
 def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic) -> List[Directions]:
 
-    """
-    Get successors. For each successors get the cost. Also find the distance that node is from the goal. Add the two values.
-    Compare this total among each of the succors and return the smallest one. Continue until goal is reached. 
-     """
 
     def astar():
 
-        print(heuristic(problem.getStartState(),problem))
-    
-        my_queue = []
-        my_queue.append([((problem.getStartState()), ('None', 0))])
-        visitedPos = []
-        print(my_queue)
+        priority_queue = []  # Priority queue (list)
+        visitedPos = {}  # Dictionary to track lowest cost to each noed
 
-        count =0
-        cost_buff = []
-        while len(my_queue) >0:
-            
-            count += 1
+        initialState = problem.getStartState()
+        manhattan = heuristic(initialState, problem)
+        priority_queue.append((0 + manhattan, 0, [], initialState))  
+        # (f(n) = g(n) + h(n), g(n), path, state)
+
+        print("Initial queue", priority_queue)
+
+        count = 0
+        
+        while priority_queue:
+            count +=1
             print("\n", count)
 
-            current = my_queue.pop()
-           # print("current",current)
-  
-            if current[0][0] in [pos[0] for pos in visitedPos]: #if the current node was alreadyu visited, then skip the turn.
-                print("current val already visited", current[0][0])
-                continue
+            priority_queue.sort()  # Sort queue by first index (lowest val at start of queue
+        
+            if count <5:
+                print("Sorted queue at start:", priority_queue)
+           
+            f_value, cost, path, currentState = priority_queue.pop(0)  # Pop the current val out. 
+
+            print("Current", currentState)
+
+            if currentState in visitedPos and visitedPos[currentState] <= cost:
+                print("Current state already visited or lower cost path already explored.")
+                continue  
             
-            if problem.isGoalState(current[0][0]):
-                print("Goal found in parent")
+            visitedPos[currentState] = cost  # Add the current state and teh cost to VisitedPos
+            print("VisitedPOS current state", visitedPos, visitedPos[currentState])
 
-                nested_tuple = current
-                inverted_path = []
-                # Loop to extract each tuple
-                while isinstance(nested_tuple, tuple):
-                    inverted_path.append(
-                        nested_tuple[0])  # Add the first element of the tuple
-                    nested_tuple = nested_tuple[
-                        1]  # Move to the next nested tuple
+            if problem.isGoalState(currentState):
+                return path  # Return the solution
 
-                #reverse the list to move from start to goal
-                final_path = inverted_path[::-1]
-                final_path = [tup[1] for tup in final_path]  #give me the second index of tuple.
-                print(final_path)
-                return final_path
-            
-            visitedPos.append(current[0])
+            Options = problem.getSuccessors(currentState)
+            print("Options:", Options)
 
-            Options = problem.getSuccessors(current[0][0])
-            print("Options = ", Options[0][0])
+            for next_state, action, step_cost in Options:
+                new_cost = cost + step_cost
+                manhattan = heuristic(next_state, problem)
+                f_value = new_cost + manhattan  # f(n) = g(n) + h(n)
+                print("State", next_state," Cost:", cost, " step_cost", step_cost, " manhattan:", manhattan, " total cost:", f_value)
+                priority_queue.append((f_value, new_cost, path + [action], next_state))  # append queue
 
-            
-            for i in range(len(Options)):
-                
-                #check if goal is in the optins
-                if problem.isGoalState(Options[i][0]):
-                    print("Goal found in Options", Options[i])
-                    
-                    my_queue.append((Options[i], current))
-                    nested_tuple = current
-                    inverted_path = []
-                    # Loop to extract each tuple
-                    while isinstance(nested_tuple, tuple):
-                        inverted_path.append(
-                            nested_tuple[0])  # Add the first element of the tuple
-                        nested_tuple = nested_tuple[
-                            1]  # Move to the next nested tuple
-
-                    #reverse the list to move from start to goal
-                    final_path = inverted_path[::-1]
-                    final_path = [tup[1] for tup in final_path]  #give me the second index of tuple.
-                    print(final_path)
-                    return final_path
-
-                    
-
-
-
-                if Options[i][0] in [pos[0] for pos in visitedPos]:
-                    print("already visited", Options[i][0])
-                    continue
-
-                else:
-                    #print(Options[i])
-                    cost_buff.append(Options[i])
-
-
-
-            
-            print("cost_buff before processing:", cost_buff)
-
-            for j in range(len(cost_buff)):
-            
-                manhattan = heuristic(cost_buff[j][0], problem) # g(n)
-    
-                node_cost = cost_buff[j][2] # f(n)
-                total_cost = manhattan+node_cost
-
-                print("updating:", cost_buff[j], "  manhattan", manhattan, "node:", node_cost, "    Total cost:",total_cost)
-
-                #print(cost_buff[i][2])
-                
-                cost_buff[j] = list(cost_buff[j])
-                cost_buff[j][2] = total_cost
-                cost_buff[j] = tuple(cost_buff[j])
-
-            print("\n","Cost buff with updated costs: ",cost_buff)
-
-            lowest_node = min(cost_buff, key=lambda x: x[2]) #return the lowest cost node
-            print("The lowest is:", lowest_node)
-
-            cost_buff = [lowest_node]
-
-            print("new_buff", cost_buff)
-
-            my_queue.append((cost_buff[0], current)) #[i][0] = current, [i][2] = previous path, [i][1] = previous previous path
-
-            #empty trh cost buff
-            cost_buff = []
-            print("queue after", my_queue)
-
+            if count <5:
+                print("Queue at end of iter:", priority_queue)
 
     return astar()
-    #return ["West"]
+    #return ["West"] #debugging
 
 
     util.raiseNotDefined()
