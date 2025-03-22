@@ -108,11 +108,42 @@ def depthFirstSearch(problem: SearchProblem) -> List[Directions]:
             new_path = path + [action]
             stack.append((successor, new_path))
     return []
-
+from collections import deque
 def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+    # Initialize the queue with the start state and an empty path
+    queue = deque([(problem.getStartState(), [])])
+    visited = set()
+
+    while queue:
+        state, path = queue.popleft()
+        print("Current state:", state)
+        print("Current path:", path)
+
+        # Check if the state has been visited
+        if state in visited:
+            continue
+
+        # Mark the state as visited
+        visited.add(state)
+
+        # Check if the current state is the goal state
+        if problem.isGoalState(state):
+            print("Goal found:", state)
+            return path
+
+        # Get successors of the current state
+        successors = problem.getSuccessors(state)
+        print("Successors of", state, ":", successors)
+
+        # Add successors to the queue
+        for successor, action, cost in successors:
+            new_path = path + [action]
+            queue.append((successor, new_path))
+
+    return []
 
 def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
     """Search the node of least total cost first."""
