@@ -90,10 +90,11 @@ def depthFirstSearch(problem: SearchProblem) -> List[Directions]:
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     visited_states = set()
-    actions = [(problem.getStartState(), [])]
+    actions = util.Queue()
+    actions.push((problem.getStartState(), []))
 
     while actions:
-        current_state, path = actions.pop()
+        current_state, path = actions.list.pop(0)
 
         if problem.isGoalState(current_state):
             return path
@@ -104,58 +105,49 @@ def depthFirstSearch(problem: SearchProblem) -> List[Directions]:
         for successor, action, stepCost in problem.getSuccessors(current_state):
             if successor not in visited_states:
                 new_path = path + [action]
-                actions.append((successor, new_path))
+                actions.push((successor, new_path))
 
     return []
 
 def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
     """Search the shallowest nodes in the search tree first."""
-    queue = [(problem.getStartState(), [])]
-    visited = set()
 
-    while queue:
-        state, path = queue.pop(0)
+    actions = util.Queue()
+    actions.push((problem.getStartState(), []))
+    visited_states = set()
 
-        if problem.isGoalState(state):
+    while actions:
+        current_state, path = actions.pop()
+
+        if problem.isGoalState(current_state):
             return path
 
-        if state not in visited:
-            visited.add(state)
+        if current_state not in visited_states:
+            visited_states.add(current_state)
 
-            for successor, action, stepCost in problem.getSuccessors(state):
-                queue.append((successor, path + [action]))
+            for successor, action, stepCost in problem.getSuccessors(current_state):
+                actions.push((successor, path + [action]))
 
     return []
 
 def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
     """Search the node of least total cost first."""
-    queue = [(problem.getStartState(), [], 0)]
-    visited = set()
+    actions = util.PriorityQueue()
+    actions.push((problem.getStartState(), [], 0), 0)
+    visited_states = set()
 
-    while queue:
-
-        current_state, path, total_cost = queue.pop(0)
+    while actions:
+        current_state, path, total_cost = actions.pop()
 
         if problem.isGoalState(current_state):
             return path
 
-        if current_state not in visited:
-            visited.add(current_state)
+        if current_state not in visited_states:
+            visited_states.add(current_state)
 
             for successor, action, stepCost in problem.getSuccessors(current_state):
-                queue.append((successor, path + [action], stepCost + total_cost))
+                actions.push((successor, path + [action], stepCost + total_cost), stepCost + total_cost)
 
-
-            for x in range(1, len(queue)):
-                array_value = queue[x][2]
-                array_key = queue[x]
-                j = x - 1
-
-                while j >= 0 and queue[j][2] > array_value:
-                    queue[j + 1] = queue[j]
-                    j -= 1
-
-                queue[j + 1] = array_key
     return []
 
 
@@ -170,31 +162,23 @@ def nullHeuristic(state, problem=None) -> float:
 
 def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic) -> List[Directions]:
     """Search the node that has the lowest combined cost and heuristic first."""
-    queue = [(problem.getStartState(), [], 0)]
-    visited = {}
+    actions = util.PriorityQueue()
+    actions.push((problem.getStartState(), [], 0), 0)
+    visited_states = {}
 
-    while queue:
-        current_state, path, total_cost = queue.pop(0)
+    while actions:
+        current_state, path, total_cost = actions.pop()
 
         if problem.isGoalState(current_state):
             return path
 
-        if current_state not in visited or total_cost < visited[current_state]:
-            visited[current_state] = total_cost
+        if current_state not in visited_states or total_cost < visited_states[current_state]:
+            visited_states[current_state] = total_cost
 
             for successor, action, stepCost in problem.getSuccessors(current_state):
                 new_total_cost = total_cost + stepCost
-                if successor not in visited or new_total_cost < visited[successor]:
-                    queue.append((successor, path + [action], new_total_cost))
-
-        for x in range(1, len(queue)):
-            array_value = queue[x][2] + heuristic(queue[x][0], problem)
-            array_key = queue[x]
-            j = x - 1
-            while j >= 0 and (queue[j][2] + heuristic(queue[j][0], problem)) > array_value:
-                    queue[j + 1] = queue[j]
-                    j -= 1
-            queue[j + 1] = array_key
+                if successor not in visited_states or new_total_cost < visited_states[successor]:
+                    actions.push((successor, path + [action], new_total_cost), new_total_cost + heuristic(successor, problem))
 
     return []
 
