@@ -150,12 +150,7 @@ def depthFirstSearch(problem: SearchProblem) -> List[Directions]:
         #Last Position Becomes newParentNode 
         lastPosition=lastPosition_parent
     
-    return solution   
-        
-   
-   
-    "*** YOUR CODE HERE ***"
-    
+    return solution    
     util.raiseNotDefined()
 
 def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
@@ -197,22 +192,159 @@ def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
          lastPosition_parent=parents[lastPosition]
          solution.insert(0,visited[lastPosition])
          lastPosition=lastPosition_parent
+   
+        
   
     return solution
-          
-        
-        
-           
-    
-         
-         
-    "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
+    
 
 def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
+    
     """Search the node of least total cost first."""
+    
+       
+    visited = {}
+    # "solution" contains the sequence of directions for Pacman to get to the goal position
+    solution = []
+    # "stack" contains triplets of: (node in the fringe list, direction, cost)
+    queue = []
+    parents={}
+    lastPosition=(0,0)
+    priorityQueue=[]
+    children=[]
+    cost=0
+    startPosition=problem.getStartState()
+    
+    priorityQueue.insert(0,[startPosition,'Home',0,cost])
+    goal=False
+    a='''visited[startPosition] = 'Home'
+    if problem.isGoalState(startPosition):
+        return solution '''
+    while priorityQueue and goal !=True:
+        #visit element in head of priority queue
+        currentLocation=priorityQueue.pop(0)
+        #set the element as visited and store direction to get to it
+        visited[currentLocation[0]]=currentLocation[1]
+        print(currentLocation[0])
+        if problem.isGoalState(currentLocation[0]):
+            
+            lastPosition=currentLocation[0]
+           
+            goal=True
+            break
+            
+        for child in problem.getSuccessors(currentLocation[0]):
+            #check if child has been visited
+            if child[0] not in visited.keys():
+                currentcost=child[2]+currentLocation[3]
+                #set parents of children 
+                parents[child[0]]=currentLocation[0]
+                children=list(child)
+                #add cost to node callable 
+                children.append(currentcost)
+                #check if priority queue is empty
+                if len(priorityQueue)==0:
+                    #print("queue is empty")
+                    priorityQueue.append(children)
+                else:
+                   i=0
+                   for element in priorityQueue:
+                       #print(element[3],currentcost)
+                       if element[3]<=currentcost:
+                           i=i+1
+                           priorityQueue.insert(i-1,children)
+                           
+                           lost='''if element[3]==currentcost:
+                               priorityQueue.insert(i,children)'''
+                           break
+                       else:
+                           priorityQueue.insert(i,children)
+                           break
+                           
+                           
+                      
+    while lastPosition in parents.keys():
+        lastPosition_parent=parents[lastPosition]
+        solution.insert(0,visited[lastPosition])
+        lastPosition=lastPosition_parent
+    return solution
+        
+                      
+                      
+                  
+                  
+                   
+             
+          
+        
+        #add current location to visited list just  after the item with the lowest cost 
+        
+        #visited[currentLocation['''
+    
+    
+    return solution
+    
     "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
+    
+def formCostSearch(problem):
+    """Search the shallowest nodes in the search tree first."""
+      
+    visited = {}
+    # "solution" contains the sequence of directions for Pacman to get to the goal position
+    solution = []
+    # "stack" contains triplets of: (node in the fringe list, direction, cost)
+    priorityQueue = []
+    parents={}
+    lastPosition=(0,0)
+    cost=0
+    #getStartState returns pacmanStart psition 
+    StartPosition=problem.getStartState()
+    priorityQueue.append([StartPosition,'home',0,cost])
+    goal=False
+    
+    if problem.isGoalState(StartPosition):
+        return solution
+    while goal!=True and priorityQueue:
+        #remove first element from queue as we are doing a breat first search
+        currentPosition=priorityQueue.pop(0)
+        #mark node as visited 
+        visited[currentPosition[0]]=currentPosition[1]
+        if problem.isGoalState(currentPosition[0]):
+            #set goal to true to exit loop as we found a solution
+            goal=True
+            lastPosition=currentPosition[0]
+            break
+        
+        for child in problem.getSuccessors(currentPosition[0]):
+            if child[0] not in visited.keys()and child[0] not in parents.keys():
+               
+               currentcost=child[2]+currentPosition[3]
+               parents[child[0]]=currentPosition[0]
+               #set parents of children 
+               children=list(child)
+                #add cost to node callable 
+               children.append(currentcost)
+               
+               if not priorityQueue:
+                    priorityQueue.append(children)
+               else:
+                    index=0
+                    while priorityQueue[index][3]>currentcost:
+                        ++index
+                        print("LLLLLLLLLLLLLLLLLLLLLLLLLLLprinting index")
+                        priorityQueue.insert(index,children)
+    
+    while lastPosition in parents:
+         lastPosition_parent=parents[lastPosition]
+         solution.insert(0,visited[lastPosition])
+         lastPosition=lastPosition_parent
+   
+        
+  
+    return solution
+'''-----------  UCS ends  -----------'''
 
 def nullHeuristic(state, problem=None) -> float:
     """
