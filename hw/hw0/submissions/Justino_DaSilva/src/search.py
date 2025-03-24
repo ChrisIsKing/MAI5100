@@ -307,7 +307,8 @@ def uniformCostSearchAAAA(problem: SearchProblem) -> List[Directions]:
     children=[]
     cost=0
     point=0
-    visitedCost=1
+    visitedCost=3
+    direction=1
     
     startPosition=problem.getStartState()
     
@@ -320,7 +321,7 @@ def uniformCostSearchAAAA(problem: SearchProblem) -> List[Directions]:
         # store 
         currentLocation=priorityQueue.pop(0)
         #store, point direction and cost in array
-        visited[currentlocation[0]]=[currentLocation[direction],currentLocation[visitedCost]]
+        visited[currentLocation[0]]=[currentLocation[direction],currentLocation[visitedCost]]
               
         if problem.isGoalState(currentLocation[0]):
             lastPosition=currentLocation[0]
@@ -329,15 +330,25 @@ def uniformCostSearchAAAA(problem: SearchProblem) -> List[Directions]:
             
         for child in problem.getSuccessors(currentLocation[0]):
             #check if child has been visited
-           
+              
           
                 currentcost=child[2]+currentLocation[3]
                 
+                
                 if child[0] in visited.keys():
-                   visited[child[0]][1]<currentcost
-                   visited[child[0]][1]=currentcost
-                   #update the parent of the child as you found a better route
-                   parents[child[0]]=currentLocation[0]
+                   if visited[child[0]][1]<currentcost:
+                       
+                       for element in priorityQueue:
+                           #print(element[3],currentcost)
+                           if element[3]<=currentcost:
+                               i=i+1
+                               
+                               if element[3]==currentcost:
+                                   priorityQueue.insert(i-1,children)
+                                   break
+                               else:
+                                   priorityQueue.insert(i,children)
+                                   break
                 else:                             
                     #set parents of children 
                     parents[child[0]]=currentLocation[0]
@@ -372,21 +383,85 @@ def uniformCostSearchAAAA(problem: SearchProblem) -> List[Directions]:
         solution.insert(0,visited[lastPosition])
         lastPosition=lastPosition_parent
     return solution
-        
-                      
-                      
-                  
-                  
-                   
-             
-          
-        
-        #add current location to visited list just  after the item with the lowest cost 
-        
-        #visited[currentLocation['''
+  
     
+    "*** YOUR CODE HERE ***"
+    util.raiseNotDefined()
+
+def uniformCostSearchBBBB(problem: SearchProblem) -> List[Directions]:
     
+    """Search the node of least total cost first."""
+    
+       
+    visited = {}
+    # "solution" contains the sequence of directions for Pacman to get to the goal position
+    solution = []
+    # "stack" contains triplets of: (node in the fringe list, direction, cost)
+    queue = []
+    parents={}
+    lastPosition=(0,0)
+    priorityQueue=[]
+    children=[]
+    cost=0
+    point=0
+    routecost=3
+    direction=1
+    moveCost=2
+    
+    startPosition=problem.getStartState()
+    
+    priorityQueue.insert(0,[startPosition,'Home',0,cost])
+    goal=False
+  
+    while priorityQueue and goal !=True:
+       currentLocation=priorityQueue.pop(0)
+       visited[currentLocation[0]]=[currentLocation[1],currentLocation[3]]
+       
+       if problem.isGoalState(currentLocation[0]):
+           lastPostiton=currentLocation[0]
+           goal=True;
+           break
+       for nextLocation in problem.getSuccessors(currentLocation[0]):
+           nextLocationCost=currentLocation[routecost]+nextLocation[moveCost]
+         
+           if nextLocation[0] in visited.keys():
+              nextLocationCost=currentLocation[routecost]+nextLocation[moveCost]
+              #chech if the current location has been visited 
+              if nextLocationCost<visited[nextLocation[0]][1]:
+                 visted[nextLocation[0]][1]=nextLocationCost
+                 parents[nextLocation[0]]=currentLocation[0]
+                 continue 
+           #if the location has not been visited as yet
+           else:
+                parents[nextLocation[0]]=currentLocation[0]
+                if not priorityQueue:
+                    priorityQueue.append([nextLocation[0],nextLocation[1],nextLocation[2],nextLocationCost]);
+                else:
+                    i=0
+                    for element in priorityQueue:
+                        if element[3]<=nextLocationCost:
+                            print(element[3],nextLocationCost,nextLocation[0])
+                            priorityQueue.insert(i,[nextLocation[0],nextLocation[1],nextLocation[2],nextLocationCost])
+                            break
+                        ++i
+                        
+                        
+                            
+               
+               
+               
+              
+                  
+               
+           
+                           
+                      
+    while lastPosition in parents.keys():
+        lastPosition_parent=parents[lastPosition]
+        solution.insert(0,visited[lastPosition])
+        lastPosition=lastPosition_parent
     return solution
+  
     
     "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
