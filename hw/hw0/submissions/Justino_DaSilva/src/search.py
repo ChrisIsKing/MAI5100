@@ -218,54 +218,72 @@ def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
     
     priorityQueue.insert(0,[startPosition,'Home',0,cost])
     goal=False
-    a='''visited[startPosition] = 'Home'
+    visited[startPosition] = 'Home'
     if problem.isGoalState(startPosition):
-        return solution '''
+        return solution
+    numloops=0;
     while priorityQueue and goal !=True:
+        numloops=numloops+1
         #visit element in head of priority queue
         currentLocation=priorityQueue.pop(0)
+        point=currentLocation[0]
+        direction=currentLocation[1]
         #set the element as visited and store direction to get to it
-        visited[currentLocation[0]]=currentLocation[1]
-        print("Using uniformCostSearch",currentLocation[0])
+        visited[point]=direction
+           
         if problem.isGoalState(currentLocation[0]):
             
             lastPosition=currentLocation[0]
-           
+            #print("found it",lastPosition,visited[lastPosition])
+            
             goal=True
             break
             
         for child in problem.getSuccessors(currentLocation[0]):
-            #check if child has been visited
-           
-            if child[0] not in visited.keys():
-                currentcost=child[2]+currentLocation[3]
-                #set parents of children 
-                parents[child[0]]=currentLocation[0]
-                children=list(child)
-                #add cost to node callable 
-                children.append(currentcost)
-                #check if priority queue is empty
-                if len(priorityQueue)==0:
-                    #print("queue is empty")
+            point=child[0]
+            costToParentPoint=currentLocation[3]
+            pointcost=child[2]
+            children=list(child)
+            if point not in visited.keys():
+                #calculate cost 
+                #cost to visit child
+                CostToPoint=pointcost+costToParentPoint;
+                #add cost to get to child to child before adding to queu
+                children.append(CostToPoint)
+                index=0
+                if not priorityQueue:
+                    #print("QQQQQQQQQQQQQQQQQQQQQQQQQQQ")
                     priorityQueue.append(children)
+                    parents[point]=currentLocation[0]
+                    #print(priorityQueue,len(priorityQueue))
+                    
+                    continue
                 else:
-                   i=0
-                   for element in priorityQueue:
-                       #print(element[3],currentcost)
-                       if element[3]<=currentcost:
-                           i=i+1
-                           #priorityQueue.insert(i,children)
-                           
-                           if element[3]==currentcost:
-                               priorityQueue.insert(i-1,children)
-                               break
-                           else:
-                               priorityQueue.insert(i,children)
-                               break
+                    for element in priorityQueue:
+                        topOfQueue=element[3]
+                        if CostToPoint<topOfQueue:
+                            index=index+1
+                            #print("costTTTTTTTTTTTTTTTTTTTTTTTTTtT")
+                            continue
+                        priorityQueue.insert(index,children)
+                        parents[point]=currentLocation[0]
+                        #print("INNNNNNN",priorityQueue)
+                        break
+                    #if numloops<4:
+                        #print("QQQQQQQQQQ",priorityQueue)
+                    
+                    
+                    
+                
+            
+             #new Code
+                            
+            #new Code
+                
                           
                            
                            
-                      
+               
     while lastPosition in parents.keys():
         lastPosition_parent=parents[lastPosition]
         solution.insert(0,visited[lastPosition])
@@ -291,104 +309,9 @@ def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
     util.raiseNotDefined()
     
     
-def uniformCostSearchAAAA(problem: SearchProblem) -> List[Directions]:
-    
-    """Search the node of least total cost first."""
-    
-       
-    visited = {}
-    # "solution" contains the sequence of directions for Pacman to get to the goal position
-    solution = []
-    # "stack" contains triplets of: (node in the fringe list, direction, cost)
-    queue = []
-    parents={}
-    lastPosition=(0,0)
-    priorityQueue=[]
-    children=[]
-    cost=0
-    point=0
-    visitedCost=3
-    direction=1
-    
-    startPosition=problem.getStartState()
-    
-    priorityQueue.insert(0,[startPosition,'Home',0,cost])
-    goal=False
-    a='''visited[startPosition] = 'Home'
-    if problem.isGoalState(startPosition):
-        return solution '''
-    while priorityQueue and goal !=True:
-        # store 
-        currentLocation=priorityQueue.pop(0)
-        #store, point direction and cost in array
-        visited[currentLocation[0]]=[currentLocation[direction],currentLocation[visitedCost]]
-              
-        if problem.isGoalState(currentLocation[0]):
-            lastPosition=currentLocation[0]
-            goal=True
-            break
-            
-        for child in problem.getSuccessors(currentLocation[0]):
-            #check if child has been visited
-              
-          
-                currentcost=child[2]+currentLocation[3]
-                
-                
-                if child[0] in visited.keys():
-                   if visited[child[0]][1]<currentcost:
-                       
-                       for element in priorityQueue:
-                           #print(element[3],currentcost)
-                           if element[3]<=currentcost:
-                               i=i+1
-                               
-                               if element[3]==currentcost:
-                                   priorityQueue.insert(i-1,children)
-                                   break
-                               else:
-                                   priorityQueue.insert(i,children)
-                                   break
-                else:                             
-                    #set parents of children 
-                    parents[child[0]]=currentLocation[0]
-                    children=list(child)
-                    #add cost to node callable 
-                    children.append(currentcost)
-                    #check if priority queue is empty
-                    if len(priorityQueue)==0:
-                        #print("queue is empty")
-                        priorityQueue.append(children)
-                    else:
-                       i=0
-                       for element in priorityQueue:
-                           #print(element[3],currentcost)
-                           if element[3]<=currentcost:
-                               i=i+1
-                               #priorityQueue.insert(i,children)
-                               
-                               if element[3]==currentcost:
-                                   priorityQueue.insert(i-1,children)
-                                   break
-                               else:
-                                   priorityQueue.insert(i,children)
-                                   break
-                
-                              
-                           
-                           
-                      
-    while lastPosition in parents.keys():
-        lastPosition_parent=parents[lastPosition]
-        solution.insert(0,visited[lastPosition])
-        lastPosition=lastPosition_parent
-    return solution
-  
-    
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
 
-def uniformCostSearchBBBB(problem: SearchProblem) -> List[Directions]:
+    
+def uniformCostSearchCCCC(problem: SearchProblem) -> List[Directions]:
     
     """Search the node of least total cost first."""
     
@@ -403,69 +326,93 @@ def uniformCostSearchBBBB(problem: SearchProblem) -> List[Directions]:
     priorityQueue=[]
     children=[]
     cost=0
+    tmpcost=0
+    temppath=[]
     point=0
+    temppoint=(0,0)
     routecost=3
     direction=1
     moveCost=2
     
     startPosition=problem.getStartState()
+    print("start Position",startPosition)
     
-    priorityQueue.insert(0,[startPosition,'Home',0,cost])
+    priorityQueue.insert(0,[startPosition,'Home',0,0])
     goal=False
   
     while priorityQueue and goal !=True:
-       currentLocation=priorityQueue.pop(0)
-       visited[currentLocation[0]]=[currentLocation[1],currentLocation[3]]
-       
-       if problem.isGoalState(currentLocation[0]):
+        
+        currentLocation=priorityQueue.pop(0)
+        
+        #//generate solution unitl now
+        visited[currentLocation[0]]=[currentLocation[1],currentLocation[3]]
+        temppoint=currentLocation[0]
+        temppath=[]
+        if problem.isGoalState(currentLocation[0]):
            lastPostiton=currentLocation[0]
            goal=True;
            break
-       for nextLocation in problem.getSuccessors(currentLocation[0]):
-           nextLocationCost=currentLocation[routecost]+nextLocation[moveCost]
-         
-           if nextLocation[0] in visited.keys():
-              nextLocationCost=currentLocation[routecost]+nextLocation[moveCost]
-              #chech if the current location has been visited 
-              if nextLocationCost<visited[nextLocation[0]][1]:
-                 visted[nextLocation[0]][1]=nextLocationCost
-                 parents[nextLocation[0]]=currentLocation[0]
-                 continue 
-           #if the location has not been visited as yet
-           else:
-                parents[nextLocation[0]]=currentLocation[0]
-                if not priorityQueue:
-                    priorityQueue.append([nextLocation[0],nextLocation[1],nextLocation[2],nextLocationCost]);
-                else:
-                    i=0
-                    for element in priorityQueue:
-                        if element[3]<=nextLocationCost:
-                            print(element[3],nextLocationCost,nextLocation[0])
-                            priorityQueue.insert(i,[nextLocation[0],nextLocation[1],nextLocation[2],nextLocationCost])
-                            break
-                        ++i
-                        
-                        
+           
+        while temppoint in parents.keys():
+          
+            temppoint_parent=parents[temppoint]
+            temppath.insert(0,visited[temppoint][0])
+            temppoint=temppoint_parent
+            #if len(temppath)< 10:
+            #    print(problem.getCostOfActions(temppath))
+           
+        for nextLocation in problem.getSuccessors(currentLocation[0]):
+                 
+                      
+           temppath.insert(0,nextLocation[1])
+           nextLocationCost=problem.getCostOfActions(temppath)
+           
+               
+        
+                   
+           if len(temppath)>0:
+               
+               if nextLocation[0] in visited.keys() and nextLocationCost < visited[nextLocation[0]][1]:
+                   print("checking valuesssssssssssssssssssssssss",nextLocationCost,"<",nextLocation[2],len(temppath),"NextLocationnnnnnnnn",nextLocation[0])
+                   parents[nextLocation[0]]=currentLocation[0]
+                   visited[nextLocation[0]][1]=nextLocationCost
+                   break
+               elif nextLocation[0] not in visited.keys():
+                 
+                   parents[nextLocation[0]]=currentLocation[0]
+                   if not priorityQueue:
+                       priorityQueue.append([nextLocation[0],nextLocation[1],nextLocation[2],nextLocationCost]);
+                       break
+                   else:
+                       i=0
+                       for element in priorityQueue:
+                           if element[3]>=nextLocationCost:
+                               print("kkkkkklkkkk",element[3],nextLocationCost,nextLocation[0])
+                               priorityQueue.insert(i,[nextLocation[0],nextLocation[1],nextLocation[2],nextLocationCost])
+                               break
+                               ++i
                             
-               
-               
-               
-              
+                            
+                                
+                   
+                   
+                   
                   
-               
+                      
+                   
            
                            
                       
     while lastPosition in parents.keys():
         lastPosition_parent=parents[lastPosition]
-        solution.insert(0,visited[lastPosition])
+        solution.insert(0,visited[lastPosition][0])
         lastPosition=lastPosition_parent
+    print("finalSolution",solution)
     return solution
   
     
     "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
-
 
 def nullHeuristic(state, problem=None) -> float:
     """
