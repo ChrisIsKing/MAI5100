@@ -298,6 +298,26 @@ class CornersProblem(search.SearchProblem):
         """
         return self.startingPosition
 
+
+    # TODO modify getStartState to track visited states
+    # def getStartState(self):
+    #     """
+    #     Returns the start state (in your state space, not the full Pacman state
+    #     space)
+    #     """
+    #     return (self.startingPosition, self.visited_states)
+    #
+    #
+    #
+    #
+    # def isGoalState(self, state: Any):
+    #     """
+    #     Returns whether this search state is a goal state of the problem.
+    #     """
+    #     current_state, visited_states = state
+    #
+    #     return all(corner in self.visited_states for corner in self.corners)
+
     def isGoalState(self, state: Any):
         """
         Returns whether this search state is a goal state of the problem.
