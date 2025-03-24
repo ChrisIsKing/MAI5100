@@ -115,20 +115,20 @@ def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
     actions = util.Queue()
     actions.push((problem.getStartState(), []))
     visited_states = set()
+    visited_states.add(problem.getStartState())
 
     while actions:
         current_state, path = actions.pop()
-
         if problem.isGoalState(current_state):
             return path
 
-        if current_state not in visited_states:
-            visited_states.add(current_state)
-
-            for successor, action, stepCost in problem.getSuccessors(current_state):
+        for successor, action, stepCost in problem.getSuccessors(current_state):
+            if successor not in visited_states:
+                visited_states.add(successor)
                 actions.push((successor, path + [action]))
 
     return []
+
 
 def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
     """Search the node of least total cost first."""
