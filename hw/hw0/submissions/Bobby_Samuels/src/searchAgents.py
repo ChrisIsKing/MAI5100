@@ -296,14 +296,23 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # print("getStart state called+ "+ str(self.startingPosition))
+        return self.startingPosition
+        # util.raiseNotDefined()
 
     def isGoalState(self, state: Any):
         """
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        print("checking if goal state")
+        if(state in self.corners):
+            print("is Goal")
+            return True
+        else:
+            print("is not goal")
+            return False
+        # util.raiseNotDefined()
 
     def getSuccessors(self, state: Any):
         """

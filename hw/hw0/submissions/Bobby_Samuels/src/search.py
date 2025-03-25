@@ -206,7 +206,7 @@ def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
                             nextLevel.append((child,parentIndex))
         
         # Now that we have the next level, let's search it
-        print("===> 4 children in nextLevel is: "+str(nextLevel)) 
+        # print("===> 4 children in nextLevel is: "+str(nextLevel)) 
         if goalReachedbfs == False:
             # result returns (parentIndex, [ list of actions as array ] )
             result = bfs( nextLevel) # recursion occurs here
@@ -310,16 +310,16 @@ def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic) -> List[Directi
     # initialState = problem.getStartState()
     # print(heuristic(initialState,problem))
     
-    print("===>- 1 UCS Called")
+    print("===>- 1 A Star Called")
     
     # initialState returns only (x,y)
     # a node from getSuccessors looks like ( (x,y),'Action',number )
     
-    visitedPositions=[] # To prevent searching visited nodes
+    visitedPositions={} # To prevent searching visited nodes
     frontier = [] # Current List of frontier nodes
     actions = []  #Array of Final Actions to return
     initialState = problem.getStartState()
-    initialStateFormateed = ((initialState,"START",0),[],0,0) #Formatted : node, total arr of actions, total cost to node, g(h)+f(h)
+    initialStateFormateed = ((initialState,"START",0),[],0,heuristic(initialState, problem)) #Formatted : node, total arr of actions, total cost to node, g(h)+f(h)
     goalReached = False # Stop UCS when this is true
     frontier.append(initialStateFormateed)
     
@@ -334,20 +334,30 @@ def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic) -> List[Directi
         # This FOR loop finds the smallest cost Node
         if(len(frontier)<5):
             print("===>- 2 Frontier is "+str(frontier))
+        
+
+        
         for option in frontier:
             if option[0][0] in visitedPositions:
-                continue # Skip this node if we already visited it
+                # if the option was already visited skip it, unless it gives a lower cost
+                # in that case, override it
+                if( option[0][2] <= visitedPositions[option[0][0]]):
+                    visitedPositions[option[0][0]] = option[0][2]
+                    frontier.remove(option)
+                else:
+                    continue # Skip this node if we already visited it
             if option[3] < refCost:
                 refCost=option[3]
                 smlNode=option
         
         # Now that we have selected the smallest node, we visit it
         if(smlNode):
-            if(len(smlNode[1])<10):
+            if(len(smlNode[1])<3):
                 print("===>- 3 small node is "+str(smlNode))
         else:
             print("SML Node is Nothing?")
-        visitedPositions.append(smlNode[0][0]) # Save the node's XY coordinates
+        visitedPositions[smlNode[0][0]] = smlNode[0][2] # Save the node's XY coordinates
+
         if (problem.isGoalState( smlNode[0][0])):
             actions = smlNode[1]
             goalReached = True
