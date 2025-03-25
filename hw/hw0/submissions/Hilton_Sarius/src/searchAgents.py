@@ -296,14 +296,31 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
-
+        # State representation: (position, corners_visited)
+        # position: Pacman's current position (x, y)
+        # corners_visited: tuple of booleans indicating which corners have been visited
+        
+        # Initially, no corners are visited
+        corners_visited = (False, False, False, False)
+        
+        # Check if starting position is a corner
+        start_pos = self.startingPosition
+        for i, corner in enumerate(self.corners):
+            if start_pos == corner:
+                # Mark this corner as visited
+                corners_visited_list = list(corners_visited)
+                corners_visited_list[i] = True
+                corners_visited = tuple(corners_visited_list)
+        
+        return (start_pos, corners_visited)
     def isGoalState(self, state: Any):
         """
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # Goal state is reached when all corners have been visited
+        position, corners_visited = state
+        return all(corners_visited)
 
     def getSuccessors(self, state: Any):
         """
@@ -326,7 +343,25 @@ class CornersProblem(search.SearchProblem):
             #   hitsWall = self.walls[nextx][nexty]
 
             "*** YOUR CODE HERE ***"
-
+            # Add a successor state to the successor list if the action is legal
+            x, y = state[0]
+            corners_visited = state[1]
+            
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+            hitsWall = self.walls[nextx][nexty]
+            
+            if not hitsWall:
+                next_position = (nextx, nexty)
+                
+                # Check if new position is a corner
+                next_corners_visited = list(corners_visited)
+                for i, corner in enumerate(self.corners):
+                    if next_position == corner:
+                        next_corners_visited[i] = True
+                
+                next_state = (next_position, tuple(next_corners_visited))
+                successors.append((next_state, action, 1))
         self._expanded += 1 # DO NOT CHANGE
         return successors
 
@@ -362,7 +397,59 @@ def cornersHeuristic(state: Any, problem: CornersProblem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    corners = problem.corners # These are the corner coordinates
+    walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
+    
+    position, stateCorners = state
+    closestcorner = ()
+    numWalls1 = 0
+    numWalls2 = 0 
+    heuristic = 0
+    for i in range(len(corners)):
+      if not stateCorners[i]:
+        if heuristic < util.manhattanDistance(position, corners[i]):
+          heuristic = util.manhattanDistance(position, corners[i])
+          closestcorner = corners[i]
+    
+    if closestcorner:
+      direction = max(position[0], closestcorner[0])
+      for x in range(1, abs(position[0] - closestcorner[0])+1):
+          if direction == position[0]:
+            if walls[position[0]-x][position[1]]:
+                numWalls1+=1
+          else:
+            if walls[position[0]+x][position[1]]:
+              numWalls1+=1
+      
+      direction = max(position[1], closestcorner[1])
+      for y in range(1, abs(position[1] - closestcorner[1])+1):
+          if direction == position[1]:
+            if walls[position[0]][position[1]-y]:
+              numWalls1+=1  
+          else:
+            if walls[position[0]][position[1]+y]:
+              numWalls1+=1  
+      direction = max(position[0], closestcorner[0])
+
+      for x in range(1, abs(position[0] - closestcorner[0])+1):
+          if direction == closestcorner[0]:
+            if walls[closestcorner[0]-x][closestcorner[1]]:
+                numWalls2+=1
+          else:
+            if walls[closestcorner[0]+x][closestcorner[1]]:
+              numWalls2+=1
+      
+      direction = max(position[1], closestcorner[1])
+      for y in range(1, abs(position[1] - closestcorner[1])+1):
+          if direction == closestcorner[1]:
+            if walls[closestcorner[0]][closestcorner[1]-y]:
+              numWalls2+=1  
+          else:
+            if walls[closestcorner[0]][closestcorner[1]+y]:
+              numWalls2+=1  
+
+    return heuristic + min(numWalls1, numWalls2)
+    #return 0 # Default to trivial solution
 
 
 

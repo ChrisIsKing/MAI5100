@@ -108,11 +108,11 @@ def depthFirstSearch(problem: SearchProblem) -> List[Directions]:
             new_path = path + [action]
             stack.append((successor, new_path))
     return []
-from collections import deque
+
 def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-
+    from collections import deque
     # Initialize the queue with the start state and an empty path
     queue = deque([(problem.getStartState(), [])])
     visited = set()
@@ -144,11 +144,39 @@ def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
             queue.append((successor, new_path))
 
     return []
-
+import heapq
 def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # Priority queue to store (cost, state, path) tuples
+    priority_queue = [(0, problem.getStartState(), [])]
+    # Dictionary to store the cost to reach each state
+    costs = {problem.getStartState(): 0}
+    # Set to keep track of visited states
+    visited = set()
+
+    while priority_queue:
+        current_cost, current_state, path = heapq.heappop(priority_queue)
+
+        # If the state has been visited, skip it
+        if current_state in visited:
+            continue
+
+        # Mark the state as visited
+        visited.add(current_state)
+
+        # If the goal is reached, return the path
+        if problem.isGoalState(current_state):
+            return path
+
+        # Explore successors
+        for successor, action, step_cost in problem.getSuccessors(current_state):
+            new_cost = current_cost + step_cost
+            if successor not in costs or new_cost < costs[successor]:
+                costs[successor] = new_cost
+                heapq.heappush(priority_queue, (new_cost, successor, path + [action]))
+
+    return []  # If no path is found
 
 def nullHeuristic(state, problem=None) -> float:
     """
@@ -156,11 +184,40 @@ def nullHeuristic(state, problem=None) -> float:
     goal in the provided SearchProblem.  This heuristic is trivial.
     """
     return 0
-
+import heapq
 def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic) -> List[Directions]:
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # Priority queue to store (cost, state, path) tuples
+    priority_queue = [(0, problem.getStartState(), [])]
+    # Dictionary to store the cost to reach each state
+    costs = {problem.getStartState(): 0}
+    # Set to keep track of visited states
+    visited = set()
+
+    while priority_queue:
+        current_cost, current_state, path = heapq.heappop(priority_queue)
+
+        # If the state has been visited, skip it
+        if current_state in visited:
+            continue
+
+        # Mark the state as visited
+        visited.add(current_state)
+
+        # If the goal is reached, return the path
+        if problem.isGoalState(current_state):
+            return path
+
+        # Explore successors
+        for successor, action, step_cost in problem.getSuccessors(current_state):
+            new_cost = current_cost + step_cost
+            heuristic_cost = new_cost + heuristic(successor, problem)
+            if successor not in costs or new_cost < costs[successor]:
+                costs[successor] = new_cost
+                heapq.heappush(priority_queue, (heuristic_cost, successor, path + [action]))
+
+    return []  # If no path is found
 
 # Abbreviations
 bfs = breadthFirstSearch
