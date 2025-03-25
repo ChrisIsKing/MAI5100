@@ -148,35 +148,46 @@ import heapq
 def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    # Priority queue to store (cost, state, path) tuples
-    priority_queue = [(0, problem.getStartState(), [])]
-    # Dictionary to store the cost to reach each state
-    costs = {problem.getStartState(): 0}
-    # Set to keep track of visited states
-    visited = set()
-
-    while priority_queue:
-        current_cost, current_state, path = heapq.heappop(priority_queue)
-
-        # If the state has been visited, skip it
-        if current_state in visited:
+    # PriorityQueue for UCS frontier - stores (state, actions, totalCost) tuples
+    # Priority is determined by the totalCost
+    frontier = util.PriorityQueue()
+    
+    # Initialize with the start state, empty action list, and zero cost
+    startState = problem.getStartState()
+    frontier.push((startState, [], 0), 0)  # (state, actions, cost), priority=cost
+    
+    # Dictionary to keep track of visited states and their lowest costs
+    # Using a dict instead of a set allows us to update if we find a lower cost path
+    visited = {}  # state -> lowest cost seen so far
+    
+    while not frontier.isEmpty():
+        # Get the current state, actions to reach it, and total cost
+        currentState, actions, currentCost = frontier.pop()
+        
+        # Check if we've reached the goal
+        if problem.isGoalState(currentState):
+            return actions
+        
+        # Skip if we've already visited this state with a lower cost
+        if currentState in visited and visited[currentState] < currentCost:
             continue
-
-        # Mark the state as visited
-        visited.add(current_state)
-
-        # If the goal is reached, return the path
-        if problem.isGoalState(current_state):
-            return path
-
-        # Explore successors
-        for successor, action, step_cost in problem.getSuccessors(current_state):
-            new_cost = current_cost + step_cost
-            if successor not in costs or new_cost < costs[successor]:
-                costs[successor] = new_cost
-                heapq.heappush(priority_queue, (new_cost, successor, path + [action]))
-
-    return []  # If no path is found
+        
+        # Mark current state as visited with its cost
+        visited[currentState] = currentCost
+        
+        # Explore successors (lowest cost first)
+        for successor, action, stepCost in problem.getSuccessors(currentState):
+            # Calculate the total cost to reach the successor
+            newCost = currentCost + stepCost
+            
+            # Only consider if we haven't visited or found a lower cost path
+            if successor not in visited or newCost < visited[successor]:
+                # Create new action sequence by adding the new action
+                newActions = actions + [action]
+                frontier.push((successor, newActions, newCost), newCost)
+    
+    # If no solution is found
+    return []
 
 def nullHeuristic(state, problem=None) -> float:
     """
@@ -188,36 +199,52 @@ import heapq
 def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic) -> List[Directions]:
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    # Priority queue to store (cost, state, path) tuples
-    priority_queue = [(0, problem.getStartState(), [])]
-    # Dictionary to store the cost to reach each state
-    costs = {problem.getStartState(): 0}
-    # Set to keep track of visited states
-    visited = set()
-
-    while priority_queue:
-        current_cost, current_state, path = heapq.heappop(priority_queue)
-
-        # If the state has been visited, skip it
-        if current_state in visited:
+    # PriorityQueue for A* frontier - stores (state, actions, g_cost) tuples
+    # Priority is determined by f(n) = g(n) + h(n)
+    frontier = util.PriorityQueue()
+    
+    # Initialize with the start state, empty action list, and zero g_cost
+    startState = problem.getStartState()
+    # Calculate initial f(n) = g(n) + h(n), where g(n) = 0 for start state
+    startHeuristic = heuristic(startState, problem)
+    frontier.push((startState, [], 0), 0 + startHeuristic)  # (state, actions, g_cost), priority=f_cost
+    
+    # Dictionary to keep track of visited states and their lowest g_costs
+    visited = {}  # state -> lowest g_cost seen so far
+    
+    while not frontier.isEmpty():
+        # Get the current state, actions to reach it, and g_cost (cost so far)
+        currentState, actions, g_cost = frontier.pop()
+        
+        # Check if we've reached the goal
+        if problem.isGoalState(currentState):
+            return actions
+        
+        # Skip if we've already visited this state with a lower g_cost
+        if currentState in visited and visited[currentState] < g_cost:
             continue
-
-        # Mark the state as visited
-        visited.add(current_state)
-
-        # If the goal is reached, return the path
-        if problem.isGoalState(current_state):
-            return path
-
+        
+        # Mark current state as visited with its g_cost
+        visited[currentState] = g_cost
+        
         # Explore successors
-        for successor, action, step_cost in problem.getSuccessors(current_state):
-            new_cost = current_cost + step_cost
-            heuristic_cost = new_cost + heuristic(successor, problem)
-            if successor not in costs or new_cost < costs[successor]:
-                costs[successor] = new_cost
-                heapq.heappush(priority_queue, (heuristic_cost, successor, path + [action]))
-
-    return []  # If no path is found
+        for successor, action, stepCost in problem.getSuccessors(currentState):
+            # Calculate the g(n) to reach the successor (cost so far)
+            new_g_cost = g_cost + stepCost
+            
+            # Only consider if we haven't visited or found a lower g_cost path
+            if successor not in visited or new_g_cost < visited[successor]:
+                # Create new action sequence by adding the new action
+                newActions = actions + [action]
+                
+                # Calculate f(n) = g(n) + h(n)
+                h_cost = heuristic(successor, problem)  # Heuristic estimate to goal
+                f_cost = new_g_cost + h_cost
+                
+                frontier.push((successor, newActions, new_g_cost), f_cost)
+    
+    # If no solution is found
+    return []
 
 # Abbreviations
 bfs = breadthFirstSearch
