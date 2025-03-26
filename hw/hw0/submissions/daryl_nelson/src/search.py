@@ -90,11 +90,11 @@ def depthFirstSearch(problem: SearchProblem) -> List[Directions]:
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     visited_states = set()
-    actions = util.Queue()
+    actions = util.Stack()
     actions.push((problem.getStartState(), []))
 
     while actions:
-        current_state, path = actions.list.pop(0)
+        current_state, path = actions.pop()
 
         if problem.isGoalState(current_state):
             return path
