@@ -196,16 +196,15 @@ def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
         
   
     return solution
-    util.raiseNotDefined()
-  
+   
+ 
+
+
 def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
    
     visited = {}
-    # "solution" contains the sequence of directions for Pacman to get to the goal state
     solution = []
-    # "queue" contains triplets of: (nodes in the fringe list, direction, cost)
     queue = util.PriorityQueue()
-    # "parents" contains nodes and their parents
     parents = {}
     # "cost" contains nodes and their corresponding costs
     cost = {}
@@ -238,7 +237,9 @@ def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
                 #cost it is less than leave it bee proceed to next child
                 if child[0] in cost.keys():
                     if cost[child[0]] <= costToChild:
-                        continue
+                       print ("jasjdasdajsdjasjdajsdjasjdjasjdjasjd") 
+                       
+                       continue
                 #proceed to update que if the  costToChild is less than cost in queue
                 #child,direction,costtochild
                 queue.push((child[0], child[1], costToChild), costToChild)
@@ -263,12 +264,60 @@ def nullHeuristic(state, problem=None) -> float:
     A heuristic function estimates the cost from the current state to the nearest
     goal in the provided SearchProblem.  This heuristic is trivial.
     """
+    
     return 0
+   
 
 def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic) -> List[Directions]:
+    
     """Search the node that has the lowest combined cost and heuristic first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    #sum of cost to get to each node 
+    cost = {}  
+    #keep track of visited points
+    visited = {}  
+    #stores parent node of each poing
+    parents = {}  
+    PriorityQueue = util.PriorityQueue()
+    solution = []
+
+    startState = problem.getStartState()
+    PriorityQueue.push((startState, 'home', 0), heuristic(startState, problem)) 
+    cost[startState] = 0
+    
+    while PriorityQueue:
+        currentlocation = PriorityQueue.pop()
+
+        #was visited via  a next node
+        if currentlocation[0] in visited.keys():
+            continue
+        visited[currentlocation[0]]=currentlocation[1]
+
+        # Goal check
+        if problem.isGoalState(currentlocation[0]):
+            lastPosition = currentlocation[0]
+       
+            break
+
+        for nextchild in problem.getSuccessors(currentlocation[0]):
+            childcost = currentlocation[2] + nextchild[2]  
+            
+            if nextchild[0] not in cost.keys() or childcost < cost[nextchild[0]]:  
+                priority = childcost + heuristic(nextchild[0], problem)
+                cost[nextchild[0]] = childcost
+                priority = childcost + heuristic(nextchild[0], problem)  
+                PriorityQueue.push((nextchild[0], nextchild[1],childcost), priority)
+                parents[nextchild[0]] =currentlocation[0]
+
+    # construct the path from goal to start
+    while lastPosition in parents.keys():
+        lastPosition_parent= parents[lastPosition]
+        solution.insert(0, visited[lastPosition])
+        lastPosition=lastPosition_parent
+    return solution
+
+
+   
+
 
 # Abbreviations
 bfs = breadthFirstSearch

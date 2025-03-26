@@ -295,6 +295,7 @@ class CornersProblem(search.SearchProblem):
         Returns the start state (in your state space, not the full Pacman state
         space)
         """
+        return [self.startingPosition,self.corners]
         "*** YOUR CODE HERE ***"
         util.raiseNotDefined()
 
@@ -302,10 +303,16 @@ class CornersProblem(search.SearchProblem):
         """
         Returns whether this search state is a goal state of the problem.
         """
+        #create goal state
+        if len(state[1]) == 4:
+            return True
+        else:
+            return False
         "*** YOUR CODE HERE ***"
         util.raiseNotDefined()
 
     def getSuccessors(self, state: Any):
+        
         """
         Returns successor states, the actions they require, and a cost of 1.
 
@@ -315,21 +322,18 @@ class CornersProblem(search.SearchProblem):
             state, 'action' is the action required to get there, and 'stepCost'
             is the incremental cost of expanding to that successor
         """
-
-        successors = []
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
-            # Add a successor state to the successor list if the action is legal
-            # Here's a code snippet for figuring out whether a new position hits a wall:
-            #   x,y = currentPosition
-            #   dx, dy = Actions.directionToVector(action)
-            #   nextx, nexty = int(x + dx), int(y + dy)
-            #   hitsWall = self.walls[nextx][nexty]
+            print("lll")
+        
+                      
+           
 
-            "*** YOUR CODE HERE ***"
-
+          # Bookkeeping for display purposes
         self._expanded += 1 # DO NOT CHANGE
+        
         return successors
 
+                    
     def getCostOfActions(self, actions):
         """
         Returns the cost of a particular sequence of actions.  If those actions
