@@ -298,34 +298,12 @@ class CornersProblem(search.SearchProblem):
         """
         return self.startingPosition
 
-
-    # TODO modify getStartState to track visited states
-    # def getStartState(self):
-    #     """
-    #     Returns the start state (in your state space, not the full Pacman state
-    #     space)
-    #     """
-    #     return (self.startingPosition, self.visited_states)
-    #
-    #
-    #
-    #
-    # def isGoalState(self, state: Any):
-    #     """
-    #     Returns whether this search state is a goal state of the problem.
-    #     """
-    #     current_state, visited_states = state
-    #
-    #     return all(corner in self.visited_states for corner in self.corners)
-
     def isGoalState(self, state: Any):
         """
         Returns whether this search state is a goal state of the problem.
         """
-        if state in self.corners:
-            self.visited_states.add(state)
-
-        return all(corner in self.visited_states for corner in self.corners)
+        position, visited_corners = state
+        return visited_corners == set(self.corners)
 
     def getSuccessors(self, state: Any):
         """
@@ -338,17 +316,20 @@ class CornersProblem(search.SearchProblem):
             is the incremental cost of expanding to that successor
         """
 
+        position, visited_corners = state
         successors = []
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
-            # Add a successor state to the successor list if the action is legal
-            # Here's a code snippet for figuring out whether a new position hits a wall:
-            x,y = state
+            x, y = position
             dx, dy = Actions.directionToVector(action)
             nextx, nexty = int(x + dx), int(y + dy)
-            if not self.walls[nextx][nexty]:
-                successors.append([(nextx, nexty), action, self.getCostOfActions([action])])
 
-        self._expanded += 1 # DO NOT CHANGE
+            if not self.walls[nextx][nexty]:
+                new_visited_corners = visited_corners.copy()
+                if (nextx, nexty) in self.corners:
+                    new_visited_corners.add((nextx, nexty))
+                successors.append(((nextx, nexty), new_visited_corners, action, 1))
+
+        self._expanded += 1  # DO NOT CHANGE
         return successors
 
     def getCostOfActions(self, actions):

@@ -129,6 +129,30 @@ def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
 
     return []
 
+# Modified BFS to work with Q5
+# def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
+#     """Search the shallowest nodes in the search tree first."""
+#     actions = actions = util.Queue()
+#     start_state = problem.getStartState()
+#     actions.push(((start_state, set()), []))
+#
+#     visited_states = set()
+#     visited_states.add((start_state, frozenset()))
+#
+#     while actions:
+#         (current_position, visited_corners), path = actions.pop()
+#
+#         if problem.isGoalState((current_position, visited_corners)):
+#             return path
+#
+#         for (next_position, next_visited_corners, action, stepCost) in problem.getSuccessors((current_position, visited_corners)):
+#             state_key = (next_position, frozenset(next_visited_corners))
+#             if state_key not in visited_states:
+#                 visited_states.add(state_key)
+#                 actions.push(((next_position, next_visited_corners), path + [action]))
+#
+#     return []
+
 
 def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
     """Search the node of least total cost first."""
