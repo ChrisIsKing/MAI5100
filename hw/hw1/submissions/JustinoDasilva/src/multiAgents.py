@@ -49,10 +49,11 @@ class ReflexAgent(Agent):
         bestIndices = [index for index in range(len(scores)) if scores[index] == bestScore]
         chosenIndex = random.choice(bestIndices) # Pick randomly among the best
 
+
         "Add more of your code here if you want to"
 
         return legalMoves[chosenIndex]
-
+        #return legalMoves[0]
 
     def evaluationFunction(self, currentGameState: GameState, action):
         """
@@ -89,16 +90,160 @@ class ReflexAgent(Agent):
         2. if packman direcion is  not the same as opppostte of pacman reduce by
         """
         '*** get distance  of pacman from ghost ***'
-        gx,gy=newGhostStates[0].getPosition()
+        distance=0
         px,py=newPos
+        gx,gy=newGhostStates[0].getPosition()
         distance=abs(gx-px)+abs(gy-py)
-        addededvalue=0
+        "action is west"
+        if action=='West' and newGhostStates[0].getDirection()=='East':
+            if abs((gx+1)-px)<abs(gx-px):
+                if newScaredTimes[0]>0:
+                    distance=distance+newScaredTimes[0]*newScaredTimes[0]
+                else:
+                    distance=distance+abs((gx+1)-px)
+            else:
+                if newScaredTimes[0]>0:
+                    distance=distance+newScaredTimes[0]*newScaredTimes[0]
+                else:
+                    distance=distance+abs((gx+1)-px)
+
+
+        if action=='West' and newGhostStates[0].getDirection()=='North':
+            if abs((gy+1)-py)<abs(gy-py):
+                if newScaredTimes[0]>0:
+                    distance=distance+newScaredTimes[0]*(newScaredTimes[0]*0.5)
+                else:
+                    distance=distance+abs((gy+1)-py)
+            else:
+                if newScaredTimes[0]>0:
+                    distance=distance+newScaredTimes[0]*(newScaredTimes[0]*0.5)
+                else:
+                    distance=distance+abs((gy-1)-px)
+        if action=='West' and newGhostStates[0].getDirection()=='South':
+            if abs((gy-1)-py)<abs(gy-py):
+                if newScaredTimes[0]>0:
+                    distance=distance+newScaredTimes[0]*(newScaredTimes[0]*0.5)
+                else:
+                    distance=distance+abs((gy-1)-py)
+            else:
+                if newScaredTimes[0]>0:
+                    distance=distance+newScaredTimes[0]*(newScaredTimes[0]*0.5)
+                else:
+                    distance=distance+abs((gy-1)-py)
+        "Action is East"
+        if action=='East' and newGhostStates[0].getDirection()=='West':
+            if abs((gx-1)-px)<abs(gx-px):
+                if newScaredTimes[0]>0:
+                    distance=distance+newScaredTimes[0]*newScaredTimes[0]
+                else:
+                    distance=distance+abs((gx-1)-px)*0.8
+            else:
+                if newScaredTimes[0]>0:
+                    distance=distance+newScaredTimes[0]*newScaredTimes[0]
+                else:
+                    distance=distance+abs((gx-1)-px)*0.8
+        if action=='East' and newGhostStates[0].getDirection()=='North':
+            if abs((gy+1)-py)<abs(gy-py):
+                if newScaredTimes[0]>0:
+                    distance=distance+newScaredTimes[0]*(newScaredTimes[0]*0.5)
+                else:
+                    distance=distance+abs((gy+1)-py)
+            else:
+                if newScaredTimes[0]>0:
+                    distance=distance+newScaredTimes[0]*(newScaredTimes[0]*0.5)
+                else:
+                    distance=distance+abs((gy+1)-py)
+        if action=='East' and newGhostStates[0].getDirection()=='South':
+            if abs((gy-1)-py)<abs(gy-py):
+                if newScaredTimes[0]>0:
+                    distance=distance+newScaredTimes[0]*(newScaredTimes[0]*0.5)
+                else:
+                    distance=distance+abs((gy-1)-py)
+            else:
+                if abs((gy-1)-py)<abs(gy-py):
+                    if newScaredTimes[0]>0:
+                        distance=distance+newScaredTimes[0]*(newScaredTimes[0]*0.5)
+                    else:
+                        distance=distance+abs((gy-1)-py)
+        "*** action is north"
+        if action=='North' and newGhostStates[0].getDirection()=='South':
+            if abs((gy-1)-py)<abs(gy-py):
+                if newScaredTimes[0]>0:
+                    distance=distance+newScaredTimes[0]*newScaredTimes[0]
+                else:
+                    distance=distance+abs((gy-1)-py)*0.8
+            else:
+                if newScaredTimes[0]>0:
+                    distance=distance+newScaredTimes[0]*newScaredTimes[0]
+                else:
+                    distance=distance+abs((gy-1)-py)*0.8
+        if action=='North' and newGhostStates[0].getDirection()=='West':
+            if abs((gx-1)-px)<abs(gx-px):
+                if newScaredTimes[0]>0:
+                    distance=distance+newScaredTimes[0]*(newScaredTimes[0]*0.5)
+                else:
+                    distance=distance+abs((gx-1)-px)
+            else:
+                if newScaredTimes[0]>0:
+                    distance=distance+newScaredTimes[0]*(newScaredTimes[0]*0.5)
+                else:
+                    distance=distance+abs((gx-1)-px)
+        if action=='North' and newGhostStates[0].getDirection()=='East':
+            if abs((gx+1)-py)<abs(gx-px):
+                if newScaredTimes[0]>0:
+                    distance=distance+newScaredTimes[0]*(newScaredTimes[0]*0.5)
+                else:
+                    distance=distance+abs((gx+1)-px)
+            else:
+                if newScaredTimes[0]>0:
+                    distance=distance+newScaredTimes[0]*(newScaredTimes[0]*0.5)
+                else:
+                    distance=distance+abs((gx+1)-px)
+
+        "action is South"
+        if action=='South' and newGhostStates[0].getDirection()=='North':
+            if abs((gy+1)-py)<abs(gy-py):
+                if newScaredTimes[0]>0:
+                    distance=distance+newScaredTimes[0]*newScaredTimes[0]
+                else:
+                    distance=distance+abs((gy+1)-py)*0.8
+            else:
+                if newScaredTimes[0]>0:
+                    distance=distance+newScaredTimes[0]*newScaredTimes[0]
+                else:
+                    distance=distance+abs((gy+1)-py)*0.8
+        if action=='South' and newGhostStates[0].getDirection()=='West':
+            if abs((gx-1)-px)<abs(gx-px):
+                if newScaredTimes[0]>0:
+                    distance=distance+newScaredTimes[0]*(newScaredTimes[0]*0.5)
+                else:
+                    distance=distance+abs((gx-1)-px)
+            else:
+                if newScaredTimes[0]>0:
+                    distance=distance+newScaredTimes[0]*(newScaredTimes[0]*0.5)
+                else:
+                    distance=distance+abs((gx-1)-px)
+        if action=='South' and newGhostStates[0].getDirection()=='East':
+            if abs((gx+1)-py)<abs(gx-px):
+                if newScaredTimes[0]>0:
+                    distance=distance+newScaredTimes[0]*(newScaredTimes[0]*0.5)
+                else:
+                    distance=distance+abs((gx+1)-px)
+            else:
+                if newScaredTimes[0]>0:
+                    distance=distance+newScaredTimes[0]*(newScaredTimes[0]*0.5)
+                else:
+                    distance=distance+abs((gx+1)-px)
+        '''*** compare direction of pacman and'''
+        #if newFood[px][py]==True:
+        #    distance=distance+1
+
         #if newFood[newPos[0]][newPos[1]]==False:
         #    addededvalue=addededvalue+1
         #gx,gy=newGhostStates.getPosition()
 
-        print(action,newGhostStates[0].getDirection())
-
+        #print(action,newGhostStates[0].getDirection())
+        
 
 
         return successorGameState.getScore()+distance
