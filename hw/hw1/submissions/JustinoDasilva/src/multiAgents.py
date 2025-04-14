@@ -90,24 +90,29 @@ class ReflexAgent(Agent):
         2. if packman direcion is  not the same as opppostte of pacman reduce by
         """
         '*** get distance  of pacman from ghost ***'
+        '*** if pacman is coming in your direction but ther is a awall'
         ghostDirection=newGhostStates[0].getDirection()
-        scared=newScaredTimes[0]
+        scared=max(newScaredTimes)
         gx,gy=newGhostStates[0].getPosition()
         px,py=newPos
         distance=1
 
         if action==ghostDirection:
 
-            '''pacmand is in the same row or column as ghost'''
+            '''pacman is in the same row or column as ghost'''
             if action in ['West','East']:
                if px==gx:
-                   distance=distance+1;
+                   distance=distance+1
+                   if scared>0:
+                       distance=distance+3
                else:
                    distance=distance+2
 
             elif action in ['North','South']:
                 if py==gy:
-                    distance=distance+1;
+                    distance=distance+1
+                    if scared>0:
+                        distance=distance+3
                 else:
                     distance=distance+2
 
@@ -115,40 +120,59 @@ class ReflexAgent(Agent):
         '''pacman is going west'''
         if action=='West':
             if ghostDirection=='East':
-                if (abs(px-gx)+abs(py-gy))<(abs(px-gx+1)+abs(py-gy)):
+                if (abs(px-gx)+abs(py-gy))<(abs(px-(gx+1))+abs(py-gy)):
                     distance=distance+distance+2
+                    if scared>0:
+                        distance=distance+3
+                        if px==gx:
+                            distance=distance+3
+                        else:
+                            distance=distance+2
+                    else:
+                        distance=distance-1
                 else:
                     distance=distance+distance/2
+
+
             elif ghostDirection=='South':
-                if(abs(px-gx)+abs(py-gy))<(abs(px-gx)+abs(py-gy-1)):
+                if(abs(px-gx)+abs(py-gy))<(abs(px-gx)+abs(py-(gy-1))):
                     distance=distance+distance+2
                 else:
                     distance=distance+distance/2
 
 
             else:
-                if(abs(px-gx)+abs(py-gy))<(abs(px-gx)+abs(py-gy+1)):
+                if(abs(px-gx)+abs(py-gy))<(abs(px-gx)+abs(py-(gy+1))):
                     distance=distance+distance+2
                 else:
                     distance=distance+distance/2
 
 
-        '''packman is goint north'''
+        '''packman is going north'''
         if action=='North':
             if ghostDirection=='South':
-                if(abs(px-gx)+abs(py-gy))<(abs(px-gx)+abs(py-gy-1)):
+                if(abs(px-gx)+abs(py-gy))<(abs(px-gx)+abs(py-(gy-1))):
                     distance=distance+distance+2
+                    if scared>0:
+                        distance=distance+3
+                        if gy==py:
+                            distance=distance+3
+                        else:
+                            distance=distance+2
+                    else:
+                        distance=distance-1
                 else:
                     distance=distance+distance/2
 
+
             elif ghostDirection=='East':
-                if(abs(px-gx)+abs(py-gy))<(abs(px-gx+1)+abs(py-gy)):
+                if(abs(px-gx)+abs(py-gy))<(abs(px-(gx+1))+abs(py-gy)):
                     distance=distance+distance+2
                 else:
                     distance=distance+distance/2
 
             else:
-                if(abs(px-gx)+abs(py-gy))<(abs(px-gx-1)+abs(py-gy)):
+                if(abs(px-gx)+abs(py-gy))<(abs(px-(gx-1))+abs(py-gy)):
                     distance=distance+distance+2
                 else:
                     distance=distance+distance/2
@@ -157,36 +181,53 @@ class ReflexAgent(Agent):
         '''packman is ogitn south'''
         if action=='South':
             if ghostDirection=='North':
-                if(abs(px-gx)+abs(py-gy))<(abs(px-gx)+abs(py-gy+1)):
+                if(abs(px-gx)+abs(py-gy))<(abs(px-gx)+abs(py-(gy+1))):
                     distance=distance+distance+2
+                    if scared>0:
+                        distance=distance+3
+                        if py==gy:
+                            distance=distance+3
+                        else:
+                            distance=distance+2
+                    else:
+                        distance=distance-1
                 else:
                     distance=distance+distance/2
+
             elif ghostDirection=='East':
-                if(abs(px-gx)+abs(py-gy))<(abs(px-gx+1)+abs(py-gy)):
+                if(abs(px-gx)+abs(py-gy))<(abs(px-(gx+1))+abs(py-gy)):
                     distance=distance+distance+2
                 else:
                     distance=distance+distance/2
             else:
-                if(abs(px-gx)+abs(py-gy))<(abs(px-gx-1)+abs(py-gy)):
+                if(abs(px-gx)+abs(py-gy))<(abs(px-(gx-1))+abs(py-gy)):
                     distance=distance+distance+2
                 else:
                     distance=distance+distance/2
         ''' pacman is going East'''
         if action=='East':
             if ghostDirection=='West':
-                if(abs(px-gx)+abs(py-gy))<(abs(px-gx-1)+abs(py-gy)):
+                if(abs(px-gx)+abs(py-gy))<(abs(px-(gx-1))+abs(py-gy)):
                     distance=distance+distance+2
+                    if scared>0:
+                        distance=distance+3
+                        if px==gx:
+                            distance=distance+3
+                        else:
+                            distance=distance+2
+                    else:
+                        distance=distance-1
                 else:
                     distance=distance+distance/2
 
             elif ghostDirection=='North':
-                if(abs(px-gx)+abs(py-gy))<(abs(px-gx)+abs(py-gy+1)):
+                if(abs(px-gx)+abs(py-gy))<(abs(px-gx)+abs(py-(gy+1))):
                     distance=distance+distance+2
                 else:
                     distance=distance+distance/2
 
             else:
-                if(abs(px-gx)+abs(py-gy))<(abs(px-gx)+abs(py-gy-1)):
+                if(abs(px-gx)+abs(py-gy))<(abs(px-gx)+abs(py-(gy-1))):
                     distance=distance+distance+2
                 else:
                     distance=distance+distance/2
@@ -201,174 +242,7 @@ class ReflexAgent(Agent):
 
 
 
-        '''////////////////////////////////////////////////'''
-        '''distance=0
-        px,py=newPos
-        gx,gy=newGhostStates[0].getPosition()
-        distance=abs(gx-px)+abs(gy-py)
-        ghostDirection=newGhostStates[0].getDirection()
 
-        "action is west"
-        if action=='West' and ghostDirection=='East':
-
-            if abs((gx+1)-px)<abs(gx-px):
-                if px==gx:
-                    if
-                    distance=distance-(distance/2)
-                if newScaredTimes[0]>0:
-                    distance=distance+newScaredTimes[0]*newScaredTimes[0]
-                else:
-                    distance=distance+abs((gx+1)-px)
-            else:
-                if newScaredTimes[0]>0:
-                    distance=distance+newScaredTimes[0]*newScaredTimes[0]
-                else:
-                    distance=distance+abs((gx+1)-px)
-
-
-        if action=='West' and newGhostStates[0].getDirection()=='North':
-            if abs((gy+1)-py)<abs(gy-py):
-                if newScaredTimes[0]>0:
-                    distance=distance+newScaredTimes[0]*(newScaredTimes[0]*0.5)
-                else:
-                    distance=distance+abs((gy+1)-py)
-            else:
-                if newScaredTimes[0]>0:
-                    distance=distance+newScaredTimes[0]*(newScaredTimes[0]*0.5)
-                else:
-                    distance=distance+abs((gy-1)-px)
-        if action=='West' and newGhostStates[0].getDirection()=='South':
-            if abs((gy-1)-py)<abs(gy-py):
-                if newScaredTimes[0]>0:
-                    distance=distance+newScaredTimes[0]*(newScaredTimes[0]*0.5)
-                else:
-                    distance=distance+abs((gy-1)-py)
-            else:
-                if newScaredTimes[0]>0:
-                    distance=distance+newScaredTimes[0]*(newScaredTimes[0]*0.5)
-                else:
-                    distance=distance+abs((gy-1)-py)
-        if action=='West' and newGhostStates[0].getDirection()=='West':
-            distance=distance*2+newScaredTimes[0]*(newScaredTimes[0]*2)
-        "Action is East"
-        if action=='East' and newGhostStates[0].getDirection()=='West':
-
-            if abs((gx-1)-px)<abs(gx-px):
-                if px==gx:
-                    distance=distance-(distance/2)
-                if newScaredTimes[0]>0:
-                    distance=distance+newScaredTimes[0]*newScaredTimes[0]
-                else:
-                    distance=distance+abs((gx-1)-px)*0.8
-            else:
-                if newScaredTimes[0]>0:
-                    distance=distance+newScaredTimes[0]*newScaredTimes[0]
-                else:
-                    distance=distance+abs((gx-1)-px)*0.8
-        if action=='East' and newGhostStates[0].getDirection()=='North':
-            if abs((gy+1)-py)<abs(gy-py):
-                if newScaredTimes[0]>0:
-                    distance=distance+newScaredTimes[0]*(newScaredTimes[0]*0.5)
-                else:
-                    distance=distance+abs((gy+1)-py)
-            else:
-                if newScaredTimes[0]>0:
-                    distance=distance+newScaredTimes[0]*(newScaredTimes[0]*0.5)
-                else:
-                    distance=distance+abs((gy+1)-py)
-        if action=='East' and newGhostStates[0].getDirection()=='South':
-            if abs((gy-1)-py)<abs(gy-py):
-                if newScaredTimes[0]>0:
-                    distance=distance+newScaredTimes[0]*(newScaredTimes[0]*0.5)
-                else:
-                    distance=distance+abs((gy-1)-py)
-            else:
-                if abs((gy-1)-py)<abs(gy-py):
-                    if newScaredTimes[0]>0:
-                        distance=distance+newScaredTimes[0]*(newScaredTimes[0]*0.5)
-                    else:
-                        distance=distance+abs((gy-1)-py)
-        if action=='East' and newGhostStates[0].getDirection()=='East':
-            distance=distance*2+newScaredTimes[0]*(newScaredTimes[0]*2)
-        "*** action is north"
-        if action=='North' and newGhostStates[0].getDirection()=='South':
-
-            if abs((gy-1)-py)<abs(gy-py):
-                if gy==py:
-                    distance=distance-(distance/2)
-                if newScaredTimes[0]>0:
-                    distance=distance+newScaredTimes[0]*newScaredTimes[0]
-                else:
-                    distance=distance+abs((gy-1)-py)*0.8
-            else:
-                if newScaredTimes[0]>0:
-                    distance=distance+newScaredTimes[0]*newScaredTimes[0]
-                else:
-                    distance=distance+abs((gy-1)-py)*0.8
-        if action=='North' and newGhostStates[0].getDirection()=='West':
-            if abs((gx-1)-px)<abs(gx-px):
-                if newScaredTimes[0]>0:
-                    distance=distance+newScaredTimes[0]*(newScaredTimes[0]*0.5)
-                else:
-                    distance=distance+abs((gx-1)-px)
-            else:
-                if newScaredTimes[0]>0:
-                    distance=distance+newScaredTimes[0]*(newScaredTimes[0]*0.5)
-                else:
-                    distance=distance+abs((gx-1)-px)
-        if action=='North' and newGhostStates[0].getDirection()=='East':
-            if abs((gx+1)-py)<abs(gx-px):
-                if newScaredTimes[0]>0:
-                    distance=distance+newScaredTimes[0]*(newScaredTimes[0]*0.5)
-                else:
-                    distance=distance+abs((gx+1)-px)
-            else:
-                if newScaredTimes[0]>0:
-                    distance=distance+newScaredTimes[0]*(newScaredTimes[0]*0.5)
-                else:
-                    distance=distance+abs((gx+1)-px)
-        if action=='North' and newGhostStates[0].getDirection()=='North':
-            distance=distance*2+newScaredTimes[0]*(newScaredTimes[0]*2)
-
-        "action is South"
-        if action=='South' and newGhostStates[0].getDirection()=='North':
-
-            if abs((gy+1)-py)<abs(gy-py):
-                if py==gy:
-                    distance=distance-(distance/2)
-                if newScaredTimes[0]>0:
-                    distance=distance+newScaredTimes[0]*newScaredTimes[0]
-                else:
-                    distance=distance+abs((gy+1)-py)*0.8
-            else:
-                if newScaredTimes[0]>0:
-                    distance=distance+newScaredTimes[0]*newScaredTimes[0]
-                else:
-                    distance=distance+abs((gy+1)-py)*0.8
-        if action=='South' and newGhostStates[0].getDirection()=='West':
-            if abs((gx-1)-px)<abs(gx-px):
-                if newScaredTimes[0]>0:
-                    distance=distance+newScaredTimes[0]*(newScaredTimes[0]*0.5)
-                else:
-                    distance=distance+abs((gx-1)-px)
-            else:
-                if newScaredTimes[0]>0:
-                    distance=distance+newScaredTimes[0]*(newScaredTimes[0]*0.5)
-                else:
-                    distance=distance+abs((gx-1)-px)
-        if action=='South' and newGhostStates[0].getDirection()=='East':
-            if abs((gx+1)-py)<abs(gx-px):
-                if newScaredTimes[0]>0:
-                    distance=distance+newScaredTimes[0]*(newScaredTimes[0]*0.5)
-                else:
-                    distance=distance+abs((gx+1)-px)
-            else:
-                if newScaredTimes[0]>0:
-                    distance=distance+newScaredTimes[0]*(newScaredTimes[0]*0.5)
-                else:
-                    distance=distance+abs((gx+1)-px)
-        if action=='South' and newGhostStates[0].getDirection()=='South':
-            distance=distance*2+newScaredTimes[0]*(newScaredTimes[0]*2)'''
         '''*** compare direction of pacman and'''
         #if newFood[px][py]==True:
         #    distance=distance+1
