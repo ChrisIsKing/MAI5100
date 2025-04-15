@@ -91,11 +91,49 @@ class ReflexAgent(Agent):
         """
         '*** get distance  of pacman from ghost ***'
         '*** if pacman is coming in your direction but ther is a awall'
+        ##check if ther is food in the chosen Directions
+        distance=1
+        height=newFood.height
+        width=newFood.width
+        hasfood={'North':0,'South':0,'East':0,'West':0}
+        x,y=currentGameState.getPacmanPosition();
+
+
+        'searching for food'
+        #print('x :',x,'y :',y)
+        if action =='North':
+            for newY in range(y,height,1):
+                if newFood[x][newY]==True:
+                    hasfood[action]=hasfood[action]+1
+            distance=distance+hasfood[action]
+        elif action=='South':
+            for newY in range(y,0,-1):
+                if newFood[x][newY]==True:
+                    hasfood[action]=hasfood[action]+1
+            distance=distance+hasfood[action]
+        elif action=='East':
+            for newX in range(x,width,1):
+                if newFood[newX][y]==True:
+                    hasfood[action]=hasfood[action]+1
+            distance=distance+hasfood[action]
+        elif action=='West':
+            for newX in range(x,0,-1):
+                if newFood[newX][y]==True:
+                    hasfood[action]=hasfood[action]+1
+            distance=distance+hasfood[action]
+        
+
+
+
+
+        '''searching for food'''
+
+
         ghostDirection=newGhostStates[0].getDirection()
         scared=max(newScaredTimes)
         gx,gy=newGhostStates[0].getPosition()
         px,py=newPos
-        distance=1
+
 
         if action==ghostDirection:
 
@@ -119,6 +157,7 @@ class ReflexAgent(Agent):
 
         '''pacman is going west'''
         if action=='West':
+
             if ghostDirection=='East':
                 if (abs(px-gx)+abs(py-gy))<(abs(px-(gx+1))+abs(py-gy)):
                     distance=distance+distance+2
@@ -170,6 +209,8 @@ class ReflexAgent(Agent):
                     distance=distance+distance+2
                 else:
                     distance=distance+distance/2
+                if px==(gx+1):
+                    distance=distance-(distance/2)
 
             else:
                 if(abs(px-gx)+abs(py-gy))<(abs(px-(gx-1))+abs(py-gy)):
@@ -194,16 +235,19 @@ class ReflexAgent(Agent):
                 else:
                     distance=distance+distance/2
 
+
             elif ghostDirection=='East':
                 if(abs(px-gx)+abs(py-gy))<(abs(px-(gx+1))+abs(py-gy)):
                     distance=distance+distance+2
                 else:
                     distance=distance+distance/2
+
             else:
                 if(abs(px-gx)+abs(py-gy))<(abs(px-(gx-1))+abs(py-gy)):
                     distance=distance+distance+2
                 else:
                     distance=distance+distance/2
+
         ''' pacman is going East'''
         if action=='East':
             if ghostDirection=='West':
@@ -220,17 +264,20 @@ class ReflexAgent(Agent):
                 else:
                     distance=distance+distance/2
 
+
             elif ghostDirection=='North':
                 if(abs(px-gx)+abs(py-gy))<(abs(px-gx)+abs(py-(gy+1))):
                     distance=distance+distance+2
                 else:
                     distance=distance+distance/2
 
+
             else:
                 if(abs(px-gx)+abs(py-gy))<(abs(px-gx)+abs(py-(gy-1))):
                     distance=distance+distance+2
                 else:
                     distance=distance+distance/2
+
 
 
 
@@ -291,8 +338,17 @@ class MinimaxAgent(MultiAgentSearchAgent):
     """
     Your minimax agent (question 2)
     """
-
+    #def getAction(self, gameState: GameState):
     def getAction(self, gameState: GameState):
+
+        legalMoves = gameState.getLegalActions()
+
+        # Choose one of the best actions
+        scores = [self.evaluationFunction(gameState, action) for action in legalMoves]
+        bestScore = max(scores)
+        bestIndices = [index for index in range(len(scores)) if scores[index] == bestScore]
+        chosenIndex = random.choice(bestIndices) # Pick randomly among the best
+
         """
         Returns the minimax action from the current gameState using self.depth
         and self.evaluationFunction.
@@ -316,6 +372,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
         Returns whether or not the game state is a losing state
         """
         "*** YOUR CODE HERE ***"
+
         util.raiseNotDefined()
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
