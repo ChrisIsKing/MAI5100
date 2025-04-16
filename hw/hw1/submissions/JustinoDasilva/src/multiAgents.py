@@ -79,6 +79,7 @@ class ReflexAgent(Agent):
         newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
 
         "*** YOUR CODE HERE ***"
+        print(newGhostStates[0],newGhostStates[1])
         #
         #calculate nuber of steps ghosts requirs to reac pacman, the  the farter the  more valuabel the moce
 
@@ -121,8 +122,6 @@ class ReflexAgent(Agent):
                 if newFood[newX][y]==True:
                     hasfood[action]=hasfood[action]+1
             distance=distance+hasfood[action]
-        
-
 
 
 
@@ -143,8 +142,10 @@ class ReflexAgent(Agent):
                    distance=distance+1
                    if scared>0:
                        distance=distance+3
+
                else:
                    distance=distance+2
+
 
             elif action in ['North','South']:
                 if py==gy:
@@ -283,8 +284,10 @@ class ReflexAgent(Agent):
 
 
 
-
-        distance=distance+scared*scared
+        if scared==0:
+            distance=distance/2
+        else:
+            distance=distance*scared+len(newScaredTimes)
 
 
 
@@ -338,16 +341,49 @@ class MinimaxAgent(MultiAgentSearchAgent):
     """
     Your minimax agent (question 2)
     """
+
     #def getAction(self, gameState: GameState):
+    ''''successorGameState = currentGameState.generatePacmanSuccessor(action)
+
+    newPos = successorGameState.getPacmanPosition()
+    newFood = successorGameState.getFood()
+    newGhostStates = successorGameState.getGhostStates()
+    newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]'''
     def getAction(self, gameState: GameState):
+        '''get legal moves dept 1 for each agent'''
+        agentsMoves=[gameState.getLegalActions(index) for index  in  range(0,gameState.getNumAgents(),1)]
+        print('number of agents',gameState.getNumAgents())
+        "generate succesor state for each agent interatively"
+        "evlate each possible state of pacman"
+        priorityQ=util.PriorityQueue()
+        newAgentEvaluation=[]# the corresponging  evaluation for each action  taken by an agent.
+        newAgentActions=[] #the coresponding action for each agent.
+        uniqueAgentActions=[]
+        uniqueAgentEvaluation=[]
+        for agentIndex in range(0,gameState.getNumAgents(),1):
 
-        legalMoves = gameState.getLegalActions()
+            for actions in agentsMoves[agentIndex]:
+                '''get the evaluation of a move'''
+                StateEvaluation=self.evaluationFunction(gameState.generateSuccessor(agentIndex,actions))
+                uniqueAgentEvaluation.append(StateEvaluation)
+                uniqueAgentActions.append(actions)
 
-        # Choose one of the best actions
-        scores = [self.evaluationFunction(gameState, action) for action in legalMoves]
-        bestScore = max(scores)
-        bestIndices = [index for index in range(len(scores)) if scores[index] == bestScore]
-        chosenIndex = random.choice(bestIndices) # Pick randomly among the best
+
+
+            newAgentEvaluation.append(uniqueAgentEvaluation)
+            if len(newAgentEvaluation)>1:
+                maxindex=newAgentEvaluation[1].index(max(newAgentEvaluation[1]))
+            else:
+                maxindex=newAgentEvaluation[0].index(max(newAgentEvaluation[0]))
+            newAgentActions.append(uniqueAgentActions)
+            #mmaxindex=newAgentEvaluation[1].index(max(newAgentEvaluation[1]))
+
+
+
+        #maxEvaluation[agentIndex]=max(newAgentEvaluation[agentIndex]
+        #pritn(newAgentEvaluation)
+        return [newAgentEvaluation[0][maxindex],newAgentActions[0]]
+
 
         """
         Returns the minimax action from the current gameState using self.depth
