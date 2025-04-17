@@ -75,7 +75,24 @@ class ReflexAgent(Agent):
         newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
 
         "*** YOUR CODE HERE ***"
-        return successorGameState.getScore()
+        """
+        The paramaters that are important for relexive behavior includes 
+        distance from food, distance from ghost, and if food or ghost has eaten
+        The latter 2 are already implemented, so let's implement the first 2
+        
+        1) Let's get closest food pellet [Manhattan Distance] (if tie randomly choose one)
+           If we are getting closer, let's reward it
+        2) Let's avoid ghosts in a radius from them by penalizing the action's score
+           
+        """
+        
+        # First let's get the base score of the game
+        score = successorGameState.getScore()
+        
+        # 1) Find the closest Food Pellet
+        
+        return score
+    
 
 def scoreEvaluationFunction(currentGameState: GameState):
     """
