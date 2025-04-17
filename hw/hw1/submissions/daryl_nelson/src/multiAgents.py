@@ -47,8 +47,12 @@ class ReflexAgent(Agent):
         bestIndices = [index for index in range(len(scores)) if scores[index] == bestScore]
         chosenIndex = random.choice(bestIndices) # Pick randomly among the best
 
-        "Add more of your code here if you want to"
+        if len(bestIndices) > 1:
+            if legalMoves[chosenIndex] == 'Stop':
+                bestIndices.pop(chosenIndex)
+                chosenIndex = random.choice(bestIndices)
 
+        "Add more of your code here if you want to"
         return legalMoves[chosenIndex]
 
     def evaluationFunction(self, currentGameState: GameState, action):
@@ -67,55 +71,22 @@ class ReflexAgent(Agent):
         to create a masterful evaluation function.
         """
         # # Useful information you can extract from a GameState (pacman.py)
-        distance_value = {
-            0:80,
-            1:70,
-            2:60,
-            3:35,
 
-        }
-        positive_distance_value = {
-            0: 80,
-            1: 70,
-            2: 60,
-            3: 55,
-            4: 50,
-            5: 45,
-            6: 40,
-            7: 35,
-            8: 30,
-            9: 25,
-            10: 20,
-            11: 19,
-            12: 18,
-            13: 17,
-            14: 16,
-            15: 15,
-            16: 14,
-            17: 13,
-            18: 12,
-        }
-
+        positive_distance_value = {i: 80 - 2 * i for i in range(31)}
+        distance_value = {i: 100 - 20 * i for i in range(6)}
         score = 0
-
         currentFood = currentGameState.getFood()
         currentCapsules = currentGameState.getCapsules()
         successorGameState = currentGameState.generatePacmanSuccessor(action)
         newPos = successorGameState.getPacmanPosition()
         min_distance = min(manhattanDistance(newPos, food) for food in currentFood.asList())
 
-        if currentFood[newPos[0]][newPos[1]] == True:
-            score += 25
-        for cap in currentCapsules:
-            if newPos == cap:
-                score += 35
-
         newGhostStates = successorGameState.getGhostStates()
         for x in newGhostStates:
             m_distance = manhattanDistance(newPos, x.getPosition())
             if m_distance in distance_value and x.scaredTimer < 1:
                 score -= distance_value[m_distance]
-            elif min_distance in positive_distance_value:
+            if min_distance in positive_distance_value:
                 score += positive_distance_value[min_distance]
 
         return successorGameState.getScore() + score
