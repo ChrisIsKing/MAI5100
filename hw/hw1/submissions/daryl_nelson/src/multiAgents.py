@@ -72,23 +72,28 @@ class ReflexAgent(Agent):
             1:70,
             2:60,
             3:35,
-            4:30,
-            5:25,
-            6:20,
-            7:15
+
         }
         positive_distance_value = {
-            8: 10,
-            9: 10,
+            0: 80,
+            1: 70,
+            2: 60,
+            3: 55,
+            4: 50,
+            5: 45,
+            6: 40,
+            7: 35,
+            8: 30,
+            9: 25,
             10: 20,
-            11: 20,
-            12: 20,
-            13: 20,
-            14: 20,
-            15: 20,
-            16: 20,
-            17: 20,
-            18: 20,
+            11: 19,
+            12: 18,
+            13: 17,
+            14: 16,
+            15: 15,
+            16: 14,
+            17: 13,
+            18: 12,
         }
 
         score = 0
@@ -97,6 +102,7 @@ class ReflexAgent(Agent):
         currentCapsules = currentGameState.getCapsules()
         successorGameState = currentGameState.generatePacmanSuccessor(action)
         newPos = successorGameState.getPacmanPosition()
+        min_distance = min(manhattanDistance(newPos, food) for food in currentFood.asList())
 
         if currentFood[newPos[0]][newPos[1]] == True:
             score += 25
@@ -109,10 +115,8 @@ class ReflexAgent(Agent):
             m_distance = manhattanDistance(newPos, x.getPosition())
             if m_distance in distance_value and x.scaredTimer < 1:
                 score -= distance_value[m_distance]
-            elif m_distance in distance_value and x.scaredTimer > 3:
-                score += distance_value[m_distance]
-            elif m_distance in positive_distance_value and x.scaredTimer < 1:
-                score += positive_distance_value[m_distance]
+            elif min_distance in positive_distance_value:
+                score += positive_distance_value[min_distance]
 
         return successorGameState.getScore() + score
 
