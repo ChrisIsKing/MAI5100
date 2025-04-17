@@ -41,9 +41,14 @@ class ReflexAgent(Agent):
         """
         # Collect legal moves and successor states
         legalMoves = gameState.getLegalActions()
+        # print(legalMoves)
+
+        # self.evaluationFunction(gameState, legalMoves)
 
         # Choose one of the best actions
+        print(legalMoves)
         scores = [self.evaluationFunction(gameState, action) for action in legalMoves]
+        # print(scores)
         bestScore = max(scores)
         bestIndices = [index for index in range(len(scores)) if scores[index] == bestScore]
         chosenIndex = random.choice(bestIndices) # Pick randomly among the best
@@ -67,15 +72,65 @@ class ReflexAgent(Agent):
         Print out these variables to see what you're getting, then combine them
         to create a masterful evaluation function.
         """
-        # Useful information you can extract from a GameState (pacman.py)
+        # # Useful information you can extract from a GameState (pacman.py)
+        # print(currentGameState.getPacmanPosition())
+
+        distance_value = {
+            0:80,
+            1:50,
+            2:40,
+            3:35,
+            4:30,
+            5:25,
+            6:20,
+            7:15
+        }
+
+        positive_distance_value = {
+            8: 10,
+            9: 10,
+            10: 20,
+            11: 20,
+            12: 20,
+            13: 20,
+            14: 20,
+            15: 20,
+            16: 20,
+            17: 20,
+            18: 20,
+        }
+        currentFood = currentGameState.getFood()
+        score = 0
+        #
+        # for direction in action:
+        #     successorGameState = currentGameState.generatePacmanSuccessor(direction)
+        #     newPos = successorGameState.getPacmanPosition()
+        #     if currentFood[newPos[0]][newPos[1]] == True:
+        #         score += 1
+        #     print(score)
+        # exit()
         successorGameState = currentGameState.generatePacmanSuccessor(action)
         newPos = successorGameState.getPacmanPosition()
-        newFood = successorGameState.getFood()
+        if currentFood[newPos[0]][newPos[1]] == True:
+            score += 15
+
         newGhostStates = successorGameState.getGhostStates()
-        newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
+        for x in newGhostStates:
+            m_distance = manhattanDistance(newPos, x.getPosition())
+            if m_distance in distance_value and x.scaredTimer < 1:
+                score -= distance_value[m_distance]
+            elif m_distance in distance_value and x.scaredTimer > 3:
+                score += distance_value[m_distance]
+            elif m_distance in positive_distance_value and x.scaredTimer < 1:
+                score += positive_distance_value[m_distance]
+
+
+        print(score)
+        print(action)
+
 
         "*** YOUR CODE HERE ***"
-        return successorGameState.getScore()
+        return successorGameState.getScore() + score
 
 def scoreEvaluationFunction(currentGameState: GameState):
     """
