@@ -337,10 +337,14 @@ class MultiAgentSearchAgent(Agent):
         self.evaluationFunction = util.lookup(evalFn, globals())
         self.depth = int(depth)
 
+
 class MinimaxAgent(MultiAgentSearchAgent):
     """
     Your minimax agent (question 2)
     """
+    '''minmax tree  contains wight and action'''
+
+
 
     #def getAction(self, gameState: GameState):
     ''''successorGameState = currentGameState.generatePacmanSuccessor(action)
@@ -349,79 +353,180 @@ class MinimaxAgent(MultiAgentSearchAgent):
     newFood = successorGameState.getFood()
     newGhostStates = successorGameState.getGhostStates()
     newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]'''
-    def getAction(self, gameState: GameState):
-        '''get legal moves dept 1 for each agent'''
-        agentsMoves=[gameState.getLegalActions(index) for index  in  range(0,gameState.getNumAgents(),1)]
-        print('number of agents',gameState.getNumAgents())
-        "generate succesor state for each agent interatively"
-        "evlate each possible state of pacman"
-        priorityQ=util.PriorityQueue()
-        newAgentEvaluation=[]# the corresponging  evaluation for each action  taken by an agent.
-        newAgentActions=[] #the coresponding action for each agent.
-        uniqueAgentActions=[]
-        uniqueAgentEvaluation=[]
-        for agentIndex in range(0,gameState.getNumAgents(),1):
-
-            for actions in agentsMoves[agentIndex]:
-                '''get the evaluation of a move'''
-                StateEvaluation=self.evaluationFunction(gameState.generateSuccessor(agentIndex,actions))
-                uniqueAgentEvaluation.append(StateEvaluation)
-                uniqueAgentActions.append(actions)
-
-
-
-            newAgentEvaluation.append(uniqueAgentEvaluation)
-            if len(newAgentEvaluation)>1:
-                maxindex=newAgentEvaluation[1].index(max(newAgentEvaluation[1]))
-            else:
-                maxindex=newAgentEvaluation[0].index(max(newAgentEvaluation[0]))
-            newAgentActions.append(uniqueAgentActions)
-            #mmaxindex=newAgentEvaluation[1].index(max(newAgentEvaluation[1]))
-
-
-
-        #maxEvaluation[agentIndex]=max(newAgentEvaluation[agentIndex]
-        #pritn(newAgentEvaluation)
-        return [newAgentEvaluation[0][maxindex],newAgentActions[0]]
-
+    def getAction(self, gameState):
 
         """
-        Returns the minimax action from the current gameState using self.depth
-        and self.evaluationFunction.
+          Returns the minimax action from the current gameState using self.depth
+          and self.evaluationFunction.
 
-        Here are some method calls that might be useful when implementing minimax.
+          Here are some method calls that might be useful when implementing minimax.
 
-        gameState.getLegalActions(agentIndex):
-        Returns a list of legal actions for an agent
-        agentIndex=0 means Pacman, ghosts are >= 1
+          gameState.getLegalActions(agentIndex):
+            Returns a list of legal actions for an agent
+            agentIndex=0 means Pacman, ghosts are >= 1
 
-        gameState.generateSuccessor(agentIndex, action):
-        Returns the successor game state after an agent takes an action
+          gameState.generateSuccessor(agentIndex, action):
+            Returns the successor game state after an agent takes an action
 
-        gameState.getNumAgents():
-        Returns the total number of agents in the game
-
-        gameState.isWin():
-        Returns whether or not the game state is a winning state
-
-        gameState.isLose():
-        Returns whether or not the game state is a losing state
+          gameState.getNumAgents():
+            Returns the total number of agents in the game
         """
         "*** YOUR CODE HERE ***"
 
-        util.raiseNotDefined()
+        # Format of result = [score, action]
+        ''' call call to max '''
 
+        # Return the action from result
+        return self.maxValue(gameState,0,0)[1]
+
+    #pacman is moving
+    def maxValue(self,gameState,agent,depth):
+            if  len(gameState.getLegalActions(agent))==0 or depth==self.depth:
+               #print("calling Score: NumberOfLegalMoves: ",NumberOfActions,"depth: ",depth,"function Depth: ",self.depth)
+               #exit(str(depth)+"hhhhhhhhhh")
+               return self.evaluationFunction(gameState),None
+            #get all legal moves of pacmane
+            legalMoves=gameState.getLegalActions(0)
+            #set the best move to lowest possible
+            bestMove=float('-inf')
+            bestAction=None
+            for actions in legalMoves:
+                GhostToMove=gameState.generateSuccessor(0,actions)
+                nextDepth=depth
+                newAgentToMove=agent+1
+                CostToMove=self.minValue(GhostToMove,newAgentToMove,nextDepth)[0]
+                #if we find a better move that the current move update it
+                if CostToMove>bestMove:
+
+                    bestMove=CostToMove
+                    bestAction=actions
+            #return the maxkim move for pacman on this leaf in case of multi layer
+            return bestMove,bestAction
+
+    #ghost is moving
+    def minValue(self,gameState,agent,depth):
+            if  len(gameState.getLegalActions(agent))==0 or depth==self.depth:
+               #print("calling Score: NumberOfLegalMoves: ",NumberOfActions,"depth: ",depth,"function Depth: ",self.depth)
+               #exit(str(depth)+"hhhhhhhhhh")
+               return self.evaluationFunction(gameState),None
+
+            NumberOfAgents=gameState.getNumAgents()
+            legalMoves=gameState.getLegalActions(agent)
+            worstMove=float('inf')
+            worstAction=None
+            #newAgentToMove=None
+
+            for actions in legalMoves:
+                newGameState=gameState.generateSuccessor(agent,actions)
+                if agent<NumberOfAgents-1:
+                    #all the ghost haven't moved new ghost to move
+                    newAgentToMove=agent+1
+                    nextDepth=depth
+                    CostToMove=self.minValue(newGameState,newAgentToMove,nextDepth)[0]
+                else:
+                    # one level is complete it's pacman turn to move again
+                    #move to the next level by increasing depth
+                    newAgentToMove=0
+                    nextDepth=depth+1
+                    CostToMove=self.maxValue(newGameState,newAgentToMove,nextDepth)[0]
+
+                #minimuze both pacman and otherchosts moves
+                if worstMove>CostToMove:
+                    worstMove=CostToMove
+                    worstAction=actions
+
+            return worstMove,worstAction
 class AlphaBetaAgent(MultiAgentSearchAgent):
     """
     Your minimax agent with alpha-beta pruning (question 3)
     """
 
-    def getAction(self, gameState: GameState):
+    def getAction(self, gameState):
+
         """
-        Returns the minimax action using self.depth and self.evaluationFunction
+          Returns the minimax action from the current gameState using self.depth
+          and self.evaluationFunction.
+
+          Here are some method calls that might be useful when implementing minimax.
+
+          gameState.getLegalActions(agentIndex):
+            Returns a list of legal actions for an agent
+            agentIndex=0 means Pacman, ghosts are >= 1
+
+          gameState.generateSuccessor(agentIndex, action):
+            Returns the successor game state after an agent takes an action
+
+          gameState.getNumAgents():
+            Returns the total number of agents in the game
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+
+        # Format of result = [score, action]
+        ''' call call to max '''
+
+        # Return the action from result
+        return self.maxValue(gameState,0,0)[1]
+
+    #pacman is moving
+    def maxValue(self,gameState,agent,depth):
+            if  len(gameState.getLegalActions(agent))==0 or depth==self.depth:
+                return self.evaluationFunction(gameState),None
+            #get all legal moves of pacmane
+            legalMoves=gameState.getLegalActions(0)
+            #set the best move to lowest possible
+            bestMove=float('-inf')
+            bestAction=None
+            for actions in legalMoves:
+                GhostToMove=gameState.generateSuccessor(0,actions)
+                nextDepth=depth
+                newAgentToMove=agent+1
+                CostToMove=self.minValue(GhostToMove,newAgentToMove,nextDepth)[0]
+                #if we find a better move that the current move update it
+                if CostToMove>bestMove:
+
+                    bestMove=CostToMove
+                    bestAction=actions
+            #return the maxkim move for pacman on this leaf in case of multi layer
+            return bestMove,bestAction
+
+    #ghost is moving
+    def minValue(self,gameState,agent,depth):
+            if  len(gameState.getLegalActions(agent))==0 or depth==self.depth:
+               #print("calling Score: NumberOfLegalMoves: ",NumberOfActions,"depth: ",depth,"function Depth: ",self.depth)
+               #exit(str(depth)+"hhhhhhhhhh")
+               return self.evaluationFunction(gameState),None
+
+            NumberOfAgents=gameState.getNumAgents()
+            legalMoves=gameState.getLegalActions(agent)
+            worstMove=float('inf')
+            worstAction=None
+            #newAgentToMove=None
+
+            for actions in legalMoves:
+                newGameState=gameState.generateSuccessor(agent,actions)
+                if agent<NumberOfAgents-1:
+                    #all the ghost haven't moved new ghost to move
+                    newAgentToMove=agent+1
+                    nextDepth=depth
+                    CostToMove=self.minValue(newGameState,newAgentToMove,nextDepth)[0]
+                else:
+                    # one level is complete it's pacman turn to move again
+                    #move to the next level by increasing depth
+                    newAgentToMove=0
+                    nextDepth=depth+1
+                    CostToMove=self.maxValue(newGameState,newAgentToMove,nextDepth)[0]
+
+                #minimuze both pacman and otherchosts moves
+                if worstMove>CostToMove:
+                    worstMove=CostToMove
+                    worstAction=actions
+
+            return worstMove,worstAction
+
+
+
+
+
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """
