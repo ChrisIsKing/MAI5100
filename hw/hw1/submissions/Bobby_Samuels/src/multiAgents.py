@@ -90,7 +90,24 @@ class ReflexAgent(Agent):
         score = successorGameState.getScore()
         
         # 1) Find the closest Food Pellet
-        
+       # Reward closer food
+        foodList = newFood.asList()
+        if len(foodList) > 0:
+            foodValues = (manhattanDistance(newPos,food)for food in foodList)
+            minFoodDist = min(foodValues)
+            score = score + (10/ minFoodDist) #10 is the 
+
+        # Penalize being too close to ghosts
+        for ghost in newGhostStates:
+            ghostDist = manhattanDistance(newPos, ghost.getPosition())
+            score = score - (100/ghostDist)
+            # if ghostDist < 1:
+            #     score = score - 200  # very risky
+
+        # Reward eating food
+        if successorGameState.getNumFood() < currentGameState.getNumFood():
+            score += 50
+
         return score
     
 
