@@ -4,7 +4,7 @@
 # educational purposes provided that (1) you do not distribute or publish
 # solutions, (2) you retain this notice, and (3) you provide clear
 # attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
-# 
+#
 # Attribution Information: The Pacman AI projects were developed at UC Berkeley.
 # The core projects and autograders were primarily created by John DeNero
 # (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
@@ -73,7 +73,7 @@ class ReflexAgent(Agent):
         # # Useful information you can extract from a GameState (pacman.py)
 
         positive_distance_value = {i: 80 - 2 * i for i in range(31)}
-        distance_value = {i: 100 - 20 * i for i in range(6)}
+        distance_value = {i: 100 - 20 * i for i in range(4)}
         score = 0
         currentFood = currentGameState.getFood()
         currentCapsules = currentGameState.getCapsules()
@@ -115,7 +115,6 @@ class MultiAgentSearchAgent(Agent):
     only partially specified, and designed to be extended.  Agent (game.py)
     is another abstract class.
     """
-
     def __init__(self, evalFn = 'scoreEvaluationFunction', depth = '2'):
         self.index = 0 # Pacman is always agent index 0
         self.evaluationFunction = util.lookup(evalFn, globals())
@@ -149,8 +148,45 @@ class MinimaxAgent(MultiAgentSearchAgent):
         gameState.isLose():
         Returns whether or not the game state is a losing state
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+
+        def minimax(state, depth, agentIndex):
+            if depth == 0 or state.isWin() or state.isLose():
+                return self.evaluationFunction(state), None
+
+            numAgents = state.getNumAgents()
+            nextAgent = (agentIndex + 1) % numAgents
+            nextDepth = depth - 1 if nextAgent == 0 else depth
+
+            legalMoves = state.getLegalActions(agentIndex)
+            if not legalMoves:
+                return self.evaluationFunction(state), None
+
+            if agentIndex == 0:
+                maxEval = float('-inf')
+                bestScoreMove = None
+                for move in legalMoves:
+                    successor = state.generateSuccessor(agentIndex, move)
+                    evalScore, _ = minimax(successor, nextDepth, nextAgent)
+                    if evalScore > maxEval:
+                        maxEval = evalScore
+                        bestScoreMove = move
+                return maxEval, bestScoreMove
+
+            else:
+                minEval = float('inf')
+                worseScoreMove = None
+                for move in legalMoves:
+                    successor = state.generateSuccessor(agentIndex, move)
+                    evalScore, _ = minimax(successor, nextDepth, nextAgent)
+                    if evalScore < minEval:
+                        minEval = evalScore
+                        worseScoreMove = move
+                return minEval, worseScoreMove
+
+        _, bestAction = minimax(gameState, self.depth, self.index)
+        return bestAction
+
+        # util.raiseNotDefined()
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
     """
