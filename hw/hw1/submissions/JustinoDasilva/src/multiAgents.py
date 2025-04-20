@@ -463,13 +463,16 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
 
         # Format of result = [score, action]
         ''' call call to max '''
-
+        agent=0
+        currentDept=0
+        alpha=float('-inf')
+        beta=float('inf')
         # Return the action from result
-        return self.maxValue(gameState,0,0)[1]
+        return self.maxValueAB(gameState,agent,currentDept,alpha,beta)[1]
 
     #pacman is moving
-    def maxValue(self,gameState,agent,depth):
-            if  len(gameState.getLegalActions(agent))==0 or depth==self.depth:
+    def maxValueAB(self,gameState,agent,depth,alpha,beta):
+            if  len(gameState.getLegalActions(agent))==0 or depth==self.depth or gameState.isLose():
                 return self.evaluationFunction(gameState),None
             #get all legal moves of pacmane
             legalMoves=gameState.getLegalActions(0)
@@ -480,20 +483,30 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
                 GhostToMove=gameState.generateSuccessor(0,actions)
                 nextDepth=depth
                 newAgentToMove=agent+1
-                CostToMove=self.minValue(GhostToMove,newAgentToMove,nextDepth)[0]
+                CostToMove=self.minValueAB(GhostToMove,newAgentToMove,nextDepth,alpha,beta)[0]
                 #if we find a better move that the current move update it
-                if CostToMove>bestMove:
 
+
+                if CostToMove>bestMove:
                     bestMove=CostToMove
                     bestAction=actions
+
+                #we update alpha if best move is better
+                alpha=max(alpha,bestMove)
+                # if best move so far is better that beta  we return it
+                if bestMove>beta:
+                    return bestMove,bestAction
+
             #return the maxkim move for pacman on this leaf in case of multi layer
+            #print('Maxxxxxxxxxxxxxxxxxxxx',bestMove,bestAction,alpha,beta)
             return bestMove,bestAction
 
     #ghost is moving
-    def minValue(self,gameState,agent,depth):
-            if  len(gameState.getLegalActions(agent))==0 or depth==self.depth:
+    def minValueAB(self,gameState,agent,depth,alpha,beta):
+            if  len(gameState.getLegalActions(agent))==0 or depth==self.depth or gameState.isLose():
                #print("calling Score: NumberOfLegalMoves: ",NumberOfActions,"depth: ",depth,"function Depth: ",self.depth)
                #exit(str(depth)+"hhhhhhhhhh")
+               #print("Value i gotttttttttttttttttttt:",self.evaluationFunction(gameState))
                return self.evaluationFunction(gameState),None
 
             NumberOfAgents=gameState.getNumAgents()
@@ -508,21 +521,30 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
                     #all the ghost haven't moved new ghost to move
                     newAgentToMove=agent+1
                     nextDepth=depth
-                    CostToMove=self.minValue(newGameState,newAgentToMove,nextDepth)[0]
+                    CostToMove=self.minValueAB(newGameState,newAgentToMove,nextDepth,alpha,beta)[0]
                 else:
                     # one level is complete it's pacman turn to move again
                     #move to the next level by increasing depth
                     newAgentToMove=0
                     nextDepth=depth+1
-                    CostToMove=self.maxValue(newGameState,newAgentToMove,nextDepth)[0]
+                    CostToMove=self.maxValueAB(newGameState,newAgentToMove,nextDepth,alpha,beta)[0]
 
                 #minimuze both pacman and otherchosts moves
+                #print('Minnnnnnnnnnnnnnnnn',CostToMove,worstMove)
+
                 if worstMove>CostToMove:
-                    worstMove=CostToMove
                     worstAction=actions
+                    worstMove=CostToMove
+                    #beta=worstMove
+                beta=min(beta,worstMove)
+                if CostToMove <alpha:
+                    return worstMove,worstAction
+                #if worstMove>CostToMove:
+
+                    #worstMove=CostToMove
+                    #worstAction=actions
 
             return worstMove,worstAction
-
 
 
 
