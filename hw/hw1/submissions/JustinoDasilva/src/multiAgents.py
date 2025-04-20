@@ -537,6 +537,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
                     worstMove=CostToMove
                     #beta=worstMove
                 beta=min(beta,worstMove)
+                # we are mininmizain sor if we find a move that is es
                 if CostToMove <alpha:
                     return worstMove,worstAction
                 #if worstMove>CostToMove:
@@ -545,11 +546,6 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
                     #worstAction=actions
 
             return worstMove,worstAction
-
-
-
-
-
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """
       Your expectimax agent (question 4)
@@ -563,7 +559,67 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         legal moves.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        agent=0
+        currentDept=0
+        alpha=float('-inf')
+        beta=float('inf')
+        # Return the action from result
+        return self.maxOfAverage(gameState,agent,currentDept)[1]
+
+    #pacman is moving
+    def maxOfAverage(self,gameState,agent,depth):
+            if  len(gameState.getLegalActions(agent))==0 or depth==self.depth or gameState.isLose():
+                return self.evaluationFunction(gameState),None
+            #get all legal moves of pacmane
+            legalMoves=gameState.getLegalActions(0)
+            #set the best move to lowest possible
+            bestMove=float('-inf')
+            bestAction=None
+            MovesCostArray=[]
+            for actions in legalMoves:
+                GhostToMove=gameState.generateSuccessor(0,actions)
+                nextDepth=depth
+                newAgentToMove=agent+1
+                CostToMove=self.averageValue(GhostToMove,newAgentToMove,nextDepth)[0]
+
+                if CostToMove> bestMove:
+                    bestMove=CostToMove
+                    bestAction=actions
+            return bestMove,bestAction
+
+
+
+
+    #ghost is moving
+    def averageValue(self,gameState,agent,depth):
+            #if you are in a losing state still return the value as it is use to calaulate the averade.
+            if  len(gameState.getLegalActions(agent))==0 or depth==self.depth or gameState.isLose():
+               return self.evaluationFunction(gameState),None
+            NumberOfAgents=gameState.getNumAgents()
+            #get all legal moves for ghosts
+            legalMoves=gameState.getLegalActions(agent)
+            total=0
+            for actions in legalMoves:
+                newGameState=gameState.generateSuccessor(agent,actions)
+                if agent<NumberOfAgents-1:
+                    #all the ghost haven't moved new ghost to move
+                    newAgentToMove=agent+1
+                    #depth remains the same as  ther are still more ghosts to move
+                    nextDepth=depth
+                    CostToMove=self.averageValue(newGameState,newAgentToMove,nextDepth)[0]
+                else:
+                    # one level is complete it's pacman turn to move again
+                    #move to the next level by increasing depth
+                    newAgentToMove=0
+                    nextDepth=depth+1
+                    CostToMove=self.maxOfAverage(newGameState,newAgentToMove,nextDepth)[0]
+                #sum all movecost  to find the averade of all, whic is wht MAX needd
+                total=total+CostToMove
+
+            # return the average value of legal moves, None of the nodes have this value so we don't return an action
+            return total/len(legalMoves),None
+
+
 
 def betterEvaluationFunction(currentGameState: GameState):
     """
