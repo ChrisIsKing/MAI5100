@@ -192,7 +192,64 @@ class MinimaxAgent(MultiAgentSearchAgent):
         Returns whether or not the game state is a losing state
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # util.raiseNotDefined()
+        """
+                STEPS to solve this problem
+                Get Array of players
+                set level depth = 1
+                Function minmax tree (Players,depth,count)
+                    if Player = Us, run max agent
+                        Then minmax(players,depth,count+1)
+                    if player is enemy Run min agent
+                        Then minmax(players,depth,count+1)
+
+                then return the best one
+
+        """
+        
+        # Collect legal moves and successor states
+        numAgents = gameState.getNumAgents()
+        myActions = gameState.getLegalActions(0)
+        newGameState = gameState.generateSuccessor(0, myActions[0])
+        isWin = gameState.isWin()
+        isLose = gameState.isLose()
+        
+        bestAction,_ = self.minimax(gameState,0,1)
+        return bestAction
+    
+    def minimax(self, gameState, agentIndex, turn):
+        # Terminal condition: if max turns reached or game over
+        if turn > self.depth or gameState.isWin() or gameState.isLose():
+            return None, self.evaluationFunction(gameState)
+
+        # Determine next agent and possibly increment turn
+        nextAgent = agentIndex + 1
+        if nextAgent == gameState.getNumAgents():
+            nextAgent = 0
+            turn += 1
+
+        legalActions = gameState.getLegalActions(agentIndex)
+        if not legalActions:
+            return None, self.evaluationFunction(gameState)
+
+        # Store actions and their minimax values
+        actionScores = {}
+
+        for action in legalActions:
+            successor = gameState.generateSuccessor(agentIndex, action)
+            _, score = self.minimax(successor, nextAgent, turn)
+            actionScores[action] = score
+
+        # Pacman (MAX)
+        if agentIndex == 0:
+            bestAction = max(actionScores, key=actionScores.get)
+            return (bestAction, actionScores[bestAction]) if turn == 1 else (None, actionScores[bestAction])
+
+        # Ghosts (MIN)
+        else:
+            worstScore = min(actionScores.values())
+            return None, worstScore
+        
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
     """
