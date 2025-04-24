@@ -79,7 +79,7 @@ class ReflexAgent(Agent):
         newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
 
         "*** YOUR CODE HERE ***"
-        print(newGhostStates[0],newGhostStates[1])
+        #print(newGhostStates[0],newGhostStates[1])
         #
         #calculate nuber of steps ghosts requirs to reac pacman, the  the farter the  more valuabel the moce
 
@@ -493,12 +493,9 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
 
                 #we update alpha if best move is better
                 alpha=max(alpha,bestMove)
-                # if best move so far is better that beta  we return it
+                # if best move so far is better than beta we return it
                 if bestMove>beta:
                     return bestMove,bestAction
-
-            #return the maxkim move for pacman on this leaf in case of multi layer
-            #print('Maxxxxxxxxxxxxxxxxxxxx',bestMove,bestAction,alpha,beta)
             return bestMove,bestAction
 
     #ghost is moving
@@ -561,8 +558,6 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         "*** YOUR CODE HERE ***"
         agent=0
         currentDept=0
-        alpha=float('-inf')
-        beta=float('inf')
         # Return the action from result
         return self.maxOfAverage(gameState,agent,currentDept)[1]
 
@@ -626,10 +621,88 @@ def betterEvaluationFunction(currentGameState: GameState):
     Your extreme ghost-hunting, pellet-nabbing, food-gobbling, unstoppable
     evaluation function (question 5).
 
+
     DESCRIPTION: <write something here so we know what you did>
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    value=0
+    ppos=currentGameState.getPacmanPosition()
+    gpos=currentGameState.getGhostStates()
+    #print("fffffffffffffffffffffffffffffffffffffprinting ghostpositions",gpos[0])
+
+    px,py=ppos
+    gx,gy=gpos[0].getPosition()
+    Gpostion=gpos[0].getPosition()
+    scared=gpos[0].scaredTimer
+    pacmanDirection=currentGameState.getPacmanState().getDirection()
+    foods=currentGameState.getFood()
+    bigfood=currentGameState.data.capsules
+
+    if ppos==gpos:
+        return -10
+    else:
+        value=value+abs(px-gx)+abs(py-gy)
+
+    '''if pacmanDirection=='North':
+        for y in range(py,foods.height,1):
+            if foods[px][y]==True:
+                value=value+10
+    elif pacmanDirection=='South':
+        for y in range(py,foods.height,-1):
+            if foods[px][y]==True:
+                value=value+10
+            else:
+                value=value-1
+
+    elif pacmanDirection=='East':
+        for x in range(px,foods.width,1):
+            if foods[x][py]==True:
+                value=value+10
+            else:
+                value=value-1
+
+    elif pacmanDirection=='West':
+        for x in range(px,foods.width,-1):
+            if foods[x][py]==True:
+                value=value+10
+            else:
+                 value=value-1
+    else:
+        value=value-10'''
+
+
+
+
+
+
+
+
+
+
+    #hasfood={'North':0,'South':0,'East':0,'West':0}
+
+
+    for point in bigfood:
+        if ppos==point:
+            value=value+20
+
+
+    if foods[px][py]==True:
+        vlaue=value+10
+    else:
+        value=value+1
+    if scared>0:
+        value=value+scared
+    else:
+        value=value-1
+
+
+
+
+
+    return value
+
+    #util.raiseNotDefined()
 
 # Abbreviation
 better = betterEvaluationFunction
