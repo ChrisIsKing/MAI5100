@@ -192,52 +192,51 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
     """
     Your minimax agent with alpha-beta pruning (question 3)
     """
+    def minimaxAB(self, state, depth, agentIndex, alpha, beta):
+        if depth == 0 or state.isWin() or state.isLose():
+            return self.evaluationFunction(state), None
+
+        numAgents = state.getNumAgents()
+        nextAgent = (agentIndex + 1) % numAgents
+        nextDepth = depth - 1 if nextAgent == 0 else depth
+
+        legalMoves = state.getLegalActions(agentIndex)
+        if not legalMoves:
+            return self.evaluationFunction(state), None
+
+        if agentIndex == 0:
+            maxEval = float('-inf')
+            bestScoreMove = None
+            for move in legalMoves:
+                successor = state.generateSuccessor(agentIndex, move)
+                evalScore, _ = self.minimaxAB(successor, nextDepth, nextAgent, alpha, beta)
+                if evalScore > maxEval:
+                    maxEval = evalScore
+                    bestScoreMove = move
+                alpha = max(alpha, evalScore)
+                if beta < alpha:
+                    break
+            return maxEval, bestScoreMove
+
+        else:
+            minEval = float('inf')
+            worseScoreMove = None
+            for move in legalMoves:
+                successor = state.generateSuccessor(agentIndex, move)
+                evalScore, _ = self.minimaxAB(successor, nextDepth, nextAgent, alpha, beta)
+                if evalScore < minEval:
+                    minEval = evalScore
+                    worseScoreMove = move
+                beta = min(beta, evalScore)
+                if beta < alpha:
+                    break
+            return minEval, worseScoreMove
 
     def getAction(self, gameState: GameState):
         """
         Returns the minimax action using self.depth and self.evaluationFunction
         """
-        def minimaxAB(state, depth, agentIndex, alpha, beta):
-            if depth == 0 or state.isWin() or state.isLose():
-                return self.evaluationFunction(state), None
-
-            numAgents = state.getNumAgents()
-            nextAgent = (agentIndex + 1) % numAgents
-            nextDepth = depth - 1 if nextAgent == 0 else depth
-
-            legalMoves = state.getLegalActions(agentIndex)
-            if not legalMoves:
-                return self.evaluationFunction(state), None
-
-            if agentIndex == 0:
-                maxEval = float('-inf')
-                bestScoreMove = None
-                for move in legalMoves:
-                    successor = state.generateSuccessor(agentIndex, move)
-                    evalScore, _ = minimaxAB(successor, nextDepth, nextAgent, alpha, beta)
-                    if evalScore > maxEval:
-                        maxEval = evalScore
-                        bestScoreMove = move
-                    alpha = max(alpha, evalScore)
-                    if beta < alpha:
-                        break
-                return maxEval, bestScoreMove
-
-            else:
-                minEval = float('inf')
-                worseScoreMove = None
-                for move in legalMoves:
-                    successor = state.generateSuccessor(agentIndex, move)
-                    evalScore, _ = minimaxAB(successor, nextDepth, nextAgent, alpha, beta)
-                    if evalScore < minEval:
-                        minEval = evalScore
-                        worseScoreMove = move
-                    beta = min(beta, evalScore)
-                    if beta < alpha:
-                        break
-                return minEval, worseScoreMove
-
-        _, bestAction = minimaxAB(gameState, self.depth, self.index, float('-inf'), float('inf'))
+        _, bestAction = self.minimaxAB(gameState, self.depth, self.index, float('-inf'), float('inf'))
         return bestAction
 
 
