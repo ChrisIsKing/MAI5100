@@ -125,6 +125,40 @@ class MinimaxAgent(MultiAgentSearchAgent):
     Your minimax agent (question 2)
     """
 
+    def minimax(self, state, depth, agentIndex):
+        if depth == 0 or state.isWin() or state.isLose():
+            return self.evaluationFunction(state), None
+
+        numAgents = state.getNumAgents()
+        nextAgent = (agentIndex + 1) % numAgents
+        nextDepth = depth - 1 if nextAgent == 0 else depth
+
+        legalMoves = state.getLegalActions(agentIndex)
+        if not legalMoves:
+            return self.evaluationFunction(state), None
+
+        if agentIndex == 0:
+            maxEval = float('-inf')
+            bestScoreMove = None
+            for move in legalMoves:
+                successor = state.generateSuccessor(agentIndex, move)
+                evalScore, _ = self.minimax(successor, nextDepth, nextAgent)
+                if evalScore > maxEval:
+                    maxEval = evalScore
+                    bestScoreMove = move
+            return maxEval, bestScoreMove
+
+        else:
+            minEval = float('inf')
+            worseScoreMove = None
+            for move in legalMoves:
+                successor = state.generateSuccessor(agentIndex, move)
+                evalScore, _ = self.minimax(successor, nextDepth, nextAgent)
+                if evalScore < minEval:
+                    minEval = evalScore
+                    worseScoreMove = move
+            return minEval, worseScoreMove
+
     def getAction(self, gameState: GameState):
         """
         Returns the minimax action from the current gameState using self.depth
@@ -148,45 +182,9 @@ class MinimaxAgent(MultiAgentSearchAgent):
         gameState.isLose():
         Returns whether or not the game state is a losing state
         """
-
-        def minimax(state, depth, agentIndex):
-            if depth == 0 or state.isWin() or state.isLose():
-                return self.evaluationFunction(state), None
-
-            numAgents = state.getNumAgents()
-            nextAgent = (agentIndex + 1) % numAgents
-            nextDepth = depth - 1 if nextAgent == 0 else depth
-
-            legalMoves = state.getLegalActions(agentIndex)
-            if not legalMoves:
-                return self.evaluationFunction(state), None
-
-            if agentIndex == 0:
-                maxEval = float('-inf')
-                bestScoreMove = None
-                for move in legalMoves:
-                    successor = state.generateSuccessor(agentIndex, move)
-                    evalScore, _ = minimax(successor, nextDepth, nextAgent)
-                    if evalScore > maxEval:
-                        maxEval = evalScore
-                        bestScoreMove = move
-                return maxEval, bestScoreMove
-
-            else:
-                minEval = float('inf')
-                worseScoreMove = None
-                for move in legalMoves:
-                    successor = state.generateSuccessor(agentIndex, move)
-                    evalScore, _ = minimax(successor, nextDepth, nextAgent)
-                    if evalScore < minEval:
-                        minEval = evalScore
-                        worseScoreMove = move
-                return minEval, worseScoreMove
-
-        _, bestAction = minimax(gameState, self.depth, self.index)
+        _, bestAction = self.minimax(gameState, self.depth, self.index)
         return bestAction
 
-        # util.raiseNotDefined()
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
     """
@@ -245,6 +243,34 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
       Your expectimax agent (question 4)
     """
 
+    def expectimax(self, state, depth, agentIndex):
+        if depth == 0 or state.isWin() or state.isLose():
+            return self.evaluationFunction(state)
+
+        numAgents = state.getNumAgents()
+        nextAgent = (agentIndex + 1) % numAgents
+        nextDepth = depth - 1 if nextAgent == 0 else depth
+
+        legalMoves = state.getLegalActions(agentIndex)
+        if not legalMoves:
+            return self.evaluationFunction(state)
+
+        if agentIndex == 0:
+            maxEval = float('-inf')
+            for move in legalMoves:
+                successor = state.generateSuccessor(agentIndex, move)
+                evalScore = self.expectimax(successor, nextDepth, nextAgent)
+                maxEval = max(maxEval, evalScore)
+            return maxEval
+        else:
+            total = 0
+            probability = 1 / len(legalMoves)
+            for move in legalMoves:
+                successor = state.generateSuccessor(agentIndex, move)
+                evalScore = self.expectimax(successor, nextDepth, nextAgent)
+                total += probability * evalScore
+            return total
+
     def getAction(self, gameState: GameState):
         """
         Returns the expectimax action using self.depth and self.evaluationFunction
@@ -252,7 +278,19 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         All ghosts should be modeled as choosing uniformly at random from their
         legal moves.
         """
-        "*** YOUR CODE HERE ***"
+
+        bestScore = float('-inf')
+        bestAction = None
+        legalMoves = gameState.getLegalActions(0)\
+
+        for action in legalMoves:
+            successor = gameState.generateSuccessor(0, action)
+            score = self.expectimax(successor, self.depth, 1)  # Next agent is ghost (index 1)
+            if score > bestScore:
+                bestScore = score
+                bestAction = action
+
+        return bestAction
         util.raiseNotDefined()
 
 def betterEvaluationFunction(currentGameState: GameState):
