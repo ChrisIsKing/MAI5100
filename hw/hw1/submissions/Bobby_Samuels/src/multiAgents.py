@@ -342,7 +342,41 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         legal moves.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        bestAction,_ = self.expectiMax(gameState,0,1)
+        return bestAction
+        
+    def expectiMax(self, gameState, agentIndex, turn):
+        # Terminal condition: if max turns reached or game over
+        if turn > self.depth or gameState.isWin() or gameState.isLose():
+            return None, self.evaluationFunction(gameState)
+
+        # Determine next agent and possibly increment turn
+        nextAgent = agentIndex + 1
+        if nextAgent == gameState.getNumAgents():
+            nextAgent = 0
+            turn += 1
+
+        legalActions = gameState.getLegalActions(agentIndex)
+        if not legalActions:
+            return None, self.evaluationFunction(gameState)
+
+        # Store actions and their minimax values
+        actionScores = {}
+
+        for action in legalActions:
+            successor = gameState.generateSuccessor(agentIndex, action)
+            _, score = self.expectiMax(successor, nextAgent, turn)
+            actionScores[action] = score
+
+        # Pacman (MAX)
+        if agentIndex == 0:
+            bestAction = max(actionScores, key=actionScores.get)
+            return (bestAction, actionScores[bestAction]) if turn == 1 else (None, actionScores[bestAction])
+
+        # Ghosts (MIN)
+        else:
+            avgScore = sum(actionScores.values())/len(actionScores)
+            return None, avgScore
 
 def betterEvaluationFunction(currentGameState: GameState):
     """
