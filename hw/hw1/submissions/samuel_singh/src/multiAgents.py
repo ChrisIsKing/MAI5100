@@ -430,6 +430,104 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         """
         "*** YOUR CODE HERE ***"
 
+
+        """
+
+        Initial Call 
+        Set the best score to negative infinity
+        Set the best action to None
+        For each legal action Pacman can take:
+            Simulate the resulting game state
+            Compute the score using expectimax for the first ghost at depth zero
+            If the score is higher than the best score so far:
+                Update the best score
+                Update the best action to the current one
+
+        Return the best action for Pacman to take
+        
+        
+
+
+        Define expectimax(agentIndex, depth, state):
+
+        If the current state is a win, a loss, or we've reached the maximum depth:
+            Return the evaluation of the state
+
+        Get the number of agents in the game
+        Get the list of legal actions for the current agent
+
+        If there are no legal actions:
+            Return the evaluation of the state
+
+        Determine the next agent to act:
+            If the current agent is the last one, the next agent is Pacman and we increase the depth
+             Otherwise, move to the next agent and keep the same depth
+
+            If the agent is Pacman (maximizing player):
+            For each legal action, compute the score by recursively calling expectimax on the resulting state
+            Return the maximum score from all these actions
+
+            Else, the agent is a ghost (chance node):
+                Initialize the total expected score to zero
+
+        The probability of each action is one divided by the number of legal actions
+        
+        For each legal action:
+            Simulate the resulting game state
+            Recursively call expectimax on this successor state
+            Multiply the result by the actions probability and add it to the total
+
+        Return the total expected score
+        """
+
+
+
+        def expectimax(agentIndex, depth, state):
+            if state.isWin() or state.isLose() or depth == self.depth:
+                return self.evaluationFunction(state)
+
+            numAgents = state.getNumAgents()
+            legalActions = state.getLegalActions(agentIndex)
+            print(numAgents, legalActions)
+            
+            if not legalActions:#assess legality
+                return self.evaluationFunction(state)
+
+            nextAgent = (agentIndex + 1) % numAgents
+
+            if nextAgent == 0:
+                nextDepth = depth + 1 
+            else:
+                nextDepth = depth
+
+            if agentIndex == 0:  # Pacman (Max)
+                return max(
+                    expectimax(nextAgent, nextDepth, state.generateSuccessor(agentIndex, action))
+                    for action in legalActions
+                )
+            else:  # Ghost (Expect)
+                total = 0
+                prob = 1.0 / len(legalActions)
+                for action in legalActions:
+                    successor = state.generateSuccessor(agentIndex, action)
+                    total += prob * expectimax(nextAgent, nextDepth, successor)
+                print("total:", total)
+                return total
+
+        # Top level: choose best action for Pacman
+        bestScore = float('-inf')
+        bestAction = None
+        for action in gameState.getLegalActions(0):
+            successor = gameState.generateSuccessor(0, action)
+            score = expectimax(1, 0, successor)
+
+            print("score v bestscore", score, bestScore)
+            if score > bestScore:
+                bestScore = score
+                bestAction = action
+
+        return bestAction
+
         util.raiseNotDefined()
 
 def betterEvaluationFunction(currentGameState: GameState):
@@ -440,6 +538,98 @@ def betterEvaluationFunction(currentGameState: GameState):
     DESCRIPTION: <write something here so we know what you did>
     """
     "*** YOUR CODE HERE ***"
+
+    """
+    Get Pacman's current position
+    Get the current food grid
+    Convert the food grid into a list of coordinates
+    Get the list of ghost states
+    Get the list of capsule positions
+    Get the current game score
+
+    Evaluate Food:
+    If there is any food remaining:
+        Calculate the Manhattan distance from Pacman to each food dot
+
+        Find the closest food dot
+
+        Increase the score by 10 divided by the distance to the nearest food
+
+        Also increase the score by 200 divided by the number of remaining food dots plus one
+        (This rewards Pacman for having fewer food dots left)
+
+
+    Evaluate Ghosts:
+
+    For each ghost:
+
+    Get the ghosts position
+    Calculate the distance between Pacman and the ghost
+    If the ghost is scared:
+        Increase the score by 200 divided by (distance plus one)
+
+        If the ghost is not scared and is very close (distance of 2 or less):
+            Decrease the score by 200 to discourage dangerous proximity
+
+    Evaluate Capsules:
+
+    If there are any capsules left:
+        Find the distance to the nearest capsule
+        Increase the score by 100 divided by (that distance plus one)
+
+        Increase the score further by 50 multiplied by the number of ghosts
+    
+
+    Final Danger Check:
+
+    If the ghost is not scared and is very close (distance of 2 or less):
+        Decrease the score by 100 as an extra penalty
+    """
+
+
+
+
+    pos = currentGameState.getPacmanPosition()
+    food = currentGameState.getFood()
+    foodList = food.asList()
+    ghostStates = currentGameState.getGhostStates()
+    capsules = currentGameState.getCapsules()
+    score = currentGameState.getScore()
+
+    print(pos,food,foodList,"\n",ghostStates,capsules,score, "\n")
+
+    # Food
+    if foodList:
+        foodDistances = [manhattanDistance(pos, foodPos) for foodPos in foodList]
+        minFoodDist = min(foodDistances)
+        print("mini Food Dist", minFoodDist)
+        score += 10.0 / minFoodDist  # Closer to food is better
+        score += 200.0 / (len(foodList)+1)  # Fewer food left is better
+
+    # Ghosts
+    for ghost in ghostStates:
+        ghostPos = ghost.getPosition()
+        print("ghost position",ghostPos)
+        dist = manhattanDistance(pos, ghostPos)
+        if ghost.scaredTimer > 0:
+            score += 200.0 / (dist + 1)  # Approach scared ghosts. NB might need to adjsut this..
+        else:
+            if dist <= 2:
+                score -= 200  # Stay away from dangerous ghosts
+
+    # Capsules    
+    if capsules:
+        minCapDist = min(manhattanDistance(pos, cap) for cap in capsules)
+        print("min capsule distrance", minCapDist)
+        score += 100.0 / (minCapDist + 1)
+        score += 50 * len(ghostStates)
+
+       
+
+    if ghost.scaredTimer == 0 and dist <= 2:
+        score -= 100  
+
+    return score
 
     util.raiseNotDefined()
 
