@@ -185,7 +185,49 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         Returns the minimax action using self.depth and self.evaluationFunction
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+
+        def minimax(agentIndex, depth, gameState, alpha, beta):
+            if depth == 0 or gameState.isWin() or gameState.isLose():
+                return self.evaluationFunction(gameState)
+
+            num_agents = gameState.getNumAgents()
+            next_agent = (agentIndex + 1) % num_agents
+
+            if agentIndex == 0: # Maximizing agent (Pacman)
+                max_eval = float('-inf')
+                for action in gameState.getLegalActions(agentIndex):
+                    successor = gameState.generateSuccessor(agentIndex, action)
+                    eval = minimax(next_agent, depth, successor, alpha, beta)
+                    max_eval = max(max_eval, eval)
+                    alpha = max(alpha, eval)
+                    if beta <= alpha:
+                        break
+                return max_eval
+            else: # Minimizing agents (Ghosts)
+                min_eval = float('inf')
+                for action in gameState.getLegalActions(agentIndex):
+                    successor = gameState.generateSuccessor(agentIndex, action)
+                    if next_agent == 0: # Next agent is Pacman, decrease depth
+                        eval = minimax(next_agent, depth - 1, successor, alpha, beta)
+                    else:
+                        eval = minimax(next_agent, depth, successor, alpha, beta)
+                    min_eval = min(min_eval, eval)
+                    beta = min(beta, eval)
+                    if beta <= alpha:
+                        break
+                return min_eval
+        best_action = None
+        max_eval = float('-inf')
+        alpha = float('-inf')
+        beta = float('inf')
+        for action in gameState.getLegalActions(0):
+            successor = gameState.generateSuccessor(0, action)
+            eval = minimax(1, self.depth, successor, alpha, beta)
+            if eval > max_eval:
+                max_eval = eval
+                best_action = action
+
+        return best_action
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """
