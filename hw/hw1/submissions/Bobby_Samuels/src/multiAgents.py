@@ -261,7 +261,73 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         Returns the minimax action using self.depth and self.evaluationFunction
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        action,finalScore = self.minimaxAB(gameState,0,1,float('-inf'),float('inf'))
+        return action
+    def minimaxAB(self,gameState, playerIndex, turnIndex, alpha, beta):
+        # Terminal condition: if max turns reached or game over
+        if turnIndex > self.depth or gameState.isWin() or gameState.isLose():
+            return None, self.evaluationFunction(gameState)
+
+        # Increment turn and player counter
+        nextPlayerIndex = playerIndex + 1
+        nextTurnIndex = turnIndex
+        if nextPlayerIndex == gameState.getNumAgents():
+            nextPlayerIndex = 0
+            nextTurnIndex += 1
+
+        SuccessorScores = {}
+
+        # Pacman (Maximizer)
+        # if playerIndex == 0 and turnIndex == 1:
+        if playerIndex == 0:
+            bestScore = float('-inf')
+            
+            legalActions = gameState.getLegalActions(playerIndex)
+            if not legalActions:
+                return None, self.evaluationFunction(gameState)
+        
+            for action in legalActions:
+                newGameState = gameState.generateSuccessor(playerIndex, action)
+                _, newScore = self.minimaxAB(newGameState, nextPlayerIndex, nextTurnIndex, alpha, beta)
+                SuccessorScores[action] = newScore
+
+                if newScore >= bestScore:
+                    bestScore = newScore
+                if bestScore > alpha:
+                    alpha = bestScore
+                if  beta < alpha:
+                    return None, bestScore
+
+
+        # Enemy/Ghost (Minimizer)
+        else:
+            bestScore = float('inf')
+            
+            legalActions = gameState.getLegalActions(playerIndex)
+            if not legalActions:
+                return None, self.evaluationFunction(gameState)
+            
+            for action in legalActions:
+                newGameState = gameState.generateSuccessor(playerIndex, action)
+                _, newScore = self.minimaxAB(newGameState, nextPlayerIndex, nextTurnIndex, alpha, beta)
+                SuccessorScores[action] = newScore
+
+                if newScore <= bestScore:
+                    bestScore = newScore
+                if bestScore < beta:
+                    beta = bestScore
+                if beta < alpha:
+                    return None,bestScore  # Prune
+
+        # Return action and score for root Pacman, or just score otherwise
+        if playerIndex == 0:
+            if turnIndex == 1:
+                bestAction = max(SuccessorScores, key=SuccessorScores.get)
+                return (bestAction, SuccessorScores[bestAction])
+            return None,max(SuccessorScores.values())
+        else:
+            return None, min(SuccessorScores.values())
+
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """
