@@ -393,13 +393,65 @@ def betterEvaluationFunction(currentGameState: GameState):
         Future States
     """
     "*** YOUR CODE HERE ***"
-    #Grab all variables
-    #Compute the final result
-    #Return the final result
+    #Grab all variables\
+     # Useful information you can extract from a GameState (pacman.py)
     
+    pos = currentGameState.getPacmanPosition()
+    food = currentGameState.getFood()
+    ghostStates = currentGameState.getGhostStates()
+    scaredTimes = [ghostState.scaredTimer for ghostState in ghostStates]
+    capsules = currentGameState.getCapsules()
+    # First let's get the base score of the game
     score = currentGameState.getScore()
-    return score
     
+    # 1) Find the closest Food Pellet
+    # Reward closer food
+    
+    foodList = food.asList()
+    if len(foodList) > 0:
+        # Reward our current state based on food closeness
+        foodValues = (manhattanDistance(pos,food)for food in foodList)
+        minFoodDist = min(foodValues)
+        score = score + (30/ minFoodDist) #10 is food eat score
+
+        # Reward our current state based on num of food pellets
+        score += 100/len(foodList)
+    else:
+        #if the food array is empty, we win!
+        score += 1000
+
+    if len(capsules) >0:
+        capsuleValues = (manhattanDistance(pos,cap) for cap in capsules)
+        shortestCapDist = min(capsuleValues)
+        score = score + (200/shortestCapDist)
+    # Penalize being too close to ghosts
+    for ghost in ghostStates:
+        ghostDist = manhattanDistance(pos, ghost.getPosition())
+        
+        # attempt to use weighted distance
+        # score = score - (100/ghostDist)
+        
+        #if the ghost is scared and its timer is greater than or equall to its distance,
+        # we can ignore it
+        
+        #if ghost is scared
+        if ghost.scaredTimer > 0:
+            
+            #only approach it if scared timer >= distance
+            if ghostDist <= ghost.scaredTimer :
+                score += (10/ghostDist)+1
+            else:
+                # avoid it as usual
+                if ghostDist < 3:
+                    score += -200  # very risky
+        else:
+        # if ghost is not scared, avoid it
+            
+            if ghostDist < 3:
+                score += -200  # very risky
+
+    return score
+
 
 # Abbreviation
 better = betterEvaluationFunction
