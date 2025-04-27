@@ -185,8 +185,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         Returns the minimax action using self.depth and self.evaluationFunction
         """
         "*** YOUR CODE HERE ***"
-
-        def minimax(agentIndex, depth, gameState, alpha, beta):
+        def minimaxab(agentIndex, depth, gameState, alpha, beta):
             if depth == 0 or gameState.isWin() or gameState.isLose():
                 return self.evaluationFunction(gameState)
 
@@ -197,7 +196,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
                 max_eval = float('-inf')
                 for action in gameState.getLegalActions(agentIndex):
                     successor = gameState.generateSuccessor(agentIndex, action)
-                    eval = minimax(next_agent, depth, successor, alpha, beta)
+                    eval = minimaxab(next_agent, depth, successor, alpha, beta)
                     max_eval = max(max_eval, eval)
                     alpha = max(alpha, eval)
                     if beta <= alpha:
@@ -208,13 +207,15 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
                 for action in gameState.getLegalActions(agentIndex):
                     successor = gameState.generateSuccessor(agentIndex, action)
                     if next_agent == 0: # Next agent is Pacman, decrease depth
-                        eval = minimax(next_agent, depth - 1, successor, alpha, beta)
+                        eval = minimaxab(next_agent, depth - 1, successor, alpha, beta)
                     else:
-                        eval = minimax(next_agent, depth, successor, alpha, beta)
+                        eval = minimaxab(next_agent, depth, successor, alpha, beta)
+                    # eval = minimaxab(next_agent, depth - 1, successor, alpha, beta)
                     min_eval = min(min_eval, eval)
                     beta = min(beta, eval)
                     if beta <= alpha:
                         break
+                        print(alpha, beta, max_eval, min_eval)
                 return min_eval
         best_action = None
         max_eval = float('-inf')
@@ -222,13 +223,12 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         beta = float('inf')
         for action in gameState.getLegalActions(0):
             successor = gameState.generateSuccessor(0, action)
-            eval = minimax(1, self.depth, successor, alpha, beta)
+            eval = minimaxab(1, self.depth, successor, alpha, beta)
             if eval > max_eval:
                 max_eval = eval
                 best_action = action
 
         return best_action
-
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """
       Your expectimax agent (question 4)
@@ -242,7 +242,43 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         legal moves.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        def expectimax(agentIndex, depth, gameState):
+            if depth == 0 or gameState.isWin() or gameState.isLose():
+                return self.evaluationFunction(gameState)
+
+            num_agents = gameState.getNumAgents()
+            next_agent = (agentIndex + 1) % num_agents
+
+            if agentIndex == 0:  # Maximizing agent (Pacman)
+                max_eval = float('-inf')
+                for action in gameState.getLegalActions(agentIndex):
+                    successor = gameState.generateSuccessor(agentIndex, action)
+                    eval = expectimax(next_agent, depth, successor)
+                    max_eval = max(max_eval, eval)
+                return max_eval
+            else:  # Chance nodes (Ghosts)
+                total_eval = 0
+                num_actions = len(gameState.getLegalActions(agentIndex))
+                for action in gameState.getLegalActions(agentIndex):
+                    successor = gameState.generateSuccessor(agentIndex, action)
+                    if next_agent == 0:  # Next agent is Pacman, decrease depth
+                        eval = expectimax(next_agent, depth - 1, successor)
+                    else:
+                        eval = expectimax(next_agent, depth, successor)
+                    total_eval += eval
+                return total_eval / num_actions if num_actions > 0 else 0
+
+        best_action = None
+        max_eval = float('-inf')
+        for action in gameState.getLegalActions(0):
+            successor = gameState.generateSuccessor(0, action)
+            eval = expectimax(1, self.depth, successor)
+            if eval > max_eval:
+                max_eval = eval
+                best_action = action
+
+        return best_action
+
 
 def betterEvaluationFunction(currentGameState: GameState):
     """
