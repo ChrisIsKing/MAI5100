@@ -383,10 +383,23 @@ def betterEvaluationFunction(currentGameState: GameState):
     Your extreme ghost-hunting, pellet-nabbing, food-gobbling, unstoppable
     evaluation function (question 5).
 
-    DESCRIPTION: <write something here so we know what you did>
+    DESCRIPTION:
+    To evaluate a score thats more than just the food-Eaten score
+    Other parameters to consider:
+        Distance to Food, Number of Food pellets
+        Distance from Ghosts
+        Are Ghosts Scared?
+        Capsule Distances? and Quantity?
+        Future States
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    #Grab all variables
+    #Compute the final result
+    #Return the final result
+    
+    score = currentGameState.getScore()
+    return score
+    
 
 # Abbreviation
 better = betterEvaluationFunction
