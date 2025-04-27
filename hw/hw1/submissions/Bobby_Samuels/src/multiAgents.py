@@ -412,7 +412,7 @@ def betterEvaluationFunction(currentGameState: GameState):
         # Reward our current state based on food closeness
         foodValues = (manhattanDistance(pos,food)for food in foodList)
         minFoodDist = min(foodValues)
-        score = score + (30/ minFoodDist) #10 is food eat score
+        score = score + (10/ minFoodDist) #10 is food eat score
 
         # Reward our current state based on num of food pellets
         score += 100/len(foodList)
@@ -423,7 +423,12 @@ def betterEvaluationFunction(currentGameState: GameState):
     if len(capsules) >0:
         capsuleValues = (manhattanDistance(pos,cap) for cap in capsules)
         shortestCapDist = min(capsuleValues)
-        score = score + (200/shortestCapDist)
+        score = score + (10/shortestCapDist)
+        
+        # score = 200/len(capsules)
+    else:
+        # if we ate all capsules we are doing better
+        score += 400
     # Penalize being too close to ghosts
     for ghost in ghostStates:
         ghostDist = manhattanDistance(pos, ghost.getPosition())
@@ -439,7 +444,7 @@ def betterEvaluationFunction(currentGameState: GameState):
             
             #only approach it if scared timer >= distance
             if ghostDist <= ghost.scaredTimer :
-                score += (10/ghostDist)+1
+                score += (100/ghostDist)+1
             else:
                 # avoid it as usual
                 if ghostDist < 3:
