@@ -45,9 +45,19 @@ class ReflexAgent(Agent):
 
         # Choose one of the best actions
         scores = [self.evaluationFunction(gameState, action) for action in legalMoves]
+        '''//////////////////////////////////////////'''
+        #for action in legalMoves:
+        #    score= self.evaluationFunction()
+
+
+        '''///////////////////////////////////////////'''
+
         bestScore = max(scores)
+
         bestIndices = [index for index in range(len(scores)) if scores[index] == bestScore]
+
         chosenIndex = random.choice(bestIndices) # Pick randomly among the best
+        #bestIndices=[0, 10, 20, 21]=20
 
 
         "Add more of your code here if you want to"
@@ -72,10 +82,12 @@ class ReflexAgent(Agent):
         """
         # Useful information you can extract from a GameState (pacman.py)
         successorGameState = currentGameState.generatePacmanSuccessor(action)
-
+        #print("\n\n\n",dir(successorGameState))
         newPos = successorGameState.getPacmanPosition()
-        newFood = successorGameState.getFood()
+        newFood = successorGameState.getFood() # returns a list of positions of food
+        #print("\n\n",newFood)
         newGhostStates = successorGameState.getGhostStates()
+        #print(newGhostStates[0])
         newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
 
         "*** YOUR CODE HERE ***"
@@ -102,6 +114,7 @@ class ReflexAgent(Agent):
 
         'searching for food'
         #print('x :',x,'y :',y)
+        #if pacman is going north
         if action =='North':
             for newY in range(y,height,1):
                 if newFood[x][newY]==True:
@@ -133,7 +146,7 @@ class ReflexAgent(Agent):
         gx,gy=newGhostStates[0].getPosition()
         px,py=newPos
 
-
+        #if ghost and pacman going in same direction ""
         if action==ghostDirection:
 
             '''pacman is in the same row or column as ghost'''
@@ -387,9 +400,11 @@ class MinimaxAgent(MultiAgentSearchAgent):
                return self.evaluationFunction(gameState),None
             #get all legal moves of pacmane
             legalMoves=gameState.getLegalActions(0)
+            #[East, west, North, south,Sopt]
             #set the best move to lowest possible
             bestMove=float('-inf')
             bestAction=None
+
             for actions in legalMoves:
                 GhostToMove=gameState.generateSuccessor(0,actions)
                 nextDepth=depth
@@ -463,6 +478,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
 
         # Format of result = [score, action]
         ''' call call to max '''
+
         agent=0
         currentDept=0
         alpha=float('-inf')
@@ -472,7 +488,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
 
     #pacman is moving
     def maxValueAB(self,gameState,agent,depth,alpha,beta):
-            if  len(gameState.getLegalActions(agent))==0 or depth==self.depth or gameState.isLose():
+            if  len(gameState.getLegalActions(agent))==0 or depth==self.depth  or gameState.isLose():
                 return self.evaluationFunction(gameState),None
             #get all legal moves of pacmane
             legalMoves=gameState.getLegalActions(0)
@@ -500,7 +516,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
 
     #ghost is moving
     def minValueAB(self,gameState,agent,depth,alpha,beta):
-            if  len(gameState.getLegalActions(agent))==0 or depth==self.depth or gameState.isLose():
+            if  len(gameState.getLegalActions(agent))==0 or depth==self.depth  or gameState.isLose():
                #print("calling Score: NumberOfLegalMoves: ",NumberOfActions,"depth: ",depth,"function Depth: ",self.depth)
                #exit(str(depth)+"hhhhhhhhhh")
                #print("Value i gotttttttttttttttttttt:",self.evaluationFunction(gameState))
@@ -543,6 +559,10 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
                     #worstAction=actions
 
             return worstMove,worstAction
+
+
+
+
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """
       Your expectimax agent (question 4)
@@ -625,18 +645,69 @@ def betterEvaluationFunction(currentGameState: GameState):
     DESCRIPTION: <write something here so we know what you did>
     """
     "*** YOUR CODE HERE ***"
-    value=0
+
+
+    #get pacmam postions and ghosts states
     ppos=currentGameState.getPacmanPosition()
     gpos=currentGameState.getGhostStates()
     #print("fffffffffffffffffffffffffffffffffffffprinting ghostpositions",gpos[0])
 
     px,py=ppos
+    # get the position go the ghosts and store  as x and y cordinates
+    # get the positon of ghosts as a point
+    #get valur to  determine if ghost is frighteb and
     gx,gy=gpos[0].getPosition()
     Gpostion=gpos[0].getPosition()
     scared=gpos[0].scaredTimer
     pacmanDirection=currentGameState.getPacmanState().getDirection()
     foods=currentGameState.getFood()
     bigfood=currentGameState.data.capsules
+    height=foods.height
+    width=foods.width
+    directionalvalue={'North':height-px,'South':px,'East':width-py,'West':py,'Stop':-10}
+    #value=directionalvalue[pacmanDirection]
+    value=0
+    #if ppos==gpos:
+    #    return -10
+    #else:
+    #    value=value+abs(px-gx)+abs(py-gy)
+
+    '''if pacmanDirection=='North':
+        if gy==py:
+            for y in range(py,foods.height,1):
+                if foods[px][y]==True:
+                    value=value+10
+                else:
+                    value=value-1
+        else:
+            for y in range(py,foods.height,1):
+                if foods[px][y]==True:
+                    value=value+10
+                else:
+                    value=value-1
+
+    elif pacmanDirection=='South':
+        for y in range(py,foods.height,-1):
+            if foods[px][y]==True:
+                value=value+10
+            else:
+                value=value-1
+
+    elif pacmanDirection=='East':
+        for x in range(px,foods.width,1):
+            if foods[x][py]==True:
+                value=value+10
+            else:
+                value=value-1
+
+    elif pacmanDirection=='West':
+        for x in range(px,foods.width,-1):
+            if foods[x][py]==True:
+                value=value+10
+            else:
+                 value=value-1
+    else:
+        value=value-10'''
 
     if ppos==gpos:
         return -10
@@ -701,6 +772,43 @@ def betterEvaluationFunction(currentGameState: GameState):
 
 
     return value
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    return value
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     #util.raiseNotDefined()
 
