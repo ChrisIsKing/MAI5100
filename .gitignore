@@ -3,3 +3,4 @@ venv
 __py_cache__
 *.pyc
 .qodo
+hw/hw0
