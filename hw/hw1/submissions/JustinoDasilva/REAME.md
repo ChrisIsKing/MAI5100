@@ -19,12 +19,12 @@ Implementing pacman using
    The **alpha beta** pruning was simple in essence once mimimax was completed however the algorithm provided in the README.md has an issue(the same on both alphna and beta). **lines 5 and six needed to be interchanged**.  That is.  we need to update alpha before pruning, ensuring that alpha is  equal to the returned value(maximum).
    A different challenge was experienced in the **Expectimax** agent. in contrast to minimax and alpha beta expectimax does not choose an action until it is propagate to the root. My implementation issue was  i was choosing  the action with the highest probability of  play  on  each level. when this is propagated to the root pac-man ended up dying  almost always. once the probability was returned on behalf of the branch and not on  a specific leaf it passed all test.
 ### **Debugging**:
-   In this second homework I also used the print function to understand the changing value of the evaluation functions
+   In this second homework I also used the **print** function to understand the changing value of the evaluation functions
    I also used **type** and **dir** to understand each returned value  and how the could be used what function calls are available.
    this came in very handy i found out the big dots were called capsules.
 
 
 ## 2. **Written Problem-Solving** (Part 2): CSPs, Adversarial Search, and Evaluation Functions.
-     Of the Three written questions,  conceptualizing  **question 1**, I failed to realized that when agent1 used agent2 utility function it was to  ne used on all levels (mx and min) not only on the adverse level. that is when u1 is maximizing, u2 is also maximizing.  
-     In the execution of **Question2**  backtracking was beginning to confuse me. As I backtracking multiple nodes in instances where i only needed to backtrack, in the first attempt I ended up generating more that forty iterations and still didn't reach a terminal state which is when i realised i was backtracking multiple nodes. Once this bug  in my interaction was observed.
-     I started over and  reached and reached the terminal state after sixteen iterations, this was a relief.
+   Of the Three written questions,  conceptualizing  **question 1**, I failed to realized that when agent1 used agent2 utility function it was to  ne used on all levels (mx and min) not only on the adverse level. that is when u1 is maximizing, u2 is also maximizing.  
+   In the execution of **Question2**  backtracking was beginning to confuse me. As I backtracking multiple nodes in instances where i only needed to backtrack, in the first attempt I ended up generating more that forty iterations and still didn't reach a terminal state which is when i realised i was backtracking multiple nodes. Once this bug  in my interaction was observed.
+   I started over and  reached and reached the terminal state after sixteen iterations, this was a relief.
