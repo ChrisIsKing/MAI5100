@@ -156,8 +156,6 @@ class MinimaxAgent(MultiAgentSearchAgent):
         Returns whether or not the game state is a losing state
         """
         "*** YOUR CODE HERE ***"
-        
-
         def minimax(agentIndex, depth, gameState):
             if depth == 0 or gameState.isWin() or gameState.isLose():
                 return self.evaluationFunction(gameState)
@@ -206,6 +204,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         """
         "*** YOUR CODE HERE ***"
         def minimaxab(agentIndex, depth, gameState, alpha, beta):
+            # Terminal state or depth limit
             if depth == 0 or gameState.isWin() or gameState.isLose():
                 return self.evaluationFunction(gameState)
 
@@ -218,39 +217,42 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
                     successor = gameState.generateSuccessor(agentIndex, action)
                     eval = minimaxab(next_agent, depth, successor, alpha, beta)
                     max_eval = max(max_eval, eval)
-                    alpha = max(alpha, eval)
-                    if beta <= alpha:
-                        break
-                    return max_eval
+                    if max_eval > beta:
+                        return max_eval # Beta cutoff
+                    alpha = max(alpha, max_eval)
+                return max_eval
             else: # Minimizing agents (Ghosts)
                 min_eval = float('inf')
                 for action in gameState.getLegalActions(agentIndex):
                     successor = gameState.generateSuccessor(agentIndex, action)
+
                     if next_agent == 0: # Next agent is Pacman, decrease depth
                         eval = minimaxab(next_agent, depth - 1, successor, alpha, beta)
                     else:
                         eval = minimaxab(next_agent, depth, successor, alpha, beta)
                     # eval = minimaxab(next_agent, depth - 1, successor, alpha, beta)
                     min_eval = min(min_eval, eval)
-                    beta = min(beta, eval)
-                    if beta <= alpha:
-                        break
-                    print(alpha, beta, max_eval, min_eval)
+                    if min_eval < alpha:
+                        return min_eval# Alpha cutoff
+                    beta = min(beta, min_eval)
                 return min_eval
-        best_action = None
+
         max_eval = float('-inf')
+        best_action = Directions.STOP
         alpha = float('-inf')
         beta = float('inf')
+
         for action in gameState.getLegalActions(0):
             successor = gameState.generateSuccessor(0, action)
             eval = minimaxab(1, self.depth, successor, alpha, beta)
+
             if eval > max_eval:
                 max_eval = eval
                 best_action = action
 
+            alpha = max(alpha, max_eval)
+
         return best_action
-
-
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """
