@@ -75,7 +75,27 @@ class ReflexAgent(Agent):
         newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
 
         "*** YOUR CODE HERE ***"
-        return successorGameState.getScore()
+        #return successorGameState.getScore()
+
+        from util import manhattanDistance
+
+        # Calculate the distance to the nearest food
+        foodList = newFood.asList()
+        if foodList:
+            minFoodDistance = min([manhattanDistance(newPos, food) for food in foodList])
+        else:
+            minFoodDistance = 0
+        # Calculate the distance to the nearest ghost
+        ghostDistances = [manhattanDistance(newPos, ghostState.getPosition()) for ghostState in newGhostStates]
+        minGhostDistance = min(ghostDistances)
+
+        # Evaluate the score based on food distance, ghost distance, and scared times
+        score = successorGameState.getScore()
+        score += max(0, 10 - minFoodDistance) # Prefer closer food
+        score -= max(0, 10 - minGhostDistance) # Avoid closer ghosts
+        score += sum(newScaredTimes) # Prefer states where ghosts are scared
+
+        return score
 
 def scoreEvaluationFunction(currentGameState: GameState):
     """
@@ -201,7 +221,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
                     alpha = max(alpha, eval)
                     if beta <= alpha:
                         break
-                return max_eval
+                    return max_eval
             else: # Minimizing agents (Ghosts)
                 min_eval = float('inf')
                 for action in gameState.getLegalActions(agentIndex):
@@ -215,7 +235,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
                     beta = min(beta, eval)
                     if beta <= alpha:
                         break
-                        print(alpha, beta, max_eval, min_eval)
+                    print(alpha, beta, max_eval, min_eval)
                 return min_eval
         best_action = None
         max_eval = float('-inf')
@@ -229,6 +249,9 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
                 best_action = action
 
         return best_action
+
+
+
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """
       Your expectimax agent (question 4)
