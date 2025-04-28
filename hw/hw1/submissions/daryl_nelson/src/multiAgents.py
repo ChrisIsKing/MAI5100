@@ -296,10 +296,41 @@ def betterEvaluationFunction(currentGameState: GameState):
     Your extreme ghost-hunting, pellet-nabbing, food-gobbling, unstoppable
     evaluation function (question 5).
 
-    DESCRIPTION: <write something here so we know what you did>
+    DESCRIPTION: So I built on my first evaluation function in the reflex agent giving more point to states where pacman in closer to food and less points
+    when ghosts are near pacman a combination of these calculations occur on every state.
+    In addition to that if the game state is win return infinite positive value and if
+    loose an infinite negative value. I also added a bit of code to grant more points to the evaluation when
+    the game score is higher.
     """
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    if currentGameState.isWin():
+        return float('inf')
+    if currentGameState.isLose():
+        return float('-inf')
+
+    positive_distance_value = {i: 80 - 2 * i for i in range(40)}
+    distance_value = {i: 100 - 20 * i for i in range(4)}
+    game_score_value = {i: i * 20 for i in range(2001)}
+
+    score = 0
+    currentFood = currentGameState.getFood()
+    pacmanPosition = currentGameState.getPacmanPosition()
+    min_distance = min(manhattanDistance(pacmanPosition, food) for food in currentFood.asList())
+    newGhostStates = currentGameState.getGhostStates()
+
+    for x in newGhostStates:
+        m_distance = manhattanDistance(pacmanPosition, x.getPosition())
+        if m_distance in distance_value and x.scaredTimer < 1:
+            score -= distance_value[m_distance]
+        if min_distance in positive_distance_value:
+            score += positive_distance_value[min_distance]
+        if x.scaredTimer > 3:
+            score += positive_distance_value[min_distance]
+
+    if currentGameState.getScore() in game_score_value:
+        score += game_score_value[currentGameState.getScore()]
+
+
+    return currentGameState.getScore() + score
 
 # Abbreviation
 better = betterEvaluationFunction
