@@ -324,7 +324,7 @@ def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic) -> List[Directi
     frontier.append(initialStateFormateed)
     
     while goalReached is False:
-        refCost = 10**12 # Every attempt to search frontier, keep track of smallest cost
+        refCost = float("inf") # Every attempt to search frontier, keep track of smallest cost
         smlNode = None # Variable to store the smallest Cost node found
         
         
@@ -334,18 +334,9 @@ def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic) -> List[Directi
         # This FOR loop finds the smallest cost Node
         if(len(frontier)<5):
             print("===>- 2 Frontier is "+str(frontier))
-        
 
-        
+        # Since we remove visited nodes from fontier, the frontier only stores nodes to be expanded
         for option in frontier:
-            if option[0][0] in visitedPositions:
-                # if the option was already visited skip it, unless it gives a lower cost
-                # in that case, override it
-                if( option[0][2] <= visitedPositions[option[0][0]]):
-                    visitedPositions[option[0][0]] = option[0][2]
-                    frontier.remove(option)
-                else:
-                    continue # Skip this node if we already visited it
             if option[3] < refCost:
                 refCost=option[3]
                 smlNode=option
@@ -356,27 +347,46 @@ def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic) -> List[Directi
                 print("===>- 3 small node is "+str(smlNode))
         else:
             print("SML Node is Nothing?")
-        visitedPositions[smlNode[0][0]] = smlNode[0][2] # Save the node's XY coordinates
+            
+        # Unpack the SmallNode object
+        state,acts,G_cost,GH_cost = smlNode
+        
+        # If we visited this node already and its G isnt lower, skip it
+        if( state[0] in visitedPositions and G_cost >= visitedPositions[state[0]]):
+            frontier.remove(smlNode)
+            continue
+        
+        #Save the node as visited
+        visitedPositions[state[0]] = G_cost # Save the node's XY coordinates
 
-        if (problem.isGoalState( smlNode[0][0])):
-            actions = smlNode[1]
+        # Check if its the goal
+        if (problem.isGoalState( state[0])):
+            actions = acts
             goalReached = True
             print("===>- 5 GOAL REACHED !!")
             print("================================>- 5 small node state is "+str(smlNode[0][0]))
             # break ?
         else:
             try:
-                children = problem.getSuccessors(smlNode[0][0])
+                children = problem.getSuccessors(state[0])
                 for child in children:
-                    childFormatted = (child,smlNode[1]+[child[1]],smlNode[2]+child[2], smlNode[2]+child[2]+heuristic(child[0],problem))
-                    frontier.append(childFormatted) 
+                    childPos, childAct, stepCost = child
+                    new_G = stepCost+G_cost
+                    new_H = new_G+heuristic(childPos,problem)
+                    new_Path = acts+[childAct]
+                    
+                    #This new child might be a visited state already
+                    if(childPos not in visitedPositions or new_G <visitedPositions[childPos]):
+                        
+                        childFormatted = (child,new_Path,new_G, new_H)
+                        frontier.append(childFormatted) 
             except  Exception as e:
                 
                 print("Error: Small Node is "+ str(smlNode))
                 print("Error: Small Node[0] is "+ str(smlNode[0]))
                 print("Error: Successors is "+ str(problem.getSuccessors(smlNode[0])))
                 print("An error occurred:", e)    
-        frontier.remove(smlNode)
+  
     #End While
     
     # if (len(actions)>0)
