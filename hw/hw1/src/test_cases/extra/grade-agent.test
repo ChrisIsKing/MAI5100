@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 class: "EvalAgentTest"
 
 agentName: "ContestAgent"
@@ -9,3 +10,16 @@ scoreThresholds: "2500 2900"
 
 randomSeed: "0"
 ghosts: "[DirectionalGhost(1), DirectionalGhost(2), DirectionalGhost(3)]"
+=======
+class: "EvalAgentTest"
+
+agentName: "ContestAgent"
+layoutName: "contestClassic"
+maxTime: "180"
+numGames: "5"
+
+scoreThresholds: "2500 2900"
+
+randomSeed: "0"
+ghosts: "[DirectionalGhost(1), DirectionalGhost(2), DirectionalGhost(3)]"
+>>>>>>> 12a32503e2a554166c42a5a115daa441a515456d

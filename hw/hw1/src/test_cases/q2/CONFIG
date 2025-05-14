@@ -1,2 +1,7 @@
+<<<<<<< HEAD
 max_points: "5"
 class: "PassAllTestsQuestion"
+=======
+max_points: "5"
+class: "PassAllTestsQuestion"
+>>>>>>> 12a32503e2a554166c42a5a115daa441a515456d

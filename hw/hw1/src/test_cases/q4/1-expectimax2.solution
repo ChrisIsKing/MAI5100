@@ -1,3 +1,9 @@
+<<<<<<< HEAD
 # This is the solution file for test_cases/q4/1-expectimax2.test.
 action: "Left"
 generated: "A B C D E F G H I exp1 exp2 exp3 max"
+=======
+# This is the solution file for test_cases/q4/1-expectimax2.test.
+action: "Left"
+generated: "A B C D E F G H I exp1 exp2 exp3 max"
+>>>>>>> 12a32503e2a554166c42a5a115daa441a515456d

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 class: "EvalAgentTest"
 
 agentName: "ReflexAgent"
@@ -16,3 +17,23 @@ winsThresholds: "5 10"
 
 randomSeed: "0"
 ghosts: "[RandomGhost(1)]"
+=======
+class: "EvalAgentTest"
+
+agentName: "ReflexAgent"
+layoutName: "openClassic"
+maxTime: "120"
+numGames: "10"
+
+
+nonTimeoutMinimum: "10"
+
+scoreThresholds: "500 1000"
+
+winsMinimum: "1"
+winsThresholds: "5 10"
+
+
+randomSeed: "0"
+ghosts: "[RandomGhost(1)]"
+>>>>>>> 12a32503e2a554166c42a5a115daa441a515456d

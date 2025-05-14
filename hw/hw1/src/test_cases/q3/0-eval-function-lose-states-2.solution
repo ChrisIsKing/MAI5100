@@ -1,3 +1,9 @@
+<<<<<<< HEAD
 # This is the solution file for test_cases/q3/0-eval-function-lose-states-2.test.
 action: "Right"
 generated: "lose1 lose2 root"
+=======
+# This is the solution file for test_cases/q3/0-eval-function-lose-states-2.test.
+action: "Right"
+generated: "lose1 lose2 root"
+>>>>>>> 12a32503e2a554166c42a5a115daa441a515456d
