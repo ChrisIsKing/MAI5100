@@ -64,7 +64,22 @@ class ValueIterationAgent(ValueEstimationAgent):
           Run the value iteration algorithm. Note that in standard
           value iteration, V_k+1(...) depends on V_k(...)'s.
         """
-        "*** YOUR CODE HERE ***"
+        for i in range(self.iterations):
+            newValues = self.values.copy()
+            for state in self.mdp.getStates():
+                if self.mdp.isTerminal(state):
+                    continue
+
+                actionValues = []
+                for action in self.mdp.getPossibleActions(state):
+                    q_value = self.computeQValueFromValues(state, action)
+                    actionValues.append(q_value)
+
+                if actionValues:
+                    newValues[state] = max(actionValues)
+
+            self.values = newValues
+
 
     def getValue(self, state):
         """
@@ -77,8 +92,11 @@ class ValueIterationAgent(ValueEstimationAgent):
           Compute the Q-value of action in state from the
           value function stored in self.values.
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        q_value = 0
+        for nextState, probability in self.mdp.getTransitionStatesAndProbs(state, action):
+            reward = self.mdp.getReward(state, action, nextState)
+            q_value += probability * (reward + self.discount * self.values[nextState])
+        return q_value
 
     def computeActionFromValues(self, state):
         """
@@ -89,8 +107,17 @@ class ValueIterationAgent(ValueEstimationAgent):
           there are no legal actions, which is the case at the
           terminal state, you should return None.
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        max_reward = float("-inf")
+        bestAction = None
+        if self.mdp.getPossibleActions(state):
+            for action in self.mdp.getPossibleActions(state):
+                print(action)
+                for nextState, probability in self.mdp.getTransitionStatesAndProbs(state, action):
+                    reward = self.mdp.getReward(state, action, nextState)
+                    if reward > max_reward:
+                        max_reward = reward
+                        bestAction = action
+        return bestAction
 
     def getPolicy(self, state):
         return self.computeActionFromValues(state)
