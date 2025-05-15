@@ -64,8 +64,12 @@ class ValueIterationAgent(ValueEstimationAgent):
           Run the value iteration algorithm. Note that in standard
           value iteration, V_k+1(...) depends on V_k(...)'s.
         """
+        print("++++++++++++++++++++++++++++++")
+        print(self.iterations)
         for i in range(self.iterations):
             newValues = self.values.copy()
+            print(newValues)
+            print("-----------------------------")
             for state in self.mdp.getStates():
                 if self.mdp.isTerminal(state):
                     continue
@@ -107,15 +111,13 @@ class ValueIterationAgent(ValueEstimationAgent):
           there are no legal actions, which is the case at the
           terminal state, you should return None.
         """
-        max_reward = float("-inf")
+        max_q_value = float("-inf")
         bestAction = None
-        if self.mdp.getPossibleActions(state):
+        if self.mdp.getPossibleActions(state) and not self.mdp.isTerminal(state):
             for action in self.mdp.getPossibleActions(state):
-                print(action)
-                for nextState, probability in self.mdp.getTransitionStatesAndProbs(state, action):
-                    reward = self.mdp.getReward(state, action, nextState)
-                    if reward > max_reward:
-                        max_reward = reward
+                    q_value = self.computeQValueFromValues(state, action)
+                    if q_value > max_q_value:
+                        max_q_value = q_value
                         bestAction = action
         return bestAction
 
