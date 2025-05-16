@@ -65,6 +65,20 @@ class ValueIterationAgent(ValueEstimationAgent):
           value iteration, V_k+1(...) depends on V_k(...)'s.
         """
         "*** YOUR CODE HERE ***"
+        #available actions:
+
+        allStates=self.mdp.getStates()
+
+        for currentState  in allStates:
+             #print(currentState)
+             actionsOnStates=self.mdp.getPossibleActions(currentState)
+             if not self.mdp.isTerminal(currentState):
+                 for action in actionsOnStates:
+                     #Get the  reachable states and the  theprobability of  reaching these states
+                     probablity=self.mdp.getTransitionStatesAndProbs(currentState,action)
+                     for nextstate in probablity:
+                        #get reward for for transiton
+                        reward=self.mdp.getReward(currentState,action,nextstate[0])
 
     def getValue(self, state):
         """
