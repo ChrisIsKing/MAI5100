@@ -68,17 +68,25 @@ class ValueIterationAgent(ValueEstimationAgent):
         #available actions:
 
         allStates=self.mdp.getStates()
+        maxQvalue=0
+        bestAction=None
 
         for currentState  in allStates:
              #print(currentState)
              actionsOnStates=self.mdp.getPossibleActions(currentState)
-             if not self.mdp.isTerminal(currentState):
-                 for action in actionsOnStates:
-                     #Get the  reachable states and the  theprobability of  reaching these states
-                     probablity=self.mdp.getTransitionStatesAndProbs(currentState,action)
-                     for nextstate in probablity:
-                        #get reward for for transiton
-                        reward=self.mdp.getReward(currentState,action,nextstate[0])
+            #calculate Qvalues  for all sates
+             for action in actionsOnStates:
+                 Qvalue=self.getQValue(currentState,action)
+                 if Qvalue>maxQvalue:
+                     maxQvalue=Qvalue
+                     bestAction=action
+        return maxQvalue,action
+
+                 #Get the  reachable states and the  there robability of  reaching these states
+                 #probablity=self.mdp.getTransitionStatesAndProbs(currentState,action)
+                 #for nextstate in probablity:
+                    #get reward for for transiton
+                    #reward=self.mdp.getReward(currentState,action,nextstate[0])
 
     def getValue(self, state):
         """
@@ -87,6 +95,32 @@ class ValueIterationAgent(ValueEstimationAgent):
         return self.values[state]
 
     def computeQValueFromValues(self, state, action):
+        reward=0
+        transitonProbability=0
+        Qvalue=0
+        #Q value is the expected utility at a chance node
+
+        if self.mdp.isTerminal(state):
+            #return Q Value as 0 if the state is a TERMINAL_STATE
+            return 0
+        else:
+            #if is not terminal  calculate  SUM { T(s,a,s')[R(s,a s')+lamda V(s')]}
+            #nextStateProbability contains all possible states from  current state
+            # if we take action "action"
+            nextStateProbability=self.mdp.getTransitionStatesAndProbs(state,action)
+
+            for nextState in nextStateProbability:
+                #get reward for the transiton what is lamda()
+                transitonProbability=nextState[1]# transition Probabilty
+                reward=reward+self.mdp.getReward(state,action,nextState[0])#Immediate
+                VsPrime=self.discount*(reward)
+
+                Qvalue=Qvalue+transitonProbability*(reward+VsPrime)
+                print(transitonProbability,reward,VsPrime)
+            #print(Qvalue)
+            return Qvalue
+
+
         """
           Compute the Q-value of action in state from the
           value function stored in self.values.
@@ -95,6 +129,7 @@ class ValueIterationAgent(ValueEstimationAgent):
         util.raiseNotDefined()
 
     def computeActionFromValues(self, state):
+
         """
           The policy is the best action in the given state
           according to the values currently stored in self.values.
@@ -103,7 +138,27 @@ class ValueIterationAgent(ValueEstimationAgent):
           there are no legal actions, which is the case at the
           terminal state, you should return None.
         """
+
         "*** YOUR CODE HERE ***"
+       #we have a state and need an action
+        maxQvalue=0
+        bestAction=None
+        if self.mdp.isTerminal(state):
+            return "exit"
+
+        actionsOnStates=self.mdp.getPossibleActions(state)
+        #calculate Qvalues  for all sates
+        for action in actionsOnStates:
+             Qvalue=self.getQValue(state,action)
+             if Qvalue>maxQvalue:
+                 maxQvalue=Qvalue
+                 bestAction=action
+                 maxQvalue=Qvalue
+        print(action,maxQvalue)
+        return bestAction
+
+
+
         util.raiseNotDefined()
 
     def getPolicy(self, state):
