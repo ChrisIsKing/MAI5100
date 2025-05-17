@@ -64,16 +64,9 @@ class ValueIterationAgent(ValueEstimationAgent):
           Run the value iteration algorithm. Note that in standard
           value iteration, V_k+1(...) depends on V_k(...)'s.
         """
-        print("++++++++++++++++++++++++++++++")
-        print(self.iterations)
         for i in range(self.iterations):
             newValues = self.values.copy()
-            print(newValues)
-            print("-----------------------------")
             for state in self.mdp.getStates():
-                if self.mdp.isTerminal(state):
-                    continue
-
                 actionValues = []
                 for action in self.mdp.getPossibleActions(state):
                     q_value = self.computeQValueFromValues(state, action)
