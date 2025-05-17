@@ -69,25 +69,24 @@ class ValueIterationAgent(ValueEstimationAgent):
         """
         "*** YOUR CODE HERE ***"
         # get available actions  of the gridworld :
-        allStates=self.mdp.getStates()
+        for iteration in  range (self.iterations):
+            allStates=self.mdp.getStates()
 
-        #I think slef that values need to be updated  however  the system aways results in 0 so
-        # lets see how it goes
-        #for each state  calulate Vpi(s)=Qpi(s')
-        # get all actions to take from a given postions
+            #for each state  calulate Vpi(s)=Qpi(s') if the posittion is not terminal
+            # get all actions to take from a given postions
 
-        for currentState  in allStates:
-             #update the mdp value array "self.values" for each state if it better that the last iteration
-             #if a state is nt terminal calculate Qpi(s') else leave as 0(default)
-             if not self.mdp.isTerminal(currentState):
-                 #get all possible actions of current state
-                 actionsOnStates=self.mdp.getPossibleActions(currentState)
-                 #calculate Qvalues  for all sates by executing an action
-                 for action in actionsOnStates:
-                     Qvalue=self.getQValue(currentState,action)
-                     #if the newwly calculater vlaue update it.  else leave it the same ( think it  chcking agaisns difference rather than grather )
-                     if Qvalue!=self.values[currentState]:#think i should also store action but it might  cause some issues in the calcualtion, however  accessing a dicitonary......
-                         self.values[currentState]=Qvalue
+            for currentState  in allStates:
+                 #update the mdp value array "self.values" for each state if it better that the last iteration
+                 #if a state is nt terminal calculate Qpi(s') else leave as 0(default)
+                 if not self.mdp.isTerminal(currentState):
+                     #get all possible actions of current state
+                     actionsOnStates=self.mdp.getPossibleActions(currentState)
+                     #calculate Qvalues  for all sates by executing an action
+                     for action in actionsOnStates:
+                         Qvalue=self.getQValue(currentState,action)
+                         #if the newwly calculater is different from the current vlaue update it.  else leave it the same ( think it  chcking agaisns difference rather than grather )
+                         if Qvalue>self.values[currentState]:
+                             self.values[currentState]=Qvalue
 
 
 
@@ -99,8 +98,7 @@ class ValueIterationAgent(ValueEstimationAgent):
         return self.values[state]
 
     def computeQValueFromValues(self, state, action):
-        reward=0
-        transitonProbability=0
+
         Qvalue=0
 
         #calculete SUM { T(s,a,s')[R(s,a s')+lamda V(s')]}
@@ -110,8 +108,9 @@ class ValueIterationAgent(ValueEstimationAgent):
         for nextState in nextStateProbability:
             #get reward for the transiton what is lamda()
             transitonProbability=nextState[1]# transition Probabilty
-            reward=reward+self.mdp.getReward(state,action,nextState[0])#Immediate
-            VsPrime=self.discount*(reward)
+            reward=self.mdp.getReward(state,action,nextState[0])#Immediate
+            VsPrime=self.discount*self.values[nextState[0]] # was looking at the current state  looking back at the formula  its the next not the current
+            print("printing", VsPrime)
 
             Qvalue=Qvalue+transitonProbability*(reward+VsPrime)
 
@@ -140,20 +139,20 @@ class ValueIterationAgent(ValueEstimationAgent):
        #we have a state and need an action
         maxQvalue=0
         bestAction=None
-        for iteration in  range (self.iterations):
-            if self.mdp.isTerminal(state):
-                return "exit"
 
-            actionsOnStates=self.mdp.getPossibleActions(state)
+        if self.mdp.isTerminal(state):
+            return "exit"
 
-            for action in actionsOnStates:
-                 Qvalue=self.getQValue(state,action)
-                 if Qvalue!=self.values[state]:
-                     print("printting when different",self.values[state])              
-                     continue
-                 else:
-                     #print(action)
-                     return action
+        actionsOnStates=self.mdp.getPossibleActions(state)
+
+        for action in actionsOnStates:
+             Qvalue=self.getQValue(state,action)
+             if Qvalue>self.values[state]:
+                 print("printting when different",self.values[state])
+                 bestAction=action
+        return bestAction
+
+
 
 
 
