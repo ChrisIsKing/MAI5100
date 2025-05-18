@@ -59,7 +59,11 @@ class ValueIterationAgent(ValueEstimationAgent):
         self.mdp = mdp
         self.discount = discount
         self.iterations = iterations
-        self.values = util.Counter() # A Counter is a dict with default 0
+        self.values =util.Counter() # A Counter is a dict with default 0
+
+
+
+
         self.runValueIteration()
 
     def runValueIteration(self):
@@ -69,24 +73,46 @@ class ValueIterationAgent(ValueEstimationAgent):
         """
         "*** YOUR CODE HERE ***"
         # get available actions  of the gridworld :
+        allStates=self.mdp.getStates()
+
         for iteration in  range (self.iterations):
-            allStates=self.mdp.getStates()
+
 
             #for each state  calulate Vpi(s)=Qpi(s') if the posittion is not terminal
             # get all actions to take from a given postions
-
+            tempvalues=util.Counter()
+            if iteration==1:
+                print([item for item in tempvalues])
             for currentState  in allStates:
                  #update the mdp value array "self.values" for each state if it better that the last iteration
                  #if a state is nt terminal calculate Qpi(s') else leave as 0(default)
-                 if not self.mdp.isTerminal(currentState):
+                 if self.mdp.isTerminal(currentState):
+                     #print("printing terminalState ",self.values[currentState])
+                     prints="kello"
+                 else:
                      #get all possible actions of current state
                      actionsOnStates=self.mdp.getPossibleActions(currentState)
+
+                     maxQvalue=float('-inf')
+
                      #calculate Qvalues  for all sates by executing an action
                      for action in actionsOnStates:
+                         if iteration==0:
+                             nextStateProbability=self.mdp.getTransitionStatesAndProbs(currentState,action)
+                             #print("action",currentState,action,[[result,prob] for result,prob in nextStateProbability])
+
                          Qvalue=self.getQValue(currentState,action)
-                         #if the newwly calculater is different from the current vlaue update it.  else leave it the same ( think it  chcking agaisns difference rather than grather )
-                         if Qvalue>self.values[currentState]:
-                             self.values[currentState]=Qvalue
+                         if Qvalue>maxQvalue:
+                             maxQvalue=Qvalue
+
+                         #if the newwly calculater is different from the current vlaue update it.  else leave it the same ( think it  chcking agaisns difference rather than grather )'''
+                         '''if Qvalue>self.values[currentState]:
+                             self.values[currentState]=Qvalue'''
+                     #print("printing tempvalues",tempvalues)
+                     tempvalues[currentState]=maxQvalue
+            self.values=tempvalues
+
+
 
 
 
@@ -101,18 +127,25 @@ class ValueIterationAgent(ValueEstimationAgent):
 
         Qvalue=0
 
+        #print("Printing Initial values",[item for item in self.values])
         #calculete SUM { T(s,a,s')[R(s,a s')+lamda V(s')]}
         #nextStateProbability contains all possible states from  current state if we take the  action "action" passed as parameter
         nextStateProbability=self.mdp.getTransitionStatesAndProbs(state,action)
 
         for nextState in nextStateProbability:
-            #get reward for the transiton what is lamda()
+            #get reward for the transiton what
+
+            '''transitonProbability=nextState[1]# transition Probabilty
+            reward=self.mdp.getReward(state,action,nextState[0])#Immediate
+            VsPrime=self.discount*self.values[nextState[0]] # was looking at the current state  looking back at the formula  its the next not the current
+            Qvalue=transitonProbability*(reward+VsPrime)'''
+
             transitonProbability=nextState[1]# transition Probabilty
             reward=self.mdp.getReward(state,action,nextState[0])#Immediate
             VsPrime=self.discount*self.values[nextState[0]] # was looking at the current state  looking back at the formula  its the next not the current
-            print("printing", VsPrime)
-
             Qvalue=Qvalue+transitonProbability*(reward+VsPrime)
+
+
 
         return Qvalue
 
@@ -137,20 +170,43 @@ class ValueIterationAgent(ValueEstimationAgent):
 
         "*** YOUR CODE HERE ***"
        #we have a state and need an action
-        maxQvalue=0
+        maxQvalue=float('-inf')
         bestAction=None
 
         if self.mdp.isTerminal(state):
-            return "exit"
+            return 0
 
         actionsOnStates=self.mdp.getPossibleActions(state)
 
         for action in actionsOnStates:
+             #for  i in range(self.iterations):
              Qvalue=self.getQValue(state,action)
-             if Qvalue>self.values[state]:
-                 print("printting when different",self.values[state])
+
+             if Qvalue>maxQvalue:
+
+                 #print("printting when different",self.values[state])
                  bestAction=action
+                 maxQvalue=Qvalue
+                 bestAction=action
+
+        '''tempvalues=[]
+        #calculate Qvalues  for all sates by executing an action
+
+        for action in actionsOnStates:
+
+            Qvalue=self.getQValue(state,action)
+
+            tempvalues.append((Qvalue,action))
+
+
+        maxi=-float('-inf')
+        for k,v in tempvalues:
+            if k<maxi:
+                bestAction=v'''
+
+
         return bestAction
+        #return self.values[state]
 
 
 
