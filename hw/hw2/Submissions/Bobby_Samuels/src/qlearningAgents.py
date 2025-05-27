@@ -70,7 +70,7 @@ class QLearningAgent(ReinforcementAgent):
         """
         "*** YOUR CODE HERE ***"
         actions = self.getLegalActions(state)
-        if len(actions)<1:
+        if len(actions)<1 or actions == None:
           return 0.0
         else:
           return max( self.getQValue(state,action) for action in actions)
@@ -90,11 +90,18 @@ class QLearningAgent(ReinforcementAgent):
           return None
         else:
           for action in actions:
-             if (self.getQValue(state,action) > bestQ ):
+             print("action is",action) 
+             if(self.getQValue(state,action) is None):
+               print("Q value is none")
+             if (self.getQValue(state,action) is not None and self.getQValue(state,action) > bestQ ):
                bestQ = self.getQValue(state,action)
+               print("best q was upadated to", bestQ)
                bestAction = [action] 
+               print("new best action is", bestAction)
              elif self.getQValue(state,action) == bestQ:
                bestAction.append(action)
+               print("new best action is",bestAction)
+        print(bestAction)       
         return random.choice(bestAction)
         # max( self.getQValue(state,action) for action in actions)
         # util.raiseNotDefined()
@@ -118,9 +125,9 @@ class QLearningAgent(ReinforcementAgent):
           return None
         
         if util.flipCoin(self.epsilon):
-          action =  random.choice(list)
+          action =  random.choice(legalActions)
         else:
-          action = self.computeActionFromQValues()
+          action = self.computeActionFromQValues(state)
 
         return action
 
@@ -198,14 +205,17 @@ class ApproximateQAgent(PacmanQAgent):
           where * is the dotProduct operator
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        features = self.featExtractor.getFeatures(state, action)
+        # Q(s,a) = w1f1 + w2f2 + ...
+        # qValue = 
 
     def update(self, state, action, nextState, reward: float):
         """
            Should update your weights based on transition
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        features = self.featExtractor.getFeatures(state, action)
+        print(features)
 
     def final(self, state):
         """Called at the end of each game."""
