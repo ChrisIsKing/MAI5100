@@ -663,9 +663,6 @@ def runGames( layout, pacman, ghosts, display, numGames, record, numTraining = 0
         print('Win Rate:      %d/%d (%.2f)' % (wins.count(True), len(wins), winRate))
         print('Record:       ', ', '.join([ ['Loss', 'Win'][int(w)] for w in wins]))
 
-
-    
-
     return games
 
 if __name__ == '__main__':
