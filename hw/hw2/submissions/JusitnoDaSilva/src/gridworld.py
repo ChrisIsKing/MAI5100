@@ -29,8 +29,11 @@ class Gridworld(mdp.MarkovDecisionProcess):
         self.grid = grid
 
         # parameters
+        #set cusotom living rewared
+
         self.livingReward = 0.0
         self.noise = 0.2
+
         # self.noise = 0
 
     def setLivingReward(self, reward):
@@ -309,6 +312,17 @@ def getBookGrid():
             [' ','#',' ',-1],
             ['S',' ',' ',' ']]
     return Gridworld(grid)
+def getThreebyThree():
+    grid = [['S',' ',+5],
+            [' ','#',' '],
+            [' ',' ',' ']]
+    return Gridworld(grid)
+
+def getBookGridWrittenQ1():
+    grid = [[' ',' ',' ',+1],
+            [' ','#',' ',' '],
+            ['S',' ',' ', -1]]
+    return Gridworld(grid)
 
 def getMazeGrid():
     grid = [[' ',' ',' ',+1],
@@ -478,6 +492,7 @@ if __name__ == '__main__':
         import graphicsGridworldDisplay
         display = graphicsGridworldDisplay.GraphicsGridworldDisplay(mdp, opts.gridSize, opts.speed)
     try:
+        a="ccc"
         display.start()
     except KeyboardInterrupt:
         sys.exit(0)
@@ -597,6 +612,7 @@ if __name__ == '__main__':
     # DISPLAY POST-LEARNING VALUES / Q-VALUES
     if opts.agent == 'q' and not opts.manual:
         try:
+            c="hhh"
             display.displayQValues(a, message = "Q-VALUES AFTER "+str(opts.episodes)+" EPISODES")
             display.pause()
             display.displayValues(a, message = "VALUES AFTER "+str(opts.episodes)+" EPISODES")

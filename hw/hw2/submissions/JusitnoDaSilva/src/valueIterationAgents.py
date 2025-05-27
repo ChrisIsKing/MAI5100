@@ -81,8 +81,8 @@ class ValueIterationAgent(ValueEstimationAgent):
             #for each state  calulate Vpi(s)=Qpi(s') if the posittion is not terminal
             # get all actions to take from a given postions
             tempvalues=util.Counter()
-            if iteration==1:
-                print([item for item in tempvalues])
+            #if iteration==1:
+            #print([item for item in tempvalues])
             for currentState  in allStates:
                  #update the mdp value array "self.values" for each state if it better that the last iteration
                  #if a state is nt terminal calculate Qpi(s') else leave as 0(default)
