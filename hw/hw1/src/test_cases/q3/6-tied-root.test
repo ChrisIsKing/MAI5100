@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 class: "GraphGameTreeTest"
 alg: "AlphaBetaAgent"
 depth: "3"
@@ -29,3 +30,36 @@ A 10.0
 B 10.0
 C 0.0
 """
+=======
+class: "GraphGameTreeTest"
+alg: "AlphaBetaAgent"
+depth: "3"
+
+diagram: """
+    max
+   /   \
+min1    min2
+ |      /  \
+ A      B   C
+10     10   0
+"""
+num_agents: "2"
+
+start_state: "max"
+win_states: "A B"
+lose_states: "C"
+
+successors: """
+max Left min1
+max Right min2
+min1 Down A
+min2 Left B
+min2 Right C
+"""
+
+evaluation: """
+A 10.0
+B 10.0
+C 0.0
+"""
+>>>>>>> dd6b6d333f4b38f7129a8b1e23d2146862989020

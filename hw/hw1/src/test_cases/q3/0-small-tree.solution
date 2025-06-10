@@ -1,3 +1,9 @@
+<<<<<<< HEAD
 # This is the solution file for test_cases/q3/0-small-tree.test.
 action: "pacLeft"
 generated: "A B C minLeft minRight root"
+=======
+# This is the solution file for test_cases/q3/0-small-tree.test.
+action: "pacLeft"
+generated: "A B C minLeft minRight root"
+>>>>>>> dd6b6d333f4b38f7129a8b1e23d2146862989020

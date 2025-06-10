@@ -1,2 +1,7 @@
+<<<<<<< HEAD
 max_points: "4"
 class: "PartialCreditQuestion"
+=======
+max_points: "4"
+class: "PartialCreditQuestion"
+>>>>>>> dd6b6d333f4b38f7129a8b1e23d2146862989020
