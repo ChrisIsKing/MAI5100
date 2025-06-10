@@ -101,9 +101,46 @@ def joinFactors(factors: List[Factor]):
                     "\n".join(map(str, factors)))
 
 
-    "*** YOUR CODE HERE ***"
-    raiseNotDefined()
-    "*** END YOUR CODE HERE ***"
+    # here
+    # Handle edge cases
+
+    factors = list(factors)
+
+    if len(factors) == 0:
+        return None
+    if len(factors) == 1:
+        return factors[0]
+    
+    allUnconditionedVariables = set()
+    allConditionedVariables = set()
+    
+    for factor in factors:
+        allUnconditionedVariables.update(factor.unconditionedVariables())
+        allConditionedVariables.update(factor.conditionedVariables())
+    
+    # Remove variables that appear as both conditioned and unconditioned
+    finalConditionedVariables = allConditionedVariables - allUnconditionedVariables
+    
+    # Get the variable domains (all factors from same BayesNet, so domains are the same)
+    variableDomainsDict = factors[0].variableDomainsDict()
+    
+    # Create the new joined factor
+    joinedFactor = Factor(allUnconditionedVariables, finalConditionedVariables, variableDomainsDict)
+    
+    # Fill in the probability table by multiplying probabilities from input factors
+    for assignmentDict in joinedFactor.getAllPossibleAssignmentDicts():
+        # Start with probability 1 (multiplicative identity)
+        jointProbability = 1.0
+        
+        # Multiply probabilities from all factors for this assignment
+        for factor in factors:
+            jointProbability *= factor.getProbability(assignmentDict)
+        
+        # Set the probability in the joined factor
+        joinedFactor.setProbability(assignmentDict, jointProbability)
+    
+    return joinedFactor
+
 
 ########### ########### ###########
 ########### QUESTION 3  ###########
