@@ -55,16 +55,22 @@ def constructBayesNet(gameState: hunters.GameState):
     X_RANGE = gameState.getWalls().width
     Y_RANGE = gameState.getWalls().height
     MAX_NOISE = 7
+
     max_dist = manhattanDistance([0,0], [X_RANGE, Y_RANGE])
+
+    coordinate_tuples = {(x, y) for x in range(X_RANGE) for y in range(Y_RANGE)}
+    max_dist_noise = {x for x in range(max_dist + MAX_NOISE - 1)}
 
     variables = [PAC, GHOST0, GHOST1, OBS0, OBS1]
     edges = [(GHOST0, OBS0),(PAC, OBS0), (PAC, OBS1), (GHOST1, OBS1)]
+
     variableDomainsDict = {}
-    variableDomainsDict[PAC] = {(x, y) for x in range(X_RANGE) for y in range(Y_RANGE)}
-    variableDomainsDict[GHOST0] = {(x, y) for x in range(X_RANGE) for y in range(Y_RANGE)}
-    variableDomainsDict[GHOST1] = {(x, y) for x in range(X_RANGE) for y in range(Y_RANGE)}
-    variableDomainsDict[OBS0] = {x for x in range(max_dist + MAX_NOISE -1)}
-    variableDomainsDict[OBS1] = {x for x in range(max_dist + MAX_NOISE -1)}
+    variableDomainsDict[PAC] = coordinate_tuples
+    variableDomainsDict[GHOST0] = coordinate_tuples
+    variableDomainsDict[GHOST1] = coordinate_tuples
+    variableDomainsDict[OBS0] = max_dist_noise
+    variableDomainsDict[OBS1] = max_dist_noise
+
     net = bn.constructEmptyBayesNet(variables, edges, variableDomainsDict)
     return net
 
