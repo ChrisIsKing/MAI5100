@@ -184,7 +184,27 @@ def eliminateWithCallTracking(callTrackingList=None):
                     "unconditionedVariables: " + str(factor.unconditionedVariables()))
 
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+        #''' new calculations##
+        conditioned=factor.conditionedVariables()
+        unconditioned=factor.unconditionedVariables()
+        unconditioned.remove(eliminationVariable)
+
+        domain=factor.variableDomainsDict()
+        EliminatedFactor=Factor(unconditioned,conditioned,domain)
+        #'''new calculaotionas##
+
+        for TableRow in EliminatedFactor.getAllPossibleAssignmentDicts():
+            print(" ReducedtableRow",TableRow)
+            totalProb = 0
+            for eliminatedomainValues in domain[eliminationVariable]:
+                OriginalRow = TableRow
+                #reconstruct table row by set the fixing  the value of the remaing value
+                OriginalRow[eliminationVariable] = eliminatedomainValues
+                print("OriginalRow",OriginalRow)
+                totalProb += factor.getProbability(OriginalRow)
+            EliminatedFactor.setProbability(TableRow, totalProb)
+
+        return EliminatedFactor
         "*** END YOUR CODE HERE ***"
 
     return eliminate
