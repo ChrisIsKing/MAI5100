@@ -61,7 +61,45 @@ def constructBayesNet(gameState: hunters.GameState):
     variableDomainsDict = {}
 
     "*** YOUR CODE HERE ***"
-    raiseNotDefined()
+    # raiseNotDefined()
+
+    #updating vars array
+    variables = [PAC, GHOST0, GHOST1, OBS0, OBS1]
+
+    #updating edges based on figure1
+    edges = [
+        (PAC, OBS0),
+        (GHOST0, OBS0),
+        (PAC, OBS1),
+        (GHOST1, OBS1)
+    ]
+
+    #defining the domains. ignoring walls so agent domains are essentially all possible x,y vals.
+    positions = []
+
+    for x in range(X_RANGE):
+        for y in range(Y_RANGE):
+            positions.append((x, y))
+    print(positions)
+
+    variableDomainsDict[PAC] = positions
+    variableDomainsDict[GHOST0] = positions
+    variableDomainsDict[GHOST1] = positions
+
+    #Settting ip manhattan distance.NB there is +- noise.
+    maxManhattan = X_RANGE + Y_RANGE - 2  #actual distance on the grid.
+    obsValues = list(range(maxManhattan + MAX_NOISE + 1))
+    variableDomainsDict[OBS0] = obsValues
+    variableDomainsDict[OBS1] = obsValues
+
+
+    print("Variables:", variables)
+    print("Edges:", edges)
+    print("Domains:")
+    for var, domain in variableDomainsDict.items():
+        print(var, ":", domain[:5])
+
+
     "*** END YOUR CODE HERE ***"
 
     net = bn.constructEmptyBayesNet(variables, edges, variableDomainsDict)
