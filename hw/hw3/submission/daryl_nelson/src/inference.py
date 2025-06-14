@@ -345,9 +345,12 @@ class DiscreteDistribution(dict):
         >>> empty
         {}
         """
-        "*** YOUR CODE HERE ***"
-        raiseNotDefined()
-        "*** END YOUR CODE HERE ***"
+        dist = DiscreteDistribution(self)
+        return {key: value / sum(dist.values()) for key, value in dist.items()} if dist else {}
+
+
+
+
 
     def sample(self):
         """
@@ -370,9 +373,15 @@ class DiscreteDistribution(dict):
         >>> round(samples.count('d') * 1.0/N, 1)
         0.0
         """
-        "*** YOUR CODE HERE ***"
-        raiseNotDefined()
-        "*** END YOUR CODE HERE ***"
+        dist = DiscreteDistribution(self)
+        N = random.random() * sum(dist.values())
+        cumulative = 0.0
+
+        return next(((key, weight) for key, weight in dist.items() if weight > 0 and (cumulative := cumulative + weight) > N), None)
+
+
+
+
 
 
 class InferenceModule:
@@ -445,9 +454,10 @@ class InferenceModule:
         """
         Return the probability P(noisyDistance | pacmanPosition, ghostPosition).
         """
-        "*** YOUR CODE HERE ***"
-        raiseNotDefined()
-        "*** END YOUR CODE HERE ***"
+        print(noisyDistance)
+        print(pacmanPosition)
+        print(ghostPosition)
+        print(jailPosition)
 
     def setGhostPosition(self, gameState, ghostPosition, index):
         """
@@ -538,6 +548,7 @@ class ExactInference(InferenceModule):
         for p in self.legalPositions:
             self.beliefs[p] = 1.0
         self.beliefs.normalize()
+        self.beliefs.sample()
     
     ########### ########### ###########
     ########### QUESTION 6  ###########
