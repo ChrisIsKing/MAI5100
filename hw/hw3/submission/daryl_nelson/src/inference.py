@@ -548,7 +548,6 @@ class ExactInference(InferenceModule):
         for p in self.legalPositions:
             self.beliefs[p] = 1.0
         self.beliefs.normalize()
-        self.beliefs.sample()
     
     ########### ########### ###########
     ########### QUESTION 6  ###########
