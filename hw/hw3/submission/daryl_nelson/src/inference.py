@@ -345,8 +345,8 @@ class DiscreteDistribution(dict):
         >>> empty
         {}
         """
-        dist = DiscreteDistribution(self)
-        return {key: value / sum(dist.values()) for key, value in dist.items()} if dist else {}
+        self.update({key: value / total for key, value in self.items()} if (total := sum(self.values())) else {})
+
 
 
 
@@ -373,11 +373,10 @@ class DiscreteDistribution(dict):
         >>> round(samples.count('d') * 1.0/N, 1)
         0.0
         """
-        dist = DiscreteDistribution(self)
-        N = random.random() * sum(dist.values())
+        self.normalize()
+        N = random.random() * sum(self.values())
         cumulative = 0.0
-
-        return next(((key, weight) for key, weight in dist.items() if weight > 0 and (cumulative := cumulative + weight) > N), None)
+        return next((key for key, weight in self.items() if weight > 0 and (cumulative := cumulative + weight) > N), None)
 
 
 
@@ -454,10 +453,11 @@ class InferenceModule:
         """
         Return the probability P(noisyDistance | pacmanPosition, ghostPosition).
         """
-        print(noisyDistance)
-        print(pacmanPosition)
-        print(ghostPosition)
-        print(jailPosition)
+        # print(self)
+        # print(noisyDistance)
+        # print(pacmanPosition)
+        # print(ghostPosition)
+        # print(jailPosition)
 
     def setGhostPosition(self, gameState, ghostPosition, index):
         """
