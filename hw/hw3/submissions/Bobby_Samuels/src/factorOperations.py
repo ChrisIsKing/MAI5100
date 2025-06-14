@@ -102,7 +102,40 @@ def joinFactors(factors: List[Factor]):
 
 
     "*** YOUR CODE HERE ***"
-    raiseNotDefined()
+    # Debugging
+    for factor in factors:
+        print("Next factor")
+        print(str(factor))
+        print(str(factor.getAllPossibleAssignmentDicts))
+        print(str(factor.unconditionedVariables))
+        print(str(factor.variableDomainsDict))
+
+    # Step 1: Collect all unconditioned and conditioned variables
+    allUnconditioned = set()
+    allConditioned = set()
+    for factor in factors:
+        allUnconditioned.update(factor.unconditionedVariables())
+        allConditioned.update(factor.conditionedVariables())
+
+    # Remove any variables that are unconditioned from the conditioned set
+    allConditioned -= allUnconditioned
+
+    # Step 2: All factors use the same variable domain, so we take it from the first
+    factors = list(factors)
+    variableDomainsDict = factors[0].variableDomainsDict()
+
+    # Step 3: Create the new joined factor
+    newFactor = Factor(allUnconditioned, allConditioned, variableDomainsDict)
+
+    # Step 4: For every possible full assignment to all vars in the new factor
+    for assignment in newFactor.getAllPossibleAssignmentDicts():
+        product = 1.0
+        for factor in factors:
+            product *= factor.getProbability(assignment)
+        newFactor.setProbability(assignment, product)
+
+    return newFactor
+
     "*** END YOUR CODE HERE ***"
 
 ########### ########### ###########
