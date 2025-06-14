@@ -68,8 +68,8 @@ def constructBayesNet(gameState: hunters.GameState):
     legalSquares = []
     for x in range(X_RANGE):
         for y in range (Y_RANGE):
-            if not walls[x][y]:
-                legalSquares.append((x,y))
+            # if not walls[x][y]:
+            legalSquares.append((x,y))
     # print("1-LegalSqaures is",legalSquares)
     
     variableDomainsDict[PAC] = legalSquares
@@ -77,7 +77,7 @@ def constructBayesNet(gameState: hunters.GameState):
     variableDomainsDict[GHOST1] = legalSquares
     
     max_manhattan = X_RANGE + Y_RANGE
-    all_obs = list(range(max_manhattan + MAX_NOISE + 1))
+    all_obs = list(range(max_manhattan + MAX_NOISE - 1))
     variableDomainsDict[OBS0] = all_obs
     variableDomainsDict[OBS1] = all_obs
     "*** END YOUR CODE HERE ***"
