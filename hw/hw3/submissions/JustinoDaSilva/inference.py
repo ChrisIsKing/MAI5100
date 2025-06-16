@@ -212,7 +212,19 @@ def inferenceByVariableEliminationWithCallTracking(callTrackingList=None):
             eliminationOrder = sorted(list(eliminationVariables))
 
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+
+        factors=bayesNet.getAllCPTsWithEvidence(evidenceDict)
+
+        for var in eliminationOrder:
+            factors,joined=joinFactorsByVariable(factors,var)
+            if len(joined.unconditionedVariables())==1:
+                continue
+            else:
+                reduced=eliminate(joined,var)
+
+                factors.append(reduced)
+        finalFactor=joinFactors(factors)
+        return normalize(finalFactor)
         "*** END YOUR CODE HERE ***"
 
 
@@ -353,7 +365,9 @@ class DiscreteDistribution(dict):
         {}
         """
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+        print (dir(DiscreteDistribution()))
+
+        #raiseNotDefined()
         "*** END YOUR CODE HERE ***"
 
     def sample(self):
@@ -378,6 +392,7 @@ class DiscreteDistribution(dict):
         0.0
         """
         "*** YOUR CODE HERE ***"
+
         raiseNotDefined()
         "*** END YOUR CODE HERE ***"
 

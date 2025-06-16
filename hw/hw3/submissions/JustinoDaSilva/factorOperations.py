@@ -43,7 +43,7 @@ def joinFactorsByVariableWithCallTracking(callTrackingList=None):
         # typecheck portion
         numVariableOnLeft = len([factor for factor in currentFactorsToJoin if joinVariable in factor.unconditionedVariables()])
         if numVariableOnLeft > 1:
-            print("Factor failed joinFactorsByVariable typecheck: ", factor)
+            print("Factor failed joinFactorsByVariable typecheck: ", Factor)
             raise ValueError("The joinBy variable can only appear in one factor as an \nunconditioned variable. \n" +
                                "joinVariable: " + str(joinVariable) + "\n" +
                                ", ".join(map(str, [factor.unconditionedVariables() for factor in currentFactorsToJoin])))
