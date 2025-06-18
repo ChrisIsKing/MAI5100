@@ -687,7 +687,7 @@ class ParticleFilter(InferenceModule):
         the DiscreteDistribution may be useful.
         """
 
-        distribution = self.getBeliefDistribution()
+        distribution = DiscreteDistribution()
         pacmanPosition = gameState.getPacmanPosition()
         jailPosition = self.getJailPosition()
 
