@@ -639,9 +639,17 @@ class ParticleFilter(InferenceModule):
         self.particles for the list of particles.
         """
         self.particles = []
-        "*** YOUR CODE HERE ***"
-        raiseNotDefined()
-        "*** END YOUR CODE HERE ***"
+
+        particlesPerPosition = self.numParticles / len(self.legalPositions)
+        remainder = self.numParticles % len(self.legalPositions)
+
+        self.particles = self.legalPositions * int(particlesPerPosition)
+        self.particles += self.legalPositions[:remainder]
+
+
+
+
+
 
     def getBeliefDistribution(self):
         """
@@ -651,9 +659,16 @@ class ParticleFilter(InferenceModule):
 
         This function should return a normalized distribution.
         """
-        "*** YOUR CODE HERE ***"
-        raiseNotDefined()
-        "*** END YOUR CODE HERE ***"
+
+        distribution = DiscreteDistribution()
+
+        for particle in self.particles:
+            distribution[particle] = distribution.get(particle, 0) + 1
+
+        distribution.normalize()
+
+        return distribution
+
     
     ########### ########### ###########
     ########### QUESTION 10 ###########
@@ -671,9 +686,21 @@ class ParticleFilter(InferenceModule):
         be reinitialized by calling initializeUniformly. The total method of
         the DiscreteDistribution may be useful.
         """
-        "*** YOUR CODE HERE ***"
-        raiseNotDefined()
-        "*** END YOUR CODE HERE ***"
+
+        distribution = self.getBeliefDistribution()
+        pacmanPosition = gameState.getPacmanPosition()
+        jailPosition = self.getJailPosition()
+
+
+        for particle in self.particles:
+            likelihood = self.getObservationProb(observation, pacmanPosition, particle, jailPosition)
+            distribution[particle] += likelihood
+
+        if distribution.total() == 0:
+            self.initializeUniformly(gameState)
+        else:
+            self.particles = [distribution.sample() for _ in range(self.numParticles)]
+
     
     ########### ########### ###########
     ########### QUESTION 11 ###########
