@@ -638,7 +638,18 @@ class ExactInference(InferenceModule):
         position is known.
         """
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+        #raiseNotDefined()
+
+       
+        pacman_Position = gameState.getPacmanPosition()  #get pacman position
+        jail_Position = self.getJailPosition() #get the jail position
+
+        for position in self.allPositions:
+            obsProb = self.getObservationProb(observation, pacman_Position, position, jail_Position) #get the observation prob. ie. P(observation | ghost is at this position, pacman position, jail)
+            
+            #the new belief is proportional to the obs. probability x the previous belief
+            self.beliefs[position] *= obsProb 
+
         "*** END YOUR CODE HERE ***"
         self.beliefs.normalize()
     
@@ -656,7 +667,26 @@ class ExactInference(InferenceModule):
         current position is known.
         """
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+        #raiseNotDefined()
+
+        #Setup new dist. to hold new beliefs
+        new_Beliefs = DiscreteDistribution()
+
+        # For all prior positiions getr the updated P(G_T)
+        for old_Pos in self.allPositions:
+            old_Prob = self.beliefs[old_Pos] #P(G_t)
+
+            #Get the new distribution: P(G_{t+1} | G_t)
+            new_PosDist = self.getPositionDistribution(gameState, old_Pos)
+
+            for new_Pos, prob in new_PosDist.items():
+                # Add transition-weighted belief to each new position / transition
+                new_Beliefs[new_Pos] += old_Prob * prob
+
+        #update beliefs
+        self.beliefs = new_Beliefs
+
+
         "*** END YOUR CODE HERE ***"
 
     def getBeliefDistribution(self):
