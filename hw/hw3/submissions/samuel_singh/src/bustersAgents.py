@@ -149,5 +149,48 @@ class GreedyBustersAgent(BustersAgent):
             [beliefs for i, beliefs in enumerate(self.ghostBeliefs)
              if livingGhosts[i+1]]
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+        #raiseNotDefined()
+
+        #get teh pacman's position
+        pacman_position = gameState.getPacmanPosition()
+
+        #get all the legal actions that pacman can take
+        legal_actions = gameState.getLegalPacmanActions()
+
+        #get the beliefs of all living ghosts
+        living_ghosts = gameState.getLivingGhosts()
+        living_ghost_beliefs = []
+
+        for i, dist in enumerate(self.ghostBeliefs):
+            if living_ghosts[i + 1]:
+                living_ghost_beliefs.append(dist)
+        
+        most_likely_positions = [belief.argMax() for belief in living_ghost_beliefs] #determinet the likely postions of the ghost
+
+        #using maze distance to find the closest ghost.
+        min_distance = float('inf')
+        closest_ghost_pos = None
+
+        for pos in most_likely_positions:
+            dist = self.distancer.getDistance(pacman_position, pos)
+            if dist < min_distance:
+                min_distance = dist
+                closest_ghost_pos = pos
+                print("min distance and closest ghost: ", min_distance, closest_ghost_pos)
+
+        #determine best action to bring the pacman closer to the ghost
+        best_action = None
+        min_successor_distance = float('inf')
+
+        for action in legal_actions:
+            successor_pos = Actions.getSuccessor(pacman_position, action)
+            dist = self.distancer.getDistance(successor_pos, closest_ghost_pos)
+
+            if dist < min_successor_distance:
+                min_successor_distance = dist
+                best_action = action
+                print("Best action:", best_action)
+
+        return best_action
+
         "*** END YOUR CODE HERE ***"
