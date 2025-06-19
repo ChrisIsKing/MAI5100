@@ -813,6 +813,19 @@ class ParticleFilter(InferenceModule):
         gameState.
         """
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+        # Create a new list to store the evolved particles
+        newParticles = []
+        
+        # For each particle, sample its next position based on the transition model
+        for oldParticle in self.particles:
+            newPosDist = self.getPositionDistribution(gameState, oldParticle)
+            
+            newParticle = newPosDist.sample()
+            
+            # Add the evolved particle to our new particle set
+            newParticles.append(newParticle)
+        
+        # Replace the old particles with the new evolved particles
+        self.particles = newParticles
         "*** END YOUR CODE HERE ***"
 
