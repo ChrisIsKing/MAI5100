@@ -575,7 +575,7 @@ def readCommand( argv ):
     if options.gameToReplay != None:
         print('Replaying recorded game %s.' % options.gameToReplay)
         import pickle
-        f = open(options.gameToReplay, 'rb')
+        f = open(options.gameToReplay)
         try: recorded = pickle.load(f)
         finally: f.close()
         recorded['display'] = args['display']
@@ -649,7 +649,7 @@ def runGames( layout, pacman, ghosts, display, numGames, record, numTraining = 0
         if record:
             import time, pickle
             fname = ('recorded-game-%d' % (i + 1)) +  '-'.join([str(t) for t in time.localtime()[1:6]])
-            f = open(fname, 'wb')
+            f = open(fname, 'w')
             components = {'layout': layout, 'actions': game.moveHistory}
             pickle.dump(components, f)
             f.close()
@@ -662,9 +662,6 @@ def runGames( layout, pacman, ghosts, display, numGames, record, numTraining = 0
         print('Scores:       ', ', '.join([str(score) for score in scores]))
         print('Win Rate:      %d/%d (%.2f)' % (wins.count(True), len(wins), winRate))
         print('Record:       ', ', '.join([ ['Loss', 'Win'][int(w)] for w in wins]))
-
-
-    
 
     return games
 
