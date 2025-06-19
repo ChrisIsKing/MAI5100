@@ -637,7 +637,23 @@ class ExactInference(InferenceModule):
         position is known.
         """
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+        # Get current game information
+        pacmanPosition = gameState.getPacmanPosition()
+        jailPosition = self.getJailPosition()
+        
+        # Update beliefs for each possible ghost position using Bayes' rule
+        for position in self.allPositions:
+            # Get the prior belief for this position
+            priorBelief = self.beliefs[position]
+            
+            # Calculate the likelihood: P(observation | pacman_position, ghost_position)
+            likelihood = self.getObservationProb(observation, pacmanPosition, position, jailPosition)
+            
+            # Apply Bayes' rule: posterior ∝ likelihood × prior
+            posteriorBelief = likelihood * priorBelief
+            
+            # Update the belief for this position
+            self.beliefs[position] = posteriorBelief
         "*** END YOUR CODE HERE ***"
         self.beliefs.normalize()
     
