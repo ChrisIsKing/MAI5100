@@ -718,7 +718,15 @@ class ParticleFilter(InferenceModule):
         """
         self.particles = []
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+        #raiseNotDefined()
+
+        self.particles = [] #reset the particle array
+        positions = self.legalPositions #get the legal positions that the ghosts could be in
+        num_positions = len(positions) #number of positions.
+
+        for i in range(self.numParticles):
+            self.particles.append(positions[i % num_positions]) #distribute particles over the legal ghosts postions. 
+
         "*** END YOUR CODE HERE ***"
 
     def getBeliefDistribution(self):
@@ -730,7 +738,17 @@ class ParticleFilter(InferenceModule):
         This function should return a normalized distribution.
         """
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+        #raiseNotDefined()
+        belief_distribution = DiscreteDistribution() #initialize distribution
+
+        #check how many times a position occurs for each particle
+        for particle in self.particles:
+            belief_distribution[particle] += 1
+
+        belief_distribution.normalize() #normalize the counts ie. convert to probabilities
+        
+        return belief_distribution
+        
         "*** END YOUR CODE HERE ***"
     
     ########### ########### ###########
