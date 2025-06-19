@@ -684,15 +684,11 @@ class ExactInference(InferenceModule):
                 # Get the probability that the ghost was at oldPos in the previous time step
                 oldBelief = self.beliefs[oldPos]
                 
-                # Get the transition distribution from oldPos
-                # This gives us P(newPos | oldPos, gameState) for all possible newPos
                 newPosDist = self.getPositionDistribution(gameState, oldPos)
                 
                 # Get the probability of transitioning from oldPos to newPos
                 transitionProb = newPosDist[newPos]
                 
-                # Add this pathway's contribution to the total probability
-                # Using the law of total probability:
                 # P(newPos) += P(newPos | oldPos) * P(oldPos)
                 totalProbability += transitionProb * oldBelief
             
