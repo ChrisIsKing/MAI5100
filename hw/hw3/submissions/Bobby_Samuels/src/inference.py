@@ -200,7 +200,31 @@ def inferenceByVariableEliminationWithCallTracking(callTrackingList=None):
             eliminationOrder = sorted(list(eliminationVariables))
 
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+        """
+        This program will perform a query on a Query and Evidence Variable given a full bayes network
+        of variables by eliminating that variable by joining and summing the variables out of the factor
+        tables
+        """
+        # Step 1: Get initial factors with evidence applied
+        currentFactorsList = bayesNet.getAllCPTsWithEvidence(evidenceDict)
+
+        # Step 2: Interleaved Join and Eliminate
+        for variable in eliminationOrder:
+            currentFactorsList, joinedFactor = joinFactorsByVariable(currentFactorsList, variable)
+            
+            # Skip elimination if only one unconditioned variable
+            if len(joinedFactor.unconditionedVariables()) == 1:
+                continue
+
+            eliminatedFactor = eliminate(joinedFactor, variable)
+            currentFactorsList.append(eliminatedFactor)
+
+        # Step 3: Final join of remaining factors
+        finalFactor = joinFactors(currentFactorsList)
+
+        #The probablity distribution now needs to be normalized and then returned
+        normalizedFactor = normalize(finalFactor)
+        return normalizedFactor
         "*** END YOUR CODE HERE ***"
 
 
