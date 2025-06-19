@@ -364,9 +364,13 @@ class DiscreteDistribution(dict):
         >>> empty
         {}
         """
-        "*** YOUR CODE HERE ***"
-        print (dir(DiscreteDistribution()))
 
+        "*** YOUR CODE HERE ***"
+        print("sssssssssssssssssssssss")  # Debug print
+        total = self.total()
+        if total != 0:
+            for key in self:
+                self[key] = self[key] / total
         #raiseNotDefined()
         "*** END YOUR CODE HERE ***"
 
@@ -393,7 +397,6 @@ class DiscreteDistribution(dict):
         """
         "*** YOUR CODE HERE ***"
 
-        raiseNotDefined()
         "*** END YOUR CODE HERE ***"
 
 
