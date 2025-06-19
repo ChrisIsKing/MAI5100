@@ -380,7 +380,16 @@ class DiscreteDistribution(dict):
         {}
         """
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+        # Calculate the total of all values
+        total = self.total()
+        
+        # If total is 0 (or very close to 0), do nothing to avoid division by zero
+        if total == 0:
+            return
+        
+        # Normalize each value by dividing by the total
+        for key in self:
+            self[key] = self[key] / total
         "*** END YOUR CODE HERE ***"
 
     def sample(self):
@@ -405,7 +414,29 @@ class DiscreteDistribution(dict):
         0.0
         """
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+        import random
+        
+        # Calculate total weight
+        total = self.total()
+        
+        if total == 0:
+
+            if len(self) > 0:
+                return list(self.keys())[0]
+            else:
+                return None
+        
+        # Pick a random number between 0 and total
+        pick = random.random() * total
+        
+        cumulative = 0.0
+        for key, value in self.items():
+            cumulative += value
+            if pick <= cumulative:
+                return key
+        
+        # Return the last key as a fallback
+        return list(self.keys())[-1] if len(self) > 0 else None
         "*** END YOUR CODE HERE ***"
 
 
@@ -480,7 +511,20 @@ class InferenceModule:
         Return the probability P(noisyDistance | pacmanPosition, ghostPosition).
         """
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+        # Case 1: Ghost is in jail
+        if ghostPosition == jailPosition:
+            if noisyDistance is None:
+                return 1.0  
+            else:
+                return 0.0  
+        
+        # Case 2: Ghost is not in jail, but observation is None
+        if noisyDistance is None:
+            return 0.0
+        
+        trueDistance = manhattanDistance(pacmanPosition, ghostPosition)
+        
+        return busters.getObservationProbability(noisyDistance, trueDistance)
         "*** END YOUR CODE HERE ***"
 
     def setGhostPosition(self, gameState, ghostPosition, index):
