@@ -671,7 +671,36 @@ class ExactInference(InferenceModule):
         current position is known.
         """
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+        # Create a new distribution to store updated beliefs
+        newBeliefs = DiscreteDistribution()
+        
+        # For each possible position where the ghost could be now
+        for newPos in self.allPositions:
+            # Initialize probability for this position
+            totalProbability = 0.0
+            
+            # Consider all possible previous positions the ghost could have been at
+            for oldPos in self.allPositions:
+                # Get the probability that the ghost was at oldPos in the previous time step
+                oldBelief = self.beliefs[oldPos]
+                
+                # Get the transition distribution from oldPos
+                # This gives us P(newPos | oldPos, gameState) for all possible newPos
+                newPosDist = self.getPositionDistribution(gameState, oldPos)
+                
+                # Get the probability of transitioning from oldPos to newPos
+                transitionProb = newPosDist[newPos]
+                
+                # Add this pathway's contribution to the total probability
+                # Using the law of total probability:
+                # P(newPos) += P(newPos | oldPos) * P(oldPos)
+                totalProbability += transitionProb * oldBelief
+            
+            # Set the new belief for this position
+            newBeliefs[newPos] = totalProbability
+        
+        # Replace the old beliefs with the new ones
+        self.beliefs = newBeliefs
         "*** END YOUR CODE HERE ***"
 
     def getBeliefDistribution(self):
