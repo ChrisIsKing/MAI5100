@@ -149,5 +149,44 @@ class GreedyBustersAgent(BustersAgent):
             [beliefs for i, beliefs in enumerate(self.ghostBeliefs)
              if livingGhosts[i+1]]
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+        # Step 1: Find the most likely position for each living ghost
+        ghostTargetPositions = []
+        for distribution in livingGhostPositionDistributions:
+            # Find the position with highest probability for this ghost
+            mostLikelyPosition = distribution.argMax()
+            ghostTargetPositions.append(mostLikelyPosition)
+        
+        # Step 2: Find the closest ghost target
+        if len(ghostTargetPositions) == 0:
+            # No ghosts left - just move randomly among legal actions
+            import random
+            return random.choice(legal)
+        
+        # Calculate distance to each ghost target and find the closest one
+        closestGhostPosition = None
+        closestDistance = float('inf')
+        
+        for ghostPosition in ghostTargetPositions:
+            distance = self.distancer.getDistance(pacmanPosition, ghostPosition)
+            if distance < closestDistance:
+                closestDistance = distance
+                closestGhostPosition = ghostPosition
+        
+        # Step 3: Choose the action that gets Pacman closest to the closest ghost
+        bestAction = None
+        bestNewDistance = float('inf')
+        
+        for action in legal:
+            # Calculate where Pacman would be after taking this action
+            successorPosition = Actions.getSuccessor(pacmanPosition, action)
+            
+            # Calculate distance from new position to closest ghost
+            newDistance = self.distancer.getDistance(successorPosition, closestGhostPosition)
+            
+            # Keep track of the action that minimizes distance to target
+            if newDistance < bestNewDistance:
+                bestNewDistance = newDistance
+                bestAction = action
+        
+        return bestAction
         "*** END YOUR CODE HERE ***"
