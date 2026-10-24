@@ -1,5 +1,17 @@
 # python
-venv
-__py_cache__
+venv/
+.venv/
+__pycache__/
 *.pyc
-.qodo
+
+# editor / OS
+.DS_Store
+.qodo/
+
+# student work stays out of the public repo
+**/submissions/
+**/submission/
+projects/
+
+# office lock files
+~$*
