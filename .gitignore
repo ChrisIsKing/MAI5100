@@ -8,9 +8,7 @@ __pycache__/
 .DS_Store
 .qodo/
 
-# student work stays out of the public repo
-**/submissions/
-**/submission/
+# students submit via pull requests into hw/*/submissions/<name>/
 projects/
 
 # office lock files

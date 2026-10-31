@@ -1,0 +1,4 @@
+# Solution file for test_cases/q9/greedy_1.test
+cost: "573.800000"
+route: "Timehri,Soesdyke,Linden,Kurupukari,Annai,Lethem"
+ucs_expanded: "20"

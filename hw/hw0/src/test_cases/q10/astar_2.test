@@ -1,0 +1,5 @@
+class: "GuyanaSearchTest"
+start: "Bartica"
+goal: "Kwakwani"
+costMode: "km"
+algorithm: "astar"

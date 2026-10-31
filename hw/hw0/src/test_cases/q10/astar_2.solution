@@ -1,0 +1,4 @@
+# Solution file for test_cases/q10/astar_2.test
+cost: "498.200000"
+route: "Parika,Vreed en Hoop,Georgetown,Diamond,Soesdyke,Linden,Kwakwani"
+ucs_expanded: "17"

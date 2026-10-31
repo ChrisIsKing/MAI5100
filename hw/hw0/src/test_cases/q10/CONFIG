@@ -1,0 +1,4 @@
+class: "PassAllTestsQuestion"
+max_points: "4"
+timeout: "60"
+depends: "q3 q4"

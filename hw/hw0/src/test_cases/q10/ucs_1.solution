@@ -1,0 +1,4 @@
+# Solution file for test_cases/q10/ucs_1.test
+cost: "42.600000"
+route: "Diamond,Soesdyke,Timehri"
+ucs_expanded: "6"

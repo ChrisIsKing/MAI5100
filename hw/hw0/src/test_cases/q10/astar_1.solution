@@ -1,0 +1,4 @@
+# Solution file for test_cases/q10/astar_1.test
+cost: "555.600000"
+route: "Diamond,Soesdyke,Linden,Kurupukari,Annai,Lethem"
+ucs_expanded: "20"

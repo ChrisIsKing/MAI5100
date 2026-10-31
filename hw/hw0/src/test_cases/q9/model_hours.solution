@@ -1,0 +1,4 @@
+# Solution file for test_cases/q9/model_hours.test
+start: "Charity"
+successors: "Anna Regina,Anna Regina,5.01;Bartica,Bartica,4.53;Vreed en Hoop,Vreed en Hoop,0.48"
+path_cost: "9.95"

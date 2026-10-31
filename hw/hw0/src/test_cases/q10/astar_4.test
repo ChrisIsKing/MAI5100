@@ -1,0 +1,5 @@
+class: "GuyanaSearchTest"
+start: "Mahdia"
+goal: "New Amsterdam"
+costMode: "km"
+algorithm: "astar"

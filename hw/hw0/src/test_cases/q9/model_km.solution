@@ -1,0 +1,4 @@
+# Solution file for test_cases/q9/model_km.test
+start: "Georgetown"
+successors: "Ituni,Ituni,65.80;Kurupukari,Kurupukari,226.80;Kwakwani,Kwakwani,107.20;Mahdia,Mahdia,195.50;Soesdyke,Soesdyke,75.30"
+path_cost: "109.40"

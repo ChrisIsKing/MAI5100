@@ -1,0 +1,6 @@
+class: "GuyanaModelTest"
+start: "Charity"
+goal: "Corriverton"
+costMode: "hours"
+probe: "Parika"
+path_to_check: "Anna Regina,Parika,Bartica"

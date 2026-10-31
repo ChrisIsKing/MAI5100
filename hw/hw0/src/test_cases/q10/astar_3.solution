@@ -1,0 +1,4 @@
+# Solution file for test_cases/q10/astar_3.test
+cost: "9.520000"
+route: "Anna Regina,Parika,Vreed en Hoop,Georgetown,Ogle,Mahaica,Rosignol,New Amsterdam,Corriverton"
+ucs_expanded: "13"

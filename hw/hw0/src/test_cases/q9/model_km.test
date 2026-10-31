@@ -1,0 +1,6 @@
+class: "GuyanaModelTest"
+start: "Georgetown"
+goal: "Lethem"
+costMode: "km"
+probe: "Linden"
+path_to_check: "Diamond,Soesdyke,Linden"

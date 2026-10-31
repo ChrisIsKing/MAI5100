@@ -1,0 +1,4 @@
+# Solution file for test_cases/q9/greedy_2.test
+cost: "568.500000"
+route: "Mahdia,Linden,Kwakwani"
+ucs_expanded: "17"

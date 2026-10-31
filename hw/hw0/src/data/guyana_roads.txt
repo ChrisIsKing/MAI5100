@@ -1,0 +1,55 @@
+# Guyana road network for MAI 5100 HW0 (Part C).
+# Town coordinates: OpenStreetMap Nominatim geocoding (c) OpenStreetMap contributors, ODbL.
+# Road distances and drive times: OSRM routing on OpenStreetMap data, retrieved Oct 2026.
+# Distances are approximate and simplified for teaching; do not use for real navigation.
+#
+# TOWN <name> <latitude> <longitude>
+# ROAD <town A> | <town B> | <km> | <hours> | <ferry: yes/no>   (roads are two-way)
+
+TOWN Georgetown | 6.80326 | -58.14554
+TOWN Ogle | 6.76785 | -58.11525
+TOWN Diamond | 6.71445 | -58.18955
+TOWN Mahaica | 6.68249 | -57.92302
+TOWN Rosignol | 6.27458 | -57.53879
+TOWN New Amsterdam | 6.24264 | -57.51684
+TOWN Corriverton | 5.89474 | -57.13834
+TOWN Soesdyke | 6.54359 | -58.23566
+TOWN Timehri | 6.51086 | -58.24774
+TOWN Linden | 6.01000 | -58.31249
+TOWN Vreed en Hoop | 6.80916 | -58.18483
+TOWN Parika | 6.85942 | -58.42336
+TOWN Anna Regina | 7.26221 | -58.48221
+TOWN Charity | 7.39600 | -58.59742
+TOWN Ituni | 5.53246 | -58.25725
+TOWN Kwakwani | 5.26694 | -58.06074
+TOWN Kurupukari | 4.66483 | -58.66840
+TOWN Annai | 3.95177 | -59.12867
+TOWN Lethem | 3.37500 | -59.79587
+TOWN Mahdia | 5.28206 | -59.14953
+TOWN Bartica | 6.40533 | -58.62143
+
+ROAD Georgetown | Ogle | 7.0 | 0.21 | no
+ROAD Ogle | Mahaica | 33.0 | 0.68 | no
+ROAD Mahaica | Rosignol | 65.6 | 1.05 | no
+ROAD Rosignol | New Amsterdam | 12.5 | 0.24 | no
+ROAD New Amsterdam | Corriverton | 74.2 | 1.18 | no
+ROAD Georgetown | Diamond | 13.0 | 0.28 | no
+ROAD Diamond | Soesdyke | 21.1 | 0.39 | no
+ROAD Soesdyke | Timehri | 8.5 | 0.23 | no
+ROAD Soesdyke | Linden | 75.3 | 1.05 | no
+ROAD Georgetown | Vreed en Hoop | 15.5 | 0.26 | no
+ROAD Vreed en Hoop | Parika | 30.9 | 0.48 | no
+ROAD Parika | Anna Regina | 58.1 | 5.01 | yes
+ROAD Anna Regina | Charity | 25.2 | 0.41 | no
+ROAD Linden | Ituni | 65.8 | 1.67 | no
+ROAD Ituni | Kwakwani | 41.6 | 1.17 | yes
+ROAD Linden | Kurupukari | 226.8 | 5.66 | no
+ROAD Kurupukari | Annai | 102.5 | 2.71 | yes
+ROAD Annai | Lethem | 116.9 | 2.96 | no
+ROAD Linden | Mahdia | 195.5 | 5.00 | yes
+ROAD Mahdia | Bartica | 265.8 | 6.90 | yes
+ROAD Parika | Bartica | 235.2 | 4.53 | yes
+ROAD Ogle | Diamond | 14.5 | 0.36 | no
+ROAD Georgetown | Timehri | 43.8 | 0.87 | no
+ROAD Linden | Kwakwani | 107.2 | 2.83 | yes
+ROAD Mahaica | Soesdyke | 69.1 | 1.20 | no

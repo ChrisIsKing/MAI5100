@@ -1,0 +1,5 @@
+class: "GuyanaSearchTest"
+start: "Mahdia"
+goal: "Parika"
+costMode: "km"
+algorithm: "astar"

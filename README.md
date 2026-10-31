@@ -19,7 +19,13 @@ Graduate-level introduction to AI: intelligent agents, search, constraint satisf
 |---|---|
 | [lectures/](lectures/) | Slides for this iteration, one folder per week  |
 | [archive/2025/](archive/2025/) | Frozen material from the first iteration (slides, homeworks, midterm, old syllabus) |
-| `hw/` | Homeworks for this iteration (added as released) |
+| [hw/](hw/) | Homeworks for this iteration (added as released) |
+
+## Homeworks
+
+| Homework | Topics | Released | Due |
+|---|---|---|---|
+| [HW0: Search](hw/hw0/) | Uninformed and informed search, heuristics, route planning in Guyana, search vs. LLMs | Oct 31 | Nov 21 |
 
 ## Schedule
 

@@ -1,0 +1,4 @@
+# Solution file for test_cases/q10/astar_4.test
+cost: "417.500000"
+route: "Linden,Soesdyke,Diamond,Ogle,Mahaica,Rosignol,New Amsterdam"
+ucs_expanded: "15"
