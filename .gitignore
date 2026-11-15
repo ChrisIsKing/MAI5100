@@ -13,3 +13,6 @@ projects/
 
 # office lock files
 ~$*
+
+# instructor lecture notes stay local
+lectures/**/*_notes.md

@@ -1,7 +1,7 @@
 # MAI 5100 Homework 0: Search
 
 **Released:** Saturday, October 31, 2026
-**Due:** **Saturday, November 21, 2026 at 11:59 PM (Guyana time)**
+**Due:** **Saturday, November 28, 2026 at 11:59 PM (Guyana time)** (extended from November 21 because the November 14 class was cancelled)
 
 ![Pacman in a maze](https://inst.eecs.berkeley.edu/~cs188/fa26/assets/projects/maze.png)
 
