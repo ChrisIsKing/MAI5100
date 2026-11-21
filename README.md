@@ -7,7 +7,7 @@ Graduate-level introduction to AI: intelligent agents, search, constraint satisf
 | **Course Code** | MAI5100 |
 | **Iteration** | 2 (2026/2027) |
 | **Modality** | Online (Zoom) |
-| **Live sessions** | Saturdays, 10:00 AM - 1:00 PM Guyana time (UTC-4), from Nov 21. Earlier sessions ran 9:00 AM - 1:00 PM |
+| **Live sessions** | Saturdays, 10:00 AM - 2:00 PM Guyana time (UTC-4), from Nov 21. Earlier sessions ran 9:00 AM - 1:00 PM |
 | **Dates** | Sat 24-Oct-2026 to Sat 20-Feb-2027 (no class Nov 7, Nov 14, Dec 26, Jan 2) |
 | **Course Instructor** | [Dr. Christopher Clarke](https://csclarke.com/) |
 | **Pre-requisites** | Basic to intermediate math, Python programming |
