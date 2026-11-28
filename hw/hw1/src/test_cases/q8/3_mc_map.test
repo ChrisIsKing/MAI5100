@@ -1,0 +1,4 @@
+class: "CSPSolveTest"
+problem: "guyana3"
+config: "minconflicts"
+slack: "5"

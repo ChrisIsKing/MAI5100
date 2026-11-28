@@ -1,0 +1,4 @@
+# Solution for test_cases/q7/1_revise.test
+result: """
+[True, ['Blue', 'Red'], False]
+"""

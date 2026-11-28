@@ -1,0 +1,3 @@
+class: "CSPSolveTest"
+problem: "queens8"
+config: "first+none+none"

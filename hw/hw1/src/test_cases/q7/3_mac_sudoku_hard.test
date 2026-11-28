@@ -1,0 +1,3 @@
+class: "CSPSolveTest"
+problem: "sudoku_hard"
+config: "mrv+none+mac"

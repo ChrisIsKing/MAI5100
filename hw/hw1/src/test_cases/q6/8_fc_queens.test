@@ -1,0 +1,3 @@
+class: "CSPSolveTest"
+problem: "queens12"
+config: "mrv+none+fc"

@@ -1,0 +1,4 @@
+# Solution for test_cases/q6/7_forward.test
+result: """
+[[('Cuyuni-Mazaruni', 'Red'), ('Demerara-Mahaica', 'Red'), ('East Berbice-Corentyne', 'Red'), ('Essequibo Islands-West Demerara', 'Red'), ('Mahaica-Berbice', 'Red'), ('Potaro-Siparuni', 'Red')], None, True]
+"""

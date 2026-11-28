@@ -1,0 +1,4 @@
+# Solution for test_cases/q6/1_consistency.test
+result: """
+[False, False, True, 1, 1, 0]
+"""

@@ -1,0 +1,3 @@
+class: "CSPSolveTest"
+problem: "queens16"
+config: "mrv+lcv+mac"

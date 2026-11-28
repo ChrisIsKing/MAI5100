@@ -1,0 +1,4 @@
+# Solution for test_cases/q6/6_lcv.test
+result: """
+['Green', 'Red', 'Blue']
+"""

@@ -1,0 +1,3 @@
+class: "TimetableTest"
+instance: "ug_tiny"
+solver: "first+none+none"

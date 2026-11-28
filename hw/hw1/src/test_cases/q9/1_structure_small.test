@@ -1,0 +1,3 @@
+class: "TimetableTest"
+instance: "ug_small"
+solver: "structure"

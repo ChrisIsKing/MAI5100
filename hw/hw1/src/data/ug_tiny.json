@@ -1,0 +1,295 @@
+{
+ "name": "ug_tiny",
+ "synthetic": true,
+ "note": "SYNTHETIC data generated for MAI 5100 HW1. Not real University of Guyana data.",
+ "courses": {
+  "MTH2038": {
+   "title": "Calculus II",
+   "lecturer": "Dr. Vishnu Adams",
+   "enrolment": 16
+  },
+  "MGT1019": {
+   "title": "Organisational Behaviour",
+   "lecturer": "Dr. Candace Persaud",
+   "enrolment": 14
+  },
+  "PHY2014": {
+   "title": "Mechanics",
+   "lecturer": "Dr. Sabrina Ramsaroop",
+   "enrolment": 12
+  },
+  "CSC1000": {
+   "title": "Algorithms",
+   "lecturer": "Dr. Indira Williams",
+   "enrolment": 11
+  },
+  "ECN1007": {
+   "title": "Principles of Macroeconomics",
+   "lecturer": "Dr. Sabrina Ramsaroop",
+   "enrolment": 8
+  },
+  "GEO4066": {
+   "title": "Physical Geography",
+   "lecturer": "Dr. Candace Persaud",
+   "enrolment": 13
+  },
+  "ENG3034": {
+   "title": "Caribbean Literature",
+   "lecturer": "Dr. Vishnu Adams",
+   "enrolment": 14
+  },
+  "CHM1045": {
+   "title": "General Chemistry",
+   "lecturer": "Dr. Candace Persaud",
+   "enrolment": 11
+  }
+ },
+ "students": {
+  "S10000": [
+   "ENG3034"
+  ],
+  "S10001": [
+   "CHM1045",
+   "MTH2038"
+  ],
+  "S10002": [
+   "CSC1000"
+  ],
+  "S10003": [
+   "ENG3034",
+   "PHY2014"
+  ],
+  "S10004": [
+   "CSC1000"
+  ],
+  "S10005": [
+   "MTH2038"
+  ],
+  "S10006": [
+   "MGT1019",
+   "MTH2038"
+  ],
+  "S10007": [
+   "GEO4066",
+   "MTH2038"
+  ],
+  "S10008": [
+   "CSC1000",
+   "ECN1007"
+  ],
+  "S10009": [
+   "PHY2014"
+  ],
+  "S10010": [
+   "PHY2014"
+  ],
+  "S10011": [
+   "CSC1000"
+  ],
+  "S10012": [
+   "ENG3034",
+   "GEO4066"
+  ],
+  "S10013": [
+   "ECN1007",
+   "MGT1019"
+  ],
+  "S10014": [
+   "ECN1007",
+   "GEO4066"
+  ],
+  "S10015": [
+   "ENG3034",
+   "MGT1019"
+  ],
+  "S10016": [
+   "MGT1019"
+  ],
+  "S10017": [
+   "MGT1019",
+   "MTH2038"
+  ],
+  "S10018": [
+   "MTH2038",
+   "PHY2014"
+  ],
+  "S10019": [
+   "CHM1045",
+   "MTH2038"
+  ],
+  "S10020": [
+   "CHM1045"
+  ],
+  "S10021": [
+   "MTH2038"
+  ],
+  "S10022": [
+   "GEO4066",
+   "PHY2014"
+  ],
+  "S10023": [
+   "ECN1007",
+   "MTH2038"
+  ],
+  "S10024": [
+   "ENG3034",
+   "MGT1019"
+  ],
+  "S10025": [
+   "CHM1045",
+   "ENG3034"
+  ],
+  "S10026": [
+   "ENG3034",
+   "MGT1019"
+  ],
+  "S10027": [
+   "CHM1045",
+   "GEO4066"
+  ],
+  "S10028": [
+   "ECN1007",
+   "MTH2038"
+  ],
+  "S10029": [
+   "CHM1045",
+   "GEO4066"
+  ],
+  "S10030": [
+   "CSC1000",
+   "MGT1019"
+  ],
+  "S10031": [
+   "ENG3034",
+   "GEO4066"
+  ],
+  "S10032": [
+   "CSC1000",
+   "PHY2014"
+  ],
+  "S10033": [
+   "CSC1000",
+   "MTH2038"
+  ],
+  "S10034": [
+   "GEO4066",
+   "MGT1019"
+  ],
+  "S10035": [
+   "CSC1000"
+  ],
+  "S10036": [
+   "CHM1045",
+   "MTH2038"
+  ],
+  "S10037": [
+   "ECN1007"
+  ],
+  "S10038": [
+   "ENG3034"
+  ],
+  "S10039": [
+   "ECN1007"
+  ],
+  "S10040": [
+   "MGT1019"
+  ],
+  "S10041": [
+   "CSC1000",
+   "MTH2038"
+  ],
+  "S10042": [
+   "CHM1045",
+   "PHY2014"
+  ],
+  "S10043": [
+   "ENG3034",
+   "PHY2014"
+  ],
+  "S10044": [
+   "PHY2014"
+  ],
+  "S10045": [
+   "GEO4066",
+   "MTH2038"
+  ],
+  "S10046": [
+   "MGT1019"
+  ],
+  "S10047": [
+   "MGT1019",
+   "MTH2038"
+  ],
+  "S10048": [
+   "CSC1000",
+   "GEO4066"
+  ],
+  "S10049": [
+   "ECN1007"
+  ],
+  "S10050": [
+   "GEO4066",
+   "MGT1019"
+  ],
+  "S10051": [
+   "CHM1045"
+  ],
+  "S10052": [
+   "CHM1045",
+   "PHY2014"
+  ],
+  "S10053": [
+   "PHY2014"
+  ],
+  "S10054": [
+   "CSC1000",
+   "PHY2014"
+  ],
+  "S10055": [
+   "ENG3034"
+  ],
+  "S10056": [
+   "CHM1045",
+   "MTH2038"
+  ],
+  "S10057": [
+   "ENG3034",
+   "MGT1019"
+  ],
+  "S10058": [
+   "ENG3034",
+   "GEO4066"
+  ],
+  "S10059": [
+   "ENG3034",
+   "GEO4066"
+  ]
+ },
+ "slots": [
+  "Mon AM",
+  "Mon PM",
+  "Tue AM",
+  "Tue PM",
+  "Wed AM",
+  "Wed PM"
+ ],
+ "days": {
+  "Mon AM": 0,
+  "Mon PM": 0,
+  "Tue AM": 1,
+  "Tue PM": 1,
+  "Wed AM": 2,
+  "Wed PM": 2
+ },
+ "rooms": {
+  "Education Lecture Theatre": 180,
+  "George Walcott Lecture Theatre": 220,
+  "Faculty of Natural Sciences LT1": 120
+ },
+ "unavailable": {
+  "Dr. Candace Persaud": [
+   "Mon AM",
+   "Mon PM"
+  ]
+ }
+}

@@ -1,0 +1,4 @@
+class: "CSPSolveTest"
+problem: "guyana2"
+config: "first+none+none"
+solvable: "False"

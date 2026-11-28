@@ -26,6 +26,8 @@ Graduate-level introduction to AI: intelligent agents, search, constraint satisf
 | Homework | Topics | Released | Due |
 |---|---|---|---|
 | [HW0: Search](hw/hw0/) | Uninformed and informed search, heuristics, route planning in Guyana, search vs. LLMs | Oct 31 | Nov 28 |
+| [HW1: CSPs and Adversarial Search](hw/hw1/) | CSP solver (backtracking, MRV/LCV, forward checking, AC-3, min-conflicts), UG exam timetabling, multi-agent Pacman | Nov 28 | Dec 16 |
+| [HW1: CSPs and Adversarial Search](hw/hw1/) | Multi-agent Pac-Man, a CSP solver built from scratch, UG exam timetabling, written problems | Nov 28 | Wed Dec 16 |
 
 ## Schedule
 
@@ -38,7 +40,7 @@ The schedule may be adjusted as the course proceeds; changes will be announced b
 | | Nov 7 | *No class* | |
 | | Nov 14 | *Class cancelled (instructor illness).* Week 3 slides posted for self-study | |
 | 3 | Nov 21 | Informed search: heuristics, A* | [Slides](lectures/week03/) |
-| 4 | Nov 28 | Constraint satisfaction problems; local search | |
+| 4 | Nov 28 | Constraint satisfaction problems; local search | [Slides](lectures/week04/) |
 | 5 | Dec 5 | Adversarial search; expectimax and utilities | |
 | 6 | Dec 12 | MDPs; reinforcement learning | |
 | 7 | Dec 19 | Midterm / review | |

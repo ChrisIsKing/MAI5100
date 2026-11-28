@@ -1,0 +1,4 @@
+# Solution for test_cases/q7/2_ac3.test
+result: """
+[True, True, 81, True, [('Barima-Waini', ['Blue']), ('Cuyuni-Mazaruni', ['Green']), ('Demerara-Mahaica', ['Green']), ('East Berbice-Corentyne', ['Green']), ('Essequibo Islands-West Demerara', ['Blue']), ('Mahaica-Berbice', ['Blue']), ('Pomeroon-Supenaam', ['Red']), ('Potaro-Siparuni', ['Blue']), ('Upper Demerara-Berbice', ['Red']), ('Upper Takutu-Upper Essequibo', ['Red'])]]
+"""

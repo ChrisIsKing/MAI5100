@@ -1,0 +1,3 @@
+class: "CSPSolveTest"
+problem: "sudoku_easy"
+config: "mrv+none+fc"
